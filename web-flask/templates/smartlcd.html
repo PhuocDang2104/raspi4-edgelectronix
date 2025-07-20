@@ -60,11 +60,11 @@
 
     <div class="right-section">
         <div class="notes">
-            <div class="note one"><span id="note-1"></span></div>
-            <div class="note two"><span id="note-2"></span></div>
-            <div class="note three"><span id="note-3"></span></div>
-            <div class="note four"><span id="note-4"></span></div>
-            <div class="note five"><span id="note-5"></span></div>
+            <div class="note one"><span class="note-right" data-note="1"></span></div>
+            <div class="note two"><span class="note-right" data-note="2"></span></div>
+            <div class="note three"><span class="note-right" data-note="3"></span></div>
+            <div class="note four"><span class="note-right" data-note="4"></span></div>
+            <div class="note five"><span class="note-right" data-note="5"></span></div>
         </div>
         <div class="bottle-img">
         <img src="../static/images/ECLAT NOIR Perfume.png" alt="ÉCLAT NOIR bottle" />
@@ -109,6 +109,12 @@
       document.getElementById('note-3').textContent = perfume.note_3 || '-';
       document.getElementById('note-4').textContent = perfume.note_4 || '-';
       document.getElementById('note-5').textContent = perfume.note_5 || '-';
+
+    document.querySelector('[data-note="1"]').textContent = perfume.note_1 || '-';
+    document.querySelector('[data-note="2"]').textContent = perfume.note_2 || '-';
+    document.querySelector('[data-note="3"]').textContent = perfume.note_3 || '-';
+    document.querySelector('[data-note="4"]').textContent = perfume.note_4 || '-';
+    document.querySelector('[data-note="5"]').textContent = perfume.note_5 || '-';
 
       console.log('📦 Perfume loaded:', perfume);
     });
