@@ -14,42 +14,36 @@ socketio = SocketIO(app, cors_allowed_origins="*")
 
 # 🧠 Redis pub/sub setup
 redis_client = redis.Redis(host='127.0.0.1', port=6379, db=0)
-def redis_subscribe_thread():
-    pubsub = redis_client.pubsub()
-    pubsub.subscribe('dashboard_updates')
-
-    for message in pubsub.listen():
-        if message['type'] == 'message':
-            try:
-                data = json.loads(message['data'])
-                socketio.emit('update_shelf_stock', data.get('update_shelf_stock'))
-                socketio.emit('update_kpi', data.get('update_kpi'))
-            except Exception as e:
-                print(f"❌ Redis parse error: {e}")
-
-# 🌐 Routes
-@app.route('/')
-def home():
-    return render_template('smartlcd.html')
 
 # 👂 Redis listener task – chạy song song
 def redis_listener():
     pubsub = redis_client.pubsub()
     pubsub.subscribe('dashboard_updates')
+
     for message in pubsub.listen():
         if message['type'] == 'message':
             try:
                 payload = json.loads(message['data'])
                 print("📡 Redis received")
 
-                if 'update_shelf_stock' in payload:
-                    socketio.emit('update_shelf_stock', payload['update_shelf_stock'])
+                # Gửi dữ liệu perfumes khi có cập nhật
+                if 'update_perfume_catalog' in payload:
+                    socketio.emit('update_perfume_catalog', payload['update_perfume_catalog'])
 
-                if 'update_kpi' in payload:
-                    socketio.emit('update_kpi', payload['update_kpi'])
+                # (Tuỳ chọn) Nếu sau này muốn dùng lại update_shelf_stock hoặc update_kpi
+                # if 'update_shelf_stock' in payload:
+                #     socketio.emit('update_shelf_stock', payload['update_shelf_stock'])
+
+                # if 'update_kpi' in payload:
+                #     socketio.emit('update_kpi', payload['update_kpi'])
 
             except Exception as e:
                 print(f"❌ Redis listener error: {e}")
+
+# 🌐 Routes
+@app.route('/')
+def home():
+    return render_template('smartlcd.html')
 
 # 🔌 Socket.IO connection event
 @socketio.on('connect')
@@ -58,8 +52,6 @@ def on_connect():
 
 # 🧠 Main app entry
 if __name__ == '__main__':
-
-
     socketio.start_background_task(target=redis_listener)
 
     def get_local_ip():
