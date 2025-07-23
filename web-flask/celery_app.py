@@ -1,15 +1,10 @@
-# celery_app.py
 from celery import Celery
 
-def make_celery(app_name=__name__):
-    return Celery(
-        app_name,
-        broker='redis://localhost:6379/0',
-        backend='redis://localhost:6379/0'
-    )
+celery = Celery(
+    'your_project',
+    broker='redis://localhost:6379/0',
+    backend='redis://localhost:6379/0'
+)
 
-celery = make_celery()
-
-celery.autodiscover_tasks(['celery_tasks'])
-
+from celery_tasks import coap_task
 __all__ = ['celery']
