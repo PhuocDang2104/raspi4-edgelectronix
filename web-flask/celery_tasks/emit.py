@@ -4,6 +4,7 @@ import psycopg2
 import time
 import json
 import redis
+import threading
 
 # PostgreSQL config
 POSTGRES_CONFIG = {
@@ -18,6 +19,21 @@ redis_client = redis.Redis(host='localhost', port=6379, db=0)
 
 # Selected perfume ID (can be dynamically updated later)
 SELECTED_ID = 'P005'
+
+def listen_perfume_selector():
+    global SELECTED_ID
+    pubsub = redis_client.pubsub()
+    pubsub.subscribe('perfume_selector_channel')
+    print("📡 Listening for perfume_id selection...")
+
+    for msg in pubsub.listen():
+        if msg['type'] == 'message':
+            new_id = msg['data'].decode()
+            print(f"🆕 Received new SELECTED_ID: {new_id}")
+            SELECTED_ID = new_id
+
+# Start pubsub listener in background thread
+threading.Thread(target=listen_perfume_selector, daemon=True).start()
 
 def run_emit_loop():
     previous_state = {}
