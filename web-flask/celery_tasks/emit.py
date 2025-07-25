@@ -17,7 +17,7 @@ POSTGRES_CONFIG = {
 # Redis config
 redis_client = redis.Redis(host='localhost', port=6379, db=0)
 
-# Selected perfume ID (can be dynamically updated later)
+# Selected perfume ID 
 SELECTED_ID = 'P005'
 
 def listen_perfume_selector():
@@ -37,13 +37,17 @@ threading.Thread(target=listen_perfume_selector, daemon=True).start()
 
 def run_emit_loop():
     previous_state = {}
+    global SELECTED_ID
+    last_selected_id = SELECTED_ID  
+
     while True:
         try:
+            # 🔁 Cập nhật SELECTED_ID nếu Redis key có thay đổi
             udp_selected_id = redis_client.get('selected_perfume_id_from_udp')
             if udp_selected_id:
                 udp_selected_id = udp_selected_id.decode()
                 if udp_selected_id != last_selected_id:
-                    print(f" SELECTED_ID updated from Redis key: {udp_selected_id}")
+                    print(f"🔄 SELECTED_ID updated from Redis key: {udp_selected_id}")
                     SELECTED_ID = udp_selected_id
                     last_selected_id = udp_selected_id    
 
