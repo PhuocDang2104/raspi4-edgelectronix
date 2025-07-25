@@ -39,6 +39,14 @@ def run_emit_loop():
     previous_state = {}
     while True:
         try:
+            udp_selected_id = redis_client.get('selected_perfume_id_from_udp')
+            if udp_selected_id:
+                udp_selected_id = udp_selected_id.decode()
+                if udp_selected_id != last_selected_id:
+                    print(f" SELECTED_ID updated from Redis key: {udp_selected_id}")
+                    SELECTED_ID = udp_selected_id
+                    last_selected_id = udp_selected_id    
+
             with psycopg2.connect(**POSTGRES_CONFIG) as conn:
                 with conn.cursor() as cur:
                     # Query only the selected perfume_id
