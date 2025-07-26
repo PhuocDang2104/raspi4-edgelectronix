@@ -47,7 +47,7 @@ def run_emit_loop():
             if udp_selected_id:
                 udp_selected_id = udp_selected_id.decode()
                 if udp_selected_id != last_selected_id:
-                    print(f"🔄 SELECTED_ID updated from Redis key: {udp_selected_id}")
+                    print(f" SELECTED_ID updated from Redis key: {udp_selected_id}")
                     SELECTED_ID = udp_selected_id
                     last_selected_id = udp_selected_id    
 
@@ -71,10 +71,10 @@ def run_emit_loop():
                 'update_perfume_catalog': data
             }))
 
-            print(f"✅ Published selected perfume {SELECTED_ID} to Redis → dashboard_updates")
+            print(f" Published selected perfume {SELECTED_ID} to Redis → dashboard_updates")
 
         except Exception as e:
-            print(f"❌ Emit error: {e}")
+            print(f" Emit error: {e}")
 
         time.sleep(1)
 

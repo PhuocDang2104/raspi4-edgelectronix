@@ -15,6 +15,6 @@ while True:
     message = data.decode().strip()
     print("📨 Received from", addr, ":", message)
 
-    # 👉 Ghi nội dung vào key riêng
+    #  Ghi nội dung vào key riêng
     redis_client.set('selected_perfume_id_from_udp', message)
     print(f"🔁 Set SELECTED_ID via Redis key: {message}")
