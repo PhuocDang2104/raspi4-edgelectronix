@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>ÉCLAT NOIR - Essence of Elegance</title>
+  <title>PERFUME NAME</title>
   <link rel="stylesheet" href="/static/css/smartlcd.css" />
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Roboto:wght@400;500&display=swap" rel="stylesheet"/>
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" />
@@ -23,7 +23,7 @@
 
       <div class="product-info">
         <div class="info-box" id="volume">100ml</div>
-        <div class="info-box" id="price">300$</div>
+        <div class="info-box" id="pricelabel">300$</div>
       </div>
 
       <div class="season-time">
@@ -71,6 +71,132 @@
         </div>
     </div>
 </div>
+<!-- Nút AI góc phải trên -->
+<button id="aiTriggerBtn" class="ai-button">
+  <i class="bi bi-chat-dots-fill"></i>
+</button>
+
+<!-- Modal nhập văn bản AI -->
+<div id="aiModal" class="modal-overlay">
+  <div class="modal-content">
+    <h3>Ask S.C.E.N.T Suggestion AI!</h3>
+
+    <!-- Tabs -->
+    <div class="ai-mode-tabs">
+      <button class="mode-tab active" data-mode="voice">Voice</button>
+      <button class="mode-tab" data-mode="manual">Manual</button>
+    </div>
+
+    <!-- Input area with two tabs -->
+    <div class="input-container">
+      <!-- Voice Mode -->
+      <div id="voiceMode" style="display: block;">
+        <textarea id="aiInput" placeholder="Speak your perfume preferences..."></textarea>
+      
+        <div class="voice-controls">
+          <button id="micBtn" class="mic-button"><i class="bi bi-mic-fill"></i></button>
+          <span id="recordingStatus" class="recording-dot" style="display: none;"></span>
+        </div>
+        <div id="aiResult" class="ai-result-box"></div>
+      </div>
+    
+      <!-- Manual Mode -->
+      <div id="manualMode" style="display: none;">
+        <div class="manual-form">
+          <div class="field-group">
+            <label for="ageRange">Age:</label>
+            <input type="range" id="ageRange" min="10" max="100" value="30">
+            <div id="ageValue"><strong>30</strong></div>
+          </div>
+      
+          <div class="field-group">
+            <label for="gender">Gender:</label>
+            <select id="gender">
+              <option value="men">Men</option>
+              <option value="women">Women</option>
+              <option value="unisex">Unisex</option>
+            </select>
+          </div>
+      
+          <div class="field-group">
+            <label for="personality">Personality:</label>
+            <select id="personality">
+              <option value="elegant">Elegant</option>
+              <option value="sporty">Sporty</option>
+              <option value="bold">Bold</option>
+              <option value="classic">Classic</option>
+              <option value="romantic">Romantic</option>
+              <option value="artistic">Artistic</option>
+              <option value="modern">Modern</option>
+              <option value="minimalist">Minimalist</option>
+              <option value="natural">Natural</option>
+              <option value="youthful">Youthful</option>
+              <option value="casual">Casual</option>
+              <option value="mysterious">Mysterious</option>
+            </select>
+          </div>
+      
+          <div class="field-group">
+            <label for="accord">Preferred Accord:</label>
+            <div class="input-wrapper">
+              <input id="accord" type="text" placeholder="Let S.C.E.N.T know ur scent ..." />
+            </div>
+          </div>
+      
+          <div class="field-group">
+            <label for="occasion">Occasion:</label>
+            <select id="occasion">
+              <option value="Work">Work</option>
+              <option value="Casual">Casual</option>
+              <option value="Date Night">Date Night</option>
+              <option value="Formal">Formal</option>
+              <option value="Everyday">Everyday</option>
+              <option value="Gym">Gym</option>
+              <option value="Vacation">Vacation</option>
+              <option value="Outdoor Activities">Outdoor Activities</option>
+              <option value="Party">Party</option>
+              <option value="Relaxing at Home">Relaxing at Home</option>
+            </select>
+          </div>
+      
+          <div class="field-group">
+            <label for="sillage">Sillage:</label>
+            <select id="sillage">
+              <option value="Light">Light</option>
+              <option value="Medium">Medium</option>
+              <option value="Strong">Strong</option>
+              <option value="Very Strong">Very Strong</option>
+            </select>
+          </div>
+      
+          <div class="field-group">
+            <label for="longevity">Longevity:</label>
+            <select id="longevity">
+              <option value="Short">Short</option>
+              <option value="Medium">Medium</option>
+              <option value="Long">Long</option>
+            </select>
+          </div>
+      
+          <div class="field-group">
+            <label for="price">Price:</label>
+            <select id="price">
+              <option value="Affordable">Affordable</option>
+              <option value="Average">Average</option>
+              <option value="High-end">High-end</option>
+            </select>
+          </div>
+        </div>
+      </div>
+
+    <div class="modal-actions">
+      <button id="sendBtn">Send</button>
+      <button id="closeBtn">Close</button>
+    </div>
+
+  </div>
+</div>
+
 
   <script>
     const socket = io();
@@ -91,7 +217,7 @@
       document.getElementById('stars').textContent = '★'.repeat(perfume.star || 0);
 
       document.getElementById('volume').textContent = `${perfume.volume}ml`;
-      document.getElementById('price').textContent = `$${perfume.price}`;
+      document.getElementById('pricelabel').textContent = `$${perfume.price}`;
 
       document.getElementById('occasion-1').textContent = perfume.occasion_1 || '-';
       document.getElementById('occasion-2').textContent = perfume.occasion_2 || '-';
@@ -110,14 +236,165 @@
       document.getElementById('note-4').textContent = perfume.note_4 || '-';
       document.getElementById('note-5').textContent = perfume.note_5 || '-';
 
-    document.querySelector('[data-note="1"]').textContent = perfume.note_1 || '-';
-    document.querySelector('[data-note="2"]').textContent = perfume.note_2 || '-';
-    document.querySelector('[data-note="3"]').textContent = perfume.note_3 || '-';
-    document.querySelector('[data-note="4"]').textContent = perfume.note_4 || '-';
-    document.querySelector('[data-note="5"]').textContent = perfume.note_5 || '-';
+      document.querySelector('[data-note="1"]').textContent = perfume.note_1 || '-';
+      document.querySelector('[data-note="2"]').textContent = perfume.note_2 || '-';
+      document.querySelector('[data-note="3"]').textContent = perfume.note_3 || '-';
+      document.querySelector('[data-note="4"]').textContent = perfume.note_4 || '-';
+      document.querySelector('[data-note="5"]').textContent = perfume.note_5 || '-';
 
       console.log('📦 Perfume loaded:', perfume);
     });
+
+    // script phần AI button
+    const aiTriggerBtn = document.getElementById('aiTriggerBtn');
+    const aiModal = document.getElementById('aiModal');
+    const closeBtn = document.getElementById('closeBtn');
+    const sendBtn = document.getElementById('sendBtn');
+    const aiInput = document.getElementById('aiInput');
+
+    aiTriggerBtn.onclick = () => {
+      aiModal.style.display = 'flex';
+    };
+
+    closeBtn.onclick = () => {
+      aiModal.style.display = 'none';
+      aiInput.value = '';
+    };
+
+    sendBtn.onclick = () => {
+      if (currentMode === 'voice') {
+        const text = aiInput.value.trim();
+        if (!text) return alert("Please speak something.");
+        socket.emit('ai_request', { NLP_input: text });
+
+      } else if (currentMode === 'manual') {
+        const data = {
+          AGE: document.getElementById('ageRange').value,
+          GENDER: document.getElementById('gender').value,
+          PERSONALITY: document.getElementById('personality').value,
+          PREFERRED_ACCORD: document.getElementById('accord').value,
+          USAGE_SITUATION: document.getElementById('occasion').value,
+          SILLAGE: document.getElementById('sillage').value,
+          LONGEVITY: document.getElementById('longevity').value,
+          PRICE: document.getElementById('price').value,
+        };
+        console.log("🔼 Sending form data:", data);
+        socket.emit('ai_request', { form_input: data });
+      }
+    };
+
+    socket.on('ai_response', (data) => {
+      const resultBox = document.getElementById('aiResult');
+
+      if (Object.keys(data).length === 0) {
+        resultBox.innerHTML = "<i>No entities found.</i>";
+        return;
+      }
+
+      let table = `<table class="ai-result-table">`;
+      for (let key in data) {
+        table += `
+          <tr>
+            <td class="label-cell">${key.toUpperCase()}:</td>
+            <td class="value-cell">${data[key]}</td>
+          </tr>
+        `;
+      }
+      table += `</table>`;
+
+      resultBox.innerHTML = table;
+    });
+
+    // Tab switching
+    const modeTabs = document.querySelectorAll('.mode-tab');
+    let currentMode = 'voice';  // Default is voice
+
+    const voiceMode = document.getElementById('voiceMode');
+    const manualMode = document.getElementById('manualMode');
+
+    modeTabs.forEach(tab => {
+      tab.onclick = () => {
+        // Bỏ class active của tất cả
+        modeTabs.forEach(t => t.classList.remove('active'));
+        // Thêm active cho tab đang click
+        tab.classList.add('active');
+        // Cập nhật chế độ
+        currentMode = tab.dataset.mode;
+
+        // Hiện/ẩn phần tương ứng
+        if (currentMode === 'voice') {
+          voiceMode.style.display = 'block';
+          manualMode.style.display = 'none';
+        } else {
+          voiceMode.style.display = 'none';
+          manualMode.style.display = 'block';
+        }
+      };
+    });
+
+    // Microphone logic with recording animation
+    const micBtn = document.getElementById('micBtn');
+    const recordingStatus = document.getElementById('recordingStatus');
+
+
+    let recognition;
+    let isRecording = false;
+
+    if ('webkitSpeechRecognition' in window) {
+      recognition = new webkitSpeechRecognition();
+      recognition.lang = 'en-US';
+      recognition.continuous = false;
+      recognition.interimResults = false;
+
+      recognition.onstart = () => {
+        isRecording = true;
+        recordingStatus.style.display = 'inline-block';
+        console.log("🎤 Listening...");
+      };
+
+      recognition.onresult = (event) => {
+        const transcript = event.results[0][0].transcript;
+        aiInput.value = transcript;
+      };
+
+      recognition.onerror = (event) => {
+        alert('Speech recognition error: ' + event.error);
+        isRecording = false;
+        recordingStatus.style.display = 'none';
+      };
+
+      recognition.onend = () => {
+        isRecording = false;
+        recordingStatus.style.display = 'none';
+        console.log("🛑 Stopped listening.");
+      };
+    } else {
+      micBtn.disabled = true;
+      micBtn.title = "Speech recognition not supported.";
+    }
+
+    micBtn.onclick = () => {
+      if (currentMode !== 'voice') {
+        alert("Switch to Voice tab first.");
+        return;
+      }
+
+      if (!recognition) return;
+
+      if (!isRecording) {
+        recognition.start(); // bắt đầu record
+      } else {
+        recognition.stop(); // dừng ghi âm
+      }
+    };
+
+    const ageRange = document.getElementById("ageRange");
+    const ageValue = document.getElementById("ageValue");
+
+    ageRange.oninput = () => {
+      ageValue.innerHTML = `<strong>${ageRange.value}</strong>`;
+    };
+
   </script>
 </body>
 </html>

@@ -269,3 +269,193 @@ body::before {
     .notes { position: static; width: 100%; }
     .bottle-img { margin: 40px auto 0 auto; }
 }
+
+.ai-button {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    background-color: #111;
+    color: white;
+    border: none;
+    border-radius: 50%;
+    padding: 12px;
+    font-size: 18px;
+    cursor: pointer;
+    z-index: 1001;
+    box-shadow: 0 0 10px rgba(0,0,0,0.3);
+}
+
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: none; /* mặc định ẩn */
+    justify-content: center;
+    align-items: center;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 1000;
+}
+
+.modal-content {
+    background: #fff;
+    padding: 20px;
+    border-radius: 10px;
+    width: 400px;
+    max-width: 90%;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+}
+
+.modal-content h3 {
+    margin-top: 0;
+    font-family: 'Playfair Display', serif;
+}
+
+.modal-content textarea {
+    width: 95%;
+    height: 10vh;
+    padding: 10px;
+    font-family: 'Roboto', sans-serif;
+    resize: none;
+}
+
+.modal-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+    margin-top: 10px;
+}
+
+.ai-result-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 10px;
+}
+
+.label-cell {
+    text-align: left;
+    font-weight: 700;
+    color: #444;
+    padding-right: 10px;
+    white-space: nowrap;
+    vertical-align: top;
+    font-size: smaller;
+}
+
+.value-cell {
+    text-align: left;
+    color: #222;
+    font-weight: 400;
+    font-size: smaller;
+}
+
+.ai-mode-tabs {
+    display: flex;
+    margin-bottom: 10px;
+}
+
+.mode-tab {
+flex: 1;
+padding: 8px;
+cursor: pointer;
+border: none;
+background: #eee;
+font-weight: bold;
+transition: background 0.3s;
+}
+
+.mode-tab.active {
+background: #cfd8dc;
+}
+
+.input-container {
+position: relative;
+width: 100%;
+box-sizing: border-box;
+}
+
+textarea#aiInput {
+width: 100%;
+height: 100px;
+padding-right: 40px;
+font-size: 14px;
+resize: none;
+box-sizing: border-box;
+}
+
+.voice-controls {
+display: flex;
+align-items: center;
+justify-content: space-between;
+margin-top: 8px;
+gap: 10px;
+}
+
+.mic-button {
+background: #f0f0f0;
+border: 1px solid #ccc;
+border-radius: 6px;
+padding: 6px 10px;
+cursor: pointer;
+}
+
+.mic-button i {
+font-size: 1.2em;
+}
+
+.recording-dot {
+width: 10px;
+height: 10px;
+background-color: red;
+border-radius: 50%;
+animation: pulse 1s infinite;
+}
+
+@keyframes pulse {
+0% { opacity: 1; }
+50% { opacity: 0.3; }
+100% { opacity: 1; }
+}
+
+.manual-form {
+display: flex;
+flex-direction: column;
+gap: 10px;
+margin-top: 10px;
+}
+
+.field-group {
+display: flex;
+align-items: center;
+gap: 10px;
+}
+
+.field-group label {
+width: 150px;
+font-weight: 500;
+text-align: left;
+}
+.field-group input[type="text"],
+.field-group input[type="range"],
+.field-group select {
+flex: 1;
+min-width: 0;
+padding: 6px;
+font-size: 14px;
+box-sizing: border-box;
+}
+
+.input-wrapper {
+    flex: 1;
+}
+.input-wrapper input {
+width: 100%;
+padding: 6px;
+font-size: 14px;
+box-sizing: border-box;
+}
+
+#ageValue {
+width: 30px;
+}
