@@ -59,6 +59,7 @@ def on_connect():
 def handle_ai_request(data):
     if 'form_input' in data:
         form_input = data['form_input']
+        udp_message = json.dumps(form_input)
         redis_client.set("udp_outgoing_message", udp_message)
         print("- Received Manual Form Input:")
         for key, value in form_input.items():
