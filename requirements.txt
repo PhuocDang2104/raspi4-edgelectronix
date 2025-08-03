@@ -4,3 +4,5 @@ eventlet
 celery
 redis
 psycopg2
+pandas
+spacy
