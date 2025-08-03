@@ -16,7 +16,7 @@ print("📡 Listening on UDP port", UDP_PORT)
 last_sender_addr = None
 
 while True:
-    # ✅ 1. Check nếu có dữ liệu gửi từ EFR32
+    #1. Check nếu có dữ liệu gửi từ EFR32
     sock.settimeout(0.5)  # không block vĩnh viễn
     try:
         data, addr = sock.recvfrom(1024)
@@ -33,7 +33,7 @@ while True:
     except socket.timeout:
         pass  # không có gì nhận
 
-    # ✅ 2. Check có message từ Redis để gửi ngược lại không
+    #2. Check có message từ Redis để gửi ngược lại không
     message2 = redis_client.get("udp_outgoing_message")
     if message2 and last_sender_addr:
         try:
