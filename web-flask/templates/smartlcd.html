@@ -228,8 +228,7 @@
       const perfumeID = perfume.perfume_id;
       const perfumeClass = idToClassMap[perfumeID] || '';
 
-      document.body.className = perfumeClass;
-      void document.body.offsetWidth; // force reflow
+      document.body.classList.remove(...document.body.classList);
       document.body.classList.add(perfumeClass, 'fade-transition');
 
       // Tùy chọn: gỡ class fade sau khi animation hoàn tất
@@ -258,22 +257,16 @@
       document.getElementById('sillage-bar').style.width = percent(perfume.sillage || 0);
       document.getElementById('projection-bar').style.width = percent(perfume.projection || 0);
 
-      document.getElementById('note-1').textContent = perfume.note_1 || '-';
-      document.getElementById('note-2').textContent = perfume.note_2 || '-';
-      document.getElementById('note-3').textContent = perfume.note_3 || '-';
-      document.getElementById('note-4').textContent = perfume.note_4 || '-';
-      document.getElementById('note-5').textContent = perfume.note_5 || '-';
-
       document.querySelector('[data-note="1"]').textContent = perfume.note_1 || '-';
       document.querySelector('[data-note="2"]').textContent = perfume.note_2 || '-';
       document.querySelector('[data-note="3"]').textContent = perfume.note_3 || '-';
       document.querySelector('[data-note="4"]').textContent = perfume.note_4 || '-';
       document.querySelector('[data-note="5"]').textContent = perfume.note_5 || '-';
 
-      document.querySelector('country').textContent = perfume.country || '-';
-      document.querySelector('brand').textContent = perfume.brand || '-';
+      document.getElementById('country').textContent = perfume.country || '-';
+      document.getElementById('brand').textContent = perfume.brand || '-';
 
-      document.getElementById('bottle-img').src = `/static/images/${perfume.title}.png`;
+      document.querySelector('#bottle-img img').src = `/static/images/${perfume.title}.png`;
 
       console.log('📦 Perfume loaded:', perfume);
     });
