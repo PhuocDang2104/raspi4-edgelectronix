@@ -645,7 +645,7 @@ width: 30px;
     padding: 20px;
     background: #f8f8f8;
     border-radius: 8px;
-    justify-content: space-around;
+    justify-content: space-evenly;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
