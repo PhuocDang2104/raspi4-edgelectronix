@@ -413,7 +413,7 @@ body.fade-transition {
     margin-bottom: 0;
     color: #4a2c0a;
     background: linear-gradient(90deg, #e7a04e 80%, #c97a2b 100%);
-    box-shadow: 2px 4px 10px #d6c7a7;
+    box-shadow: 2px 4px 10px #d0d0cf;
     position: relative;
     width: 100%;
 }
@@ -442,8 +442,8 @@ body.fade-transition {
 }
 @media (max-width: 1100px) {
     .container { flex-direction: row; }
-    .left-section{ width: 30%; }
-    .right-section {width: 70%; }
+    .left-section{ width: 40%; }
+    .right-section {width: 60%; }
 }
 
 .ai-button {
