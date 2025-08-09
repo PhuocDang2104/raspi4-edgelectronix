@@ -639,12 +639,13 @@ width: 30px;
 
 
 .country_brand {
-  display: flex;
-  flex-direction: row; /* xếp theo hàng ngang */
-  gap: 16px; /* khoảng cách giữa 2 mục */
-  padding: 20px;
-  background: #f8f8f8;
-  border-radius: 8px;
-  justify-content: space-between;
+    display: flex;
+    flex-direction: row; /* xếp theo hàng ngang */
+    gap: 16px; /* khoảng cách giữa 2 mục */
+    padding: 20px;
+    background: #f8f8f8;
+    border-radius: 8px;
+    justify-content: space-around;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
