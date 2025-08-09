@@ -359,6 +359,7 @@ body.fade-transition {
     display: flex;
     align-items: center;
     margin-bottom: 6px;
+    color: #888;
 }
 .stat-bar span {
     width: 14vh;
