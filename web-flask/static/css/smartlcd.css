@@ -24,6 +24,14 @@ body::before {
 /* === ALIEN - P001 === */
 body.bg-alien {
     background: linear-gradient(90deg, #f6fafd 0%, #5a4163 85%, #2e1d2e 100%);
+    --note1-bg: linear-gradient(90deg, #f6fafd, #7b5a83);
+    --note2-bg: linear-gradient(90deg, #f6fafd, #6d4d74);
+    --note3-bg: linear-gradient(90deg, #f6fafd, #5a4163);
+    --note4-bg: linear-gradient(90deg, #e8deec, #4f3859);
+    --note5-bg: linear-gradient(90deg, #f6fafd, #5a4163);
+    --note6-bg: linear-gradient(90deg, #e8deec, #4a3453);
+    --note7-bg: linear-gradient(90deg, #f6fafd, #3d2a44);
+    --note8-bg: linear-gradient(90deg, #e8deec, #2e1d2e);
 }
 body.bg-alien::before {
     background: radial-gradient(circle, #5a4163 80%,  #f6fafd 100%);
@@ -32,6 +40,14 @@ body.bg-alien::before {
 /* === INDIVIDUEL - P005 === */
 body.bg-individuel {
     background: linear-gradient(90deg, #f6fafd 0%, #c6d1dd 75%, #dde4ec 100%);
+    --note1-bg: linear-gradient(90deg, #f6fafd, #c6d1dd);
+    --note2-bg: linear-gradient(90deg, #f6fafd, #b9c4d0);
+    --note3-bg: linear-gradient(90deg, #f6fafd, #acb8c4);
+    --note4-bg: linear-gradient(90deg, #f6fafd, #9eabb7);
+    --note5-bg: linear-gradient(90deg, #f6fafd, #c6d1dd);
+    --note6-bg: linear-gradient(90deg, #f6fafd, #b9c4d0);
+    --note7-bg: linear-gradient(90deg, #f6fafd, #acb8c4);
+    --note8-bg: linear-gradient(90deg, #f6fafd, #9eabb7);
 }
 body.bg-individuel::before {
     background: radial-gradient(circle, #c6d1dd 80%, #f6fafd 100%);
@@ -40,6 +56,14 @@ body.bg-individuel::before {
 /* === BURBERRY-WOMEN - P007 === */
 body.bg-burberry-women {
     background: linear-gradient(90deg, #f6fafd 0%, #f0cb8a 80%, #eedbc1 100%);
+    --note1-bg: linear-gradient(90deg, #f6fafd, #f0cb8a);
+    --note2-bg: linear-gradient(90deg, #f6fafd, #e6bf7d);
+    --note3-bg: linear-gradient(90deg, #f6fafd, #dcb370);
+    --note4-bg: linear-gradient(90deg, #f6fafd, #d0a964);
+    --note5-bg: linear-gradient(90deg, #f6fafd, #f0cb8a);
+    --note6-bg: linear-gradient(90deg, #f6fafd, #e6bf7d);
+    --note7-bg: linear-gradient(90deg, #f6fafd, #dcb370);
+    --note8-bg: linear-gradient(90deg, #f6fafd, #d0a964);
 }
 body.bg-burberry-women::before {
     background: radial-gradient(circle, #ffd993 80%, #f6fafd 100%);
@@ -48,6 +72,14 @@ body.bg-burberry-women::before {
 /* === BVLGARI-MAN - P017 === */
 body.bg-bvlgari-man {
     background: linear-gradient(90deg, #f6fafd 0%, #c9ced1 75%, #d2d4d6 100%);
+    --note1-bg: linear-gradient(90deg, #f6fafd, #c9ced1);
+    --note2-bg: linear-gradient(90deg, #f6fafd, #bcc1c4);
+    --note3-bg: linear-gradient(90deg, #f6fafd, #b0b5b8);
+    --note4-bg: linear-gradient(90deg, #f6fafd, #a3a8ab);
+    --note5-bg: linear-gradient(90deg, #f6fafd, #c9ced1);
+    --note6-bg: linear-gradient(90deg, #f6fafd, #bcc1c4);
+    --note7-bg: linear-gradient(90deg, #f6fafd, #b0b5b8);
+    --note8-bg: linear-gradient(90deg, #f6fafd, #a3a8ab);
 }
 body.bg-bvlgari-man::before {
     background: radial-gradient(circle, #f0f5f8 80%, #f6fafd 100%);
@@ -56,6 +88,14 @@ body.bg-bvlgari-man::before {
 /* === BEE - P020 === */
 body.bg-bee {
     background: linear-gradient(90deg,  #f6fafd 0%, #e8b869 85%,#efcea8  100%);
+    --note1-bg: linear-gradient(90deg, #f6fafd, #e8b869);
+    --note2-bg: linear-gradient(90deg, #f6fafd, #ddab59);
+    --note3-bg: linear-gradient(90deg, #f6fafd, #d39f4b);
+    --note4-bg: linear-gradient(90deg, #f6fafd, #c9923d);
+    --note5-bg: linear-gradient(90deg, #f6fafd, #e8b869);
+    --note6-bg: linear-gradient(90deg, #f6fafd, #ddab59);
+    --note7-bg: linear-gradient(90deg, #f6fafd, #d39f4b);
+    --note8-bg: linear-gradient(90deg, #f6fafd, #c9923d);
 }
 body.bg-bee::before {
     background: radial-gradient(circle, #d99843 60%,  #f6fafd 100%);
@@ -64,6 +104,14 @@ body.bg-bee::before {
 /* === LACOSTE POUR HOMME - P026 === */
 body.bg-lacoste-pour-homme {
     background: linear-gradient(90deg,#f6fafd 0%, #b7bfc4 65%,  #dde1e4 100%);
+    --note1-bg: linear-gradient(90deg, #f6fafd, #b7bfc4);
+    --note2-bg: linear-gradient(90deg, #f6fafd, #aab3b8);
+    --note3-bg: linear-gradient(90deg, #f6fafd, #9da6ab);
+    --note4-bg: linear-gradient(90deg, #f6fafd, #909a9f);
+    --note5-bg: linear-gradient(90deg, #f6fafd, #b7bfc4);
+    --note6-bg: linear-gradient(90deg, #f6fafd, #aab3b8);
+    --note7-bg: linear-gradient(90deg, #f6fafd, #9da6ab);
+    --note8-bg: linear-gradient(90deg, #f6fafd, #909a9f);
 }
 body.bg-lacoste-pour-homme::before {
     background: radial-gradient(circle, #b7bfc4 80%, #f6fafd 100%);
@@ -72,6 +120,14 @@ body.bg-lacoste-pour-homme::before {
 /* === GÉRANIUM POUR MONSIEUR - P030 === */
 body.bg-geranium-pour-monsieur {
     background: linear-gradient(90deg,#f6fafd 0%, #e3bcbc 55%, #a2a2a2 100%);
+    --note1-bg: linear-gradient(90deg, #f6fafd, #e3bcbc);
+    --note2-bg: linear-gradient(90deg, #f6fafd, #d7aeae);
+    --note3-bg: linear-gradient(90deg, #f6fafd, #caa1a1);
+    --note4-bg: linear-gradient(90deg, #f6fafd, #bd9494);
+    --note5-bg: linear-gradient(90deg, #f6fafd, #e3bcbc);
+    --note6-bg: linear-gradient(90deg, #f6fafd, #d7aeae);
+    --note7-bg: linear-gradient(90deg, #f6fafd, #caa1a1);
+    --note8-bg: linear-gradient(90deg, #f6fafd, #bd9494);
 }
 body.bg-geranium-pour-monsieur::before {
     background: radial-gradient(circle,#f6fafd 50%,  #e3bcbc 100%);
@@ -80,6 +136,14 @@ body.bg-geranium-pour-monsieur::before {
 /* === FAR AWAY ROYALE - P045 === */
 body.bg-far-away-royale {
     background: linear-gradient(90deg, #f6fafd 0%, #a12c2c 75%, #52383a  100%);
+    --note1-bg: linear-gradient(90deg, #f6fafd, #a12c2c);
+    --note2-bg: linear-gradient(90deg, #f6fafd, #912828);
+    --note3-bg: linear-gradient(90deg, #f6fafd, #822424);
+    --note4-bg: linear-gradient(90deg, #f6fafd, #732020);
+    --note5-bg: linear-gradient(90deg, #f6fafd, #a12c2c);
+    --note6-bg: linear-gradient(90deg, #f6fafd, #912828);
+    --note7-bg: linear-gradient(90deg, #f6fafd, #822424);
+    --note8-bg: linear-gradient(90deg, #f6fafd, #732020);
 }
 body.bg-far-away-royale::before {
     background: radial-gradient(circle,#af4242  80%,#f6fafd  100%);
@@ -88,6 +152,14 @@ body.bg-far-away-royale::before {
 /* === GARDENIA - P047 === */
 body.bg-gardenia {
     background: linear-gradient(90deg, #edd8ff 0%, #8f6ba4 85%,#9880a6 100%);
+    --note1-bg: linear-gradient(90deg, #f6fafd, #8f6ba4);
+    --note2-bg: linear-gradient(90deg, #f6fafd, #826298);
+    --note3-bg: linear-gradient(90deg, #f6fafd, #75588b);
+    --note4-bg: linear-gradient(90deg, #f6fafd, #684f7e);
+    --note5-bg: linear-gradient(90deg, #f6fafd, #8f6ba4);
+    --note6-bg: linear-gradient(90deg, #f6fafd, #826298);
+    --note7-bg: linear-gradient(90deg, #f6fafd, #75588b);
+    --note8-bg: linear-gradient(90deg, #f6fafd, #684f7e);
 }
 body.bg-gardenia::before {
     background: radial-gradient(circle, #9880a6 80%, #f6fafd  100%);
@@ -96,10 +168,19 @@ body.bg-gardenia::before {
 /* === THE ICEBERG FRAGRANCE - P049 === */
 body.bg-the-iceberg-fragrance {
     background: linear-gradient(90deg, #f6fafd 0%, #f6fafd 55%, #f3e3c7 100%);
+    --note1-bg: linear-gradient(90deg, #f6fafd, #f3e3c7);
+    --note2-bg: linear-gradient(90deg, #f6fafd, #e9d9bd);
+    --note3-bg: linear-gradient(90deg, #f6fafd, #dfcfb3);
+    --note4-bg: linear-gradient(90deg, #f6fafd, #d5c5a9);
+    --note5-bg: linear-gradient(90deg, #f6fafd, #f3e3c7);
+    --note6-bg: linear-gradient(90deg, #f6fafd, #e9d9bd);
+    --note7-bg: linear-gradient(90deg, #f6fafd, #dfcfb3);
+    --note8-bg: linear-gradient(90deg, #f6fafd, #d5c5a9);
 }
 body.bg-the-iceberg-fragrance::before {
     background: radial-gradient(circle, #f3e3c7 80%, #f6fafd 100%);
 }
+
 /* Animation cho body background */
 body.fade-transition {
     animation: fadeInBackground 0.8s ease-in-out;
@@ -339,14 +420,14 @@ body.fade-transition {
 .note:empty {
     display: none;
 }
-.note.one { width: 90%; margin-left: 0; background: linear-gradient(90deg, #f1e9e2 10%, #b85a13 100%); }
-.note.two { width: 82%; margin-left: 6%; background: linear-gradient(90deg, #eee1d3 20%, #e29a4a 100%); }
-.note.three { width: 75%; margin-left: 12%; background: linear-gradient(90deg, #eddcce 10%, #eabf7b 100%); }
-.note.four { width: 68%; margin-left: 18%; background: linear-gradient(90deg, #f6e3c5 10%, #e7bfa7 100%); }
-.note.five { width: 61%; margin-left: 24%; background: linear-gradient(90deg, #eee7dc 10%, #e7bfa7 100%); }
-.note.six { width: 54%; margin-left: 30%; background: linear-gradient(90deg, #f6eee4 10%, #e7bfa7 100%); }
-.note.seven { width: 47%; margin-left: 36%; background: linear-gradient(90deg, #f1e0d5 10%, #f3e3c7 100%); }
-.note.eight { width: 40%; margin-left: 42%; background: linear-gradient(90deg, #f6fafd 20%, #f3e3c7 100%); }
+.note.one { width: 90%; margin-left: 0; background: var(--note1-bg); }
+.note.two { width: 82%; margin-left: 6%; background: var(--note2-bg); }
+.note.three { width: 75%; margin-left: 12%; background: var(--note3-bg); }
+.note.four { width: 68%; margin-left: 18%; background: var(--note4-bg); }
+.note.five { width: 61%; margin-left: 24%; background: var(--note5-bg); }
+.note.six { width: 54%; margin-left: 30%; background: var(--note6-bg); }
+.note.seven { width: 47%; margin-left: 36%; background: var(--note7-bg); }
+.note.eight { width: 40%; margin-left: 42%; background: var(--note8-bg); }
 .bottle-img {
     margin-top: 8vh;
     margin-left: 8vh;
