@@ -71,7 +71,7 @@ body.bg-lacoste-pour-homme::before {
 
 /* === GÉRANIUM POUR MONSIEUR - P030 === */
 body.bg-geranium-pour-monsieur {
-    background: linear-gradient(90deg,#f6fafd 0%, #e3bcbc 55%, #fdeeee 100%);
+    background: linear-gradient(90deg,#f6fafd 0%, #e3bcbc 55%, #a2a2a2 100%);
 }
 body.bg-geranium-pour-monsieur::before {
     background: radial-gradient(circle,#f6fafd 50%,  #e3bcbc 100%);
@@ -79,10 +79,10 @@ body.bg-geranium-pour-monsieur::before {
 
 /* === FAR AWAY ROYALE - P045 === */
 body.bg-far-away-royale {
-    background: linear-gradient(90deg, #f6fafd 0%, #8b5564 65%, #4e2e3a  100%);
+    background: linear-gradient(90deg, #f6fafd 0%, #a12c2c 65%, #52383a  100%);
 }
 body.bg-far-away-royale::before {
-    background: radial-gradient(circle,#f6fafd  80%,#8b5564  100%);
+    background: radial-gradient(circle,#f6fafd  80%,#a75656  100%);
 }
 
 /* === GARDENIA - P047 === */
