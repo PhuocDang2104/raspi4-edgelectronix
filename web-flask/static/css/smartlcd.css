@@ -430,7 +430,7 @@ body.fade-transition {
 .note.eight { width: 40%; margin-left: 42%; background: var(--note8-bg); }
 .bottle-img {
     margin-top: 8vh;
-    margin-left: 6vh;
+    margin-left: 4vh;
     margin-right: 0vh;
     padding: 4vh;
 }
