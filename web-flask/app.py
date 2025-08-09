@@ -1,7 +1,7 @@
 import eventlet
 eventlet.monkey_patch()
-from ai_models.ner_normalize import normalize_entity
 
+from ai_models.ner_normalize import normalize_entity
 from flask import Flask, render_template, jsonify
 from flask_socketio import SocketIO
 import socket
@@ -83,7 +83,7 @@ def handle_ai_request(data):
             try:
                 udp_message = json.dumps(results)
                 redis_client.set("udp_outgoing_message", udp_message)
-                print(f"📤 Queued message for EFR32 via Redis: {udp_message}")
+                print(f"Queued message for EFR32 via Redis: {udp_message}")
             except Exception as e:
                 print(f"❌ Failed to queue message for UDP: {e}")
 
@@ -96,7 +96,7 @@ def handle_ai_request(data):
 
 
 
-# 🧠 Main app entry
+# Main app entry
 if __name__ == '__main__':
     socketio.start_background_task(target=redis_listener)
 

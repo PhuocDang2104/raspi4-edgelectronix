@@ -21,7 +21,7 @@ while True:
     try:
         data, addr = sock.recvfrom(1024)
         message = data.decode().strip()
-        print("📨 Received from", addr, ":", message)
+        print("Received from", addr, ":", message)
 
         # Lưu địa chỉ gửi để còn gửi ngược lại
         last_sender_addr = addr
@@ -38,16 +38,16 @@ while True:
     if message2 and last_sender_addr:
         try:
             message2 = message2.decode().strip()
-            print(f"📨 Got message from Redis: {message2}")
+            print(f"Got message from Redis: {message2}")
 
             # Gửi lại cho EFR32
             sock.sendto(message2.encode(), last_sender_addr)
-            print(f"📤 Sent to {last_sender_addr}")
+            print(f"Sent to {last_sender_addr}")
 
             # Xoá key sau khi gửi
             redis_client.delete("udp_outgoing_message")
 
         except Exception as e:
-            print(f"❌ Error sending UDP: {e}")
+            print(f"Error sending UDP: {e}")
 
     time.sleep(0.2)

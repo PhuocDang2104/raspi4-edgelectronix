@@ -48,12 +48,16 @@
         </div>
 
         <div class="sillage">
-          <div class="stat-title">Fragrance Accords</div>
-          <div class="stat-bar"><span id="note-1">-</span></div>
-          <div class="stat-bar"><span id="note-2">-</span></div>
-          <div class="stat-bar"><span id="note-3">-</span></div>
-          <div class="stat-bar"><span id="note-4">-</span></div>
-          <div class="stat-bar"><span id="note-5">-</span></div>
+          <div class="country_brand">
+            <div class="country_brand1">
+              <div class="stat-title" id="country">Country</div>
+              <div class="stat-bar"><span>France</span></div>
+            </div>
+            <div class="country_brand1">
+              <div class="stat-title" id="brand">Brand</div>
+              <div class="stat-bar"><span>Chanel</span></div>
+            </div>
+          </div>
         </div>
       </div>
     </div>
@@ -66,8 +70,8 @@
             <div class="note four"><span class="note-right" data-note="4"></span></div>
             <div class="note five"><span class="note-right" data-note="5"></span></div>
         </div>
-        <div class="bottle-img">
-        <img src="../static/images/ECLAT NOIR Perfume.png" alt="ÉCLAT NOIR bottle" />
+        <div class="bottle-img" id="bottle-img">
+        <img src="../static/images/ALIEN.png" alt="perfume bottle" />
         </div>
     </div>
 </div>
@@ -199,6 +203,19 @@
 
 
   <script>
+    const idToClassMap = {
+      'P001': 'bg-alien',
+      'P005': 'bg-individuel',
+      'P007': 'bg-burberry-women',
+      'P017': 'bg-bvlgari-man',
+      'P020': 'bg-bee',
+      'P026': 'bg-lacoste-pour-homme',
+      'P030': 'bg-geranium-pour-monsieur',
+      'P045': 'bg-far-away-royale',
+      'P047': 'bg-gardenia',
+      'P049': 'bg-the-iceberg-fragrance'
+    };
+
     const socket = io();
 
     socket.on('connect', () => {
@@ -208,7 +225,18 @@
     socket.on('update_perfume_catalog', (data) => {
       if (!data || data.length === 0) return;
       const perfume = data[0];
+      const perfumeID = perfume.perfume_id;
+      const perfumeClass = idToClassMap[perfumeID] || '';
 
+      document.body.className = perfumeClass;
+      void document.body.offsetWidth; // force reflow
+      document.body.classList.add(perfumeClass, 'fade-transition');
+
+      // Tùy chọn: gỡ class fade sau khi animation hoàn tất
+      document.body.addEventListener('animationend', () => {
+        document.body.classList.remove('fade-transition');
+      }, { once: true });
+      
       document.getElementById('title').textContent = perfume.title || 'N/A';
       document.getElementById('subtitle').textContent = perfume.subtitle || 'N/A';
       document.getElementById('description').textContent = perfume.description || '';
@@ -241,6 +269,11 @@
       document.querySelector('[data-note="3"]').textContent = perfume.note_3 || '-';
       document.querySelector('[data-note="4"]').textContent = perfume.note_4 || '-';
       document.querySelector('[data-note="5"]').textContent = perfume.note_5 || '-';
+
+      document.querySelector('country').textContent = perfume.country || '-';
+      document.querySelector('brand').textContent = perfume.brand || '-';
+
+      document.getElementById('bottle-img').src = `/static/images/${perfume.title}.png`;
 
       console.log('📦 Perfume loaded:', perfume);
     });

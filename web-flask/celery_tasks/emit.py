@@ -57,7 +57,7 @@ def run_emit_loop():
                     cur.execute("""
                         SELECT perfume_id, title, subtitle, description, star, review, volume, price,
                                longevity, sillage, projection, occasion_1, occasion_2, occasion_3,
-                               note_1, note_2, note_3, note_4, note_5
+                               note_1, note_2, note_3, note_4, note_5, country, brand 
                         FROM perfumes
                         WHERE perfume_id = %s
                     """, (SELECTED_ID,))
