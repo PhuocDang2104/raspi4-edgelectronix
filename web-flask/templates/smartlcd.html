@@ -57,6 +57,10 @@
               <div class="stat-title">Brand</div>
               <div class="stat-bar" id="brand"><span>Chanel</span></div>
             </div>
+            <div class="country_brand1">
+              <div class="stat-title">Year</div>
+              <div class="stat-bar" id="year"><span>2005</span></div>
+            </div>
           </div>
         </div>
       </div>
@@ -271,6 +275,7 @@
 
       document.getElementById('country').textContent = perfume.country || '-';
       document.getElementById('brand').textContent = perfume.brand || '-';
+      document.getElementById('year').textContent = perfume.year || '-';
 
       document.querySelector('#bottle-img img').src = `/static/images/${perfume.title}.png`;
 
