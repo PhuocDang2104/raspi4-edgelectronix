@@ -50,15 +50,15 @@ body.bg-bvlgari-man {
     background: linear-gradient(90deg, #f6fafd 0%, #c9ced1 75%, #d2d4d6 100%);
 }
 body.bg-bvlgari-man::before {
-    background: radial-gradient(circle, #c9ced1 80%, #f6fafd 100%);
+    background: radial-gradient(circle, #f0f5f8 80%, #f6fafd 100%);
 }
 
 /* === BEE - P020 === */
 body.bg-bee {
-    background: linear-gradient(90deg,  #f6fafd 0%, #ffe379 85%,#fff8d0  100%);
+    background: linear-gradient(90deg,  #f6fafd 0%, #836909 85%,#71560b  100%);
 }
 body.bg-bee::before {
-    background: radial-gradient(circle, #f6fafd 80%,  #ffe379 100%);
+    background: radial-gradient(circle, #876d10 80%,  #f6fafd 100%);
 }
 
 /* === LACOSTE POUR HOMME - P026 === */
