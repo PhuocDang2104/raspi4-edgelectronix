@@ -58,12 +58,12 @@ body.bg-bee {
     background: linear-gradient(90deg,  #f6fafd 0%, #e8b869 85%,#efcea8  100%);
 }
 body.bg-bee::before {
-    background: radial-gradient(circle, #d99843 80%,  #f6fafd 100%);
+    background: radial-gradient(circle, #d99843 60%,  #f6fafd 100%);
 }
 
 /* === LACOSTE POUR HOMME - P026 === */
 body.bg-lacoste-pour-homme {
-    background: linear-gradient(90deg, #dde1e4 0%, #b7bfc4 55%, #f6fafd 100%);
+    background: linear-gradient(90deg,#f6fafd 0%, #b7bfc4 65%,  #dde1e4 100%);
 }
 body.bg-lacoste-pour-homme::before {
     background: radial-gradient(circle, #b7bfc4 80%, #f6fafd 100%);
@@ -71,10 +71,10 @@ body.bg-lacoste-pour-homme::before {
 
 /* === GÉRANIUM POUR MONSIEUR - P030 === */
 body.bg-geranium-pour-monsieur {
-    background: linear-gradient(90deg,#f6fafd 0%, #bce3ce 55%, #d3f1e1 100%);
+    background: linear-gradient(90deg,#f6fafd 0%, #e3bcbc 55%, #d3f1e1 100%);
 }
 body.bg-geranium-pour-monsieur::before {
-    background: radial-gradient(circle,#f6fafd 80%,  #bce3ce 100%);
+    background: radial-gradient(circle,#f6fafd 50%,  #e3bcbc 100%);
 }
 
 /* === FAR AWAY ROYALE - P045 === */
