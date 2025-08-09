@@ -216,6 +216,12 @@
       'P049': 'bg-the-iceberg-fragrance'
     };
 
+    function formatTitle(slug) {
+      if (!slug) return 'N/A';
+      return slug
+        .replace(/-/g, ' ')                 // đổi dấu gạch ngang thành khoảng trắng
+        .replace(/\b\w/g, c => c.toUpperCase()); // viết hoa chữ cái đầu mỗi từ
+    }
     const socket = io();
 
     socket.on('connect', () => {
@@ -236,7 +242,7 @@
         document.body.classList.remove('fade-transition');
       }, { once: true });
       
-      document.getElementById('title').textContent = perfume.title || 'N/A';
+      document.getElementById('title').textContent = formatTitle(perfume.title) || 'N/A';
       document.getElementById('subtitle').textContent = perfume.subtitle || 'N/A';
       document.getElementById('description').textContent = perfume.description || '';
 
