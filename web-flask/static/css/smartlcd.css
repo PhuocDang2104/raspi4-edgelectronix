@@ -79,10 +79,10 @@ body.bg-geranium-pour-monsieur::before {
 
 /* === FAR AWAY ROYALE - P045 === */
 body.bg-far-away-royale {
-    background: linear-gradient(90deg, #f6fafd 0%, #a12c2c 65%, #52383a  100%);
+    background: linear-gradient(90deg, #f6fafd 0%, #a12c2c 75%, #52383a  100%);
 }
 body.bg-far-away-royale::before {
-    background: radial-gradient(circle,#f6fafd  80%,#a75656  100%);
+    background: radial-gradient(circle,#af4242  80%,#f6fafd  100%);
 }
 
 /* === GARDENIA - P047 === */
