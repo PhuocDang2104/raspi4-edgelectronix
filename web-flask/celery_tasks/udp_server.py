@@ -13,15 +13,15 @@ sock.bind((UDP_IP, UDP_PORT))
 print("📡 Listening on UDP port", UDP_PORT)
 
 # Gán sẵn IPv6
-addr1_ip = "fd85:946:886f:1:985a:373:6248:3d88"
-addr2_ip = "fd85:946:886f:1:b215:9820:4136:571d"
+addr1_ip = "fdf3:907:f99e:9fa1:e09a:2d59:dd67:b31"
+addr2_ip = "fdf3:907:f99e:9fa1:4bca:b459:e447:40b1"
 
 while True:
     sock.settimeout(0.5)
     try:
         data, addr = sock.recvfrom(1024)
         message = data.decode().strip()
-        print("Received from", addr, ":", message)
+        
 
         if addr1_ip is None or addr[0] == addr1_ip:
             addr1_ip = addr[0]
