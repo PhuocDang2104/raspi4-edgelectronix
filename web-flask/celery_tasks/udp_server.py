@@ -26,12 +26,12 @@ while True:
         if addr1_ip is None or addr[0] == addr1_ip:
             addr1_ip = addr[0]
             redis_client.set('selected_perfume_id_from_udp', message)
-            print(f"✅ Set Redis key 'selected_perfume_id_from_udp': {message}")
+            print(f"* Set Redis key 'selected_perfume_id_from_udp': {message}")
 
         elif addr2_ip is None or addr[0] == addr2_ip:
             addr2_ip = addr[0]
             redis_client.set('environment_monitor', message)
-            print(f"✅ Set Redis key 'environment_monitor': {message}")
+            print(f"-- Nhiệt độ thu được trên kệ mỗi 5s là': {message}")
 
         else:
             print("⚠️ Unknown device, both slots full. Ignoring.")
