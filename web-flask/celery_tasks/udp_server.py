@@ -12,8 +12,9 @@ sock.bind((UDP_IP, UDP_PORT))
 
 print("📡 Listening on UDP port", UDP_PORT)
 
-# Lưu địa chỉ EFR32 để có thể gửi ngược lại
-last_sender_addr = None
+# Lưu địa chỉ 2 con EFR32
+addr1 = None
+addr2 = None
 
 while True:
     #1. Check nếu có dữ liệu gửi từ EFR32
@@ -22,32 +23,22 @@ while True:
         data, addr = sock.recvfrom(1024)
         message = data.decode().strip()
         print("Received from", addr, ":", message)
+        # Gán thiết bị vào slot
+        if addr1 is None or addr == addr1:
+            addr1 = addr
+            redis_client.set('selected_perfume_id_from_udp', message)
+            print(f"✅ Set Redis key 'selected_perfume_id_from_udp': {message}")
 
-        # Lưu địa chỉ gửi để còn gửi ngược lại
-        last_sender_addr = addr
+        elif addr2 is None or addr == addr2:
+            addr2 = addr
+            redis_client.set('environment_monitor', message)
+            print(f"✅ Set Redis key 'environment_monitor': {message}")
 
-        # Ghi Redis key để frontend/web đọc
-        redis_client.set('selected_perfume_id_from_udp', message)
-        print(f"✅ Set Redis key 'selected_perfume_id_from_udp': {message}")
+        else:
+            print("⚠️ Unknown device, both slots full. Ignoring.")
 
     except socket.timeout:
         pass  # không có gì nhận
 
-    #2. Check có message từ Redis để gửi ngược lại không
-    message2 = redis_client.get("udp_outgoing_message")
-    if message2 and last_sender_addr:
-        try:
-            message2 = message2.decode().strip()
-            print(f"Got message from Redis: {message2}")
-
-            # Gửi lại cho EFR32
-            sock.sendto(message2.encode(), last_sender_addr)
-            print(f"Sent to {last_sender_addr}")
-
-            # Xoá key sau khi gửi
-            redis_client.delete("udp_outgoing_message")
-
-        except Exception as e:
-            print(f"Error sending UDP: {e}")
 
     time.sleep(0.2)

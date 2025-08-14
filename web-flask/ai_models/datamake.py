@@ -32,31 +32,31 @@ accord_map = {
     "floral": ["floral", "flowery", "flower", "blooming", "blossom", "petal-like", "bouquet"],
     "white floral": ["white floral", "delicate floral", "white flower", "soft floral", "pure bloom", "creamy flower", "jasmine-like"],
     "yellow floral": ["yellow floral", "bright floral", "colorful flower", "sunny bloom", "golden flower", "cheerful floral", "sunflower"],
-    "woody": ["woody", "earthy", "wood", "tree", "bark", "cedar", "piney", "dry wood", "forest"],
-    "earthy": ["earthy", "soil-like", "groundy", "damp earth", "natural", "humus", "clay"],
+    "woody": ["woody", "oak", "wood", "tree", "bark", "cedar", "piney", "dry wood", "forest", "pine tree"],
+    "earthy": ["earthy", "soil-like", "groundy", "damp earth", "natural", "humus", "clay", "soil"],
     "mossy": ["mossy", "green moss"],
-    "citrus": ["citrus", "citrusy", "zesty", "lemony", "lime", "grapefruit", "tart", "fresh peel"],
-    "sweet": ["sweet", "sugary", "candied", "chocolate", "cocoa"],
+    "citrus": ["citrus", "citrusy", "zesty", "lemony", "lime", "grapefruit", "tart", "fresh peel", "bitter orange", "blood orange",
+    "clementine", "mandarin orange", "orange"],
+    "sweet": ["sweet", "sugary", "candied", "chocolate",  "dark chocolate", "cocoa", "whipped cream", "dessert-like", "syrupy", "salted caramel","caramel"],
     "powdery": ["powdery", "soft powder"],
     "balsamic": ["balsamic", "resinous", "syrupy"],
     "amber": ["amber", "warm", "resinous"],
     "vanilla": ["vanilla", "creamy", "sweet vanilla"],
     "fruity": ["fruity", "juicy", "fruit-like"],
     "tropical": ["tropical", "island vibe", "exotic fruit", "beachy", "pineapple", "mango", "coconut"],
-    "spicy": ["spicy", "peppery", "hot", "peppery"],
-    "warm spicy": ["warm spicy", "cozy spice", "rich spice", "cinnamon-like", "amber spice", "comforting"],
+    "spicy": ["spicy", "peppery", "hot", "peppery", "ginger", "ginger flower", "ceylon cinnamon", "saffron"],
+    "warm spicy": ["warm spicy", "cozy spice", "rich spice", "cinnamon-like", "amber spice", "comforting", "cinnamon"],
     "fresh spicy": ["fresh spicy", "zingy spice", "green spice"],
     "aromatic": ["aromatic", "herbal", "medicinal"],
     "green": ["green", "leafy", "grassy"],
     "aquatic": ["aquatic", "marine", "watery", "sea", "ocean", "fresh water"],
-    "ozonic": ["ozonic", "airy", "clean", "cool breeze", "mountain air"],
+    "ozonic": ["ozonic", "airy", "clean", "cool breeze", "mountain air", "clean breeze"],
     "musky": ["musky", "animalic", "skin-like"],
     "animalic": ["animalic", "feral", "musk-like"],
     "leather": ["leather", "suede", "tanned hide"],
-    "smoky": ["smoky", "burnt", "charcoal"],
-    "aldehydic": ["aldehydic", "soapy", "metallic"],
-    "coffee": ["coffee", "roasted", "caffeinated","espresso", "bitter-sweet", "americano"],
-    "sweet": ["sweet", "sugary", "candied", "caramel", "dessert-like", "syrupy"],
+    "smoky": ["smoky", "burnt", "charcoal", "campfire", "smoky tobacco"],
+    "aldehydic": ["aldehydic", "soapy", "metallic", "soap"],
+    "coffee": ["coffee", "roasted", "caffeinated","espresso", "bitter-sweet", "americano", "roasted coffee"],
     "lactonic": ["lactonic", "milky", "creamy"],
     "iris": ["iris", "powdery floral", "rooty floral", "buttery flower"],
     "violet": ["violet", "sweet floral", "purple flower", "powdery violet", "candy floral"],
@@ -66,10 +66,10 @@ accord_map = {
     "herbal": ["herbal", "green plant", "botanical", "plant"],
     "beeswax": ["beeswax", "waxen", "honeyed wax"],
     "honey": ["honey", "sweet nectar", "bee-sweet"],
-    "whiskey": ["whiskey", "boozy", "aged alcohol", "alcohol", "liquor"],
+    "whiskey": ["whiskey", "boozy", "aged alcohol", "alcohol", "liquor", "brandy"],
     "cannabis": ["cannabis", "weed-like", "green narcotic"],
     "cherry": ["cherry", "red fruit", "sweet cherry", "berry"],
-    "tobacco": ["tobacco", "smoked leaf", "nicotine scent", "burnt", "charcoal", "campfire"]
+    "tobacco": ["tobacco", "smoked leaf", "nicotine scent", "burnt", "charcoal", "campfire", "cigarette"]
 }
 
 # Usage & attributes mapping
@@ -80,7 +80,14 @@ usage_map = {
         "during working hours",
         "in professional settings",
         "for business-related occasions",
-        "when i go to work"
+        "when i go to work",
+        "when i am at the office",
+        "when i work",
+        "when i have work",
+        "when i am working",
+        "when i am in a meeting",
+        "when i am collaborating with my co-workers",
+        "when i need to concentrate"
     ],
     "Casual": [
         "for casual outings",
@@ -89,7 +96,10 @@ usage_map = {
         "during laid-back times",
         "when dressing down",
         "for daily",
-        "on normal days"
+        "on normal days",
+        "for everyday occasions",
+        "when i want to feel comfortable",
+        "when i am going out casually"
     ],
     "Date Night": [
         "for a romantic night out",
@@ -99,16 +109,25 @@ usage_map = {
         "for date nights",
         "when going out with someone special",
         "for dating",
-        "on a date"
+        "on a date",
+        "when i go on a date",
+        "when i have a date",
+        "when i am on a date",
+        "when i go on a date night",
+        "when i have a date night",
+        "when i am on a date night"
     ],
     "Formal": [
         "for formal events",
         "at formal gatherings",
         "during elegant occasions",
         "for black-tie events",
-        "in ceremonial settings"
+        "in ceremonial settings",
         "for formal party",
-        "when go to formal party"
+        "when attending formal events",
+        "for formal occasion",
+        "when i go to formal party",
+        "when i attend formal events"
     ],
     "Everyday": [
         "for daily wear",
@@ -124,7 +143,12 @@ usage_map = {
         "while working out",
         "during fitness sessions",
         "in exercise routines",
-        "when staying active"
+        "when staying active",
+        "when i go to the gym",
+        "when i hit the gym",
+        "when i work out",
+        "while hitting the gym",
+        "when hitting the gym"
     ],
     "Vacation": [
         "while traveling",
@@ -132,12 +156,14 @@ usage_map = {
         "during trips",
         "for getaways",
         "on holidays",
-        "when i travel"
+        "when i travel",
+        "on beach days",
     ],
     "Outdoor Activities": [
         "for outdoor activities",
         "while being active outside",
         "during nature adventures",
+        "for hiking",
         "on hikes or walks",
         "in open-air events",
         "for activities",
@@ -146,7 +172,12 @@ usage_map = {
         "when playing sports",
         "for playing basketball",
         "for playing football",
-        "for tennis"
+        "for tennis",
+        "for outdoor stuff",
+        "on picnic days",
+        "for barbecues",
+        "for outdoor gatherings",
+        "for nature exploration"
     ],
     "Party": [
         "at parties",
@@ -159,14 +190,16 @@ usage_map = {
         "for dancing events",
         "for partying",
         "for clubbing",
-        "when i go to",
+        "when i go to party",
+        "for club nights"
     ],
     "Relaxing at Home": [
         "when relaxing at home",
         "during downtime",
         "on lazy days",
         "in cozy moments",
-        "while staying in"
+        "while staying in",
+        "in cozy nights"
     ]
 }
 
@@ -289,7 +322,9 @@ longevity_phrases = {
             "lasts extremely long",
             "lingers for hours",
             "stays very long",
-            "persists throughout the day"
+            "persists throughout the day",
+            "sticks around for hours",
+            "sticks around for a long time"
         ]
     }
 }
