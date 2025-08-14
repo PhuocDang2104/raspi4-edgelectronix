@@ -12,25 +12,24 @@ sock.bind((UDP_IP, UDP_PORT))
 
 print("📡 Listening on UDP port", UDP_PORT)
 
-# Lưu địa chỉ 2 con EFR32
-addr1 = None
-addr2 = None
+# Gán sẵn IPv6
+addr1_ip = "fd85:946:886f:1:985a:373:6248:3d88"
+addr2_ip = "fd85:946:886f:1:b215:9820:4136:571d"
 
 while True:
-    #1. Check nếu có dữ liệu gửi từ EFR32
-    sock.settimeout(0.5)  # không block vĩnh viễn
+    sock.settimeout(0.5)
     try:
         data, addr = sock.recvfrom(1024)
         message = data.decode().strip()
         print("Received from", addr, ":", message)
-        # Gán thiết bị vào slot
-        if addr1 is None or addr == addr1:
-            addr1 = addr
+
+        if addr1_ip is None or addr[0] == addr1_ip:
+            addr1_ip = addr[0]
             redis_client.set('selected_perfume_id_from_udp', message)
             print(f"✅ Set Redis key 'selected_perfume_id_from_udp': {message}")
 
-        elif addr2 is None or addr == addr2:
-            addr2 = addr
+        elif addr2_ip is None or addr[0] == addr2_ip:
+            addr2_ip = addr[0]
             redis_client.set('environment_monitor', message)
             print(f"✅ Set Redis key 'environment_monitor': {message}")
 
@@ -38,7 +37,6 @@ while True:
             print("⚠️ Unknown device, both slots full. Ignoring.")
 
     except socket.timeout:
-        pass  # không có gì nhận
-
+        pass
 
     time.sleep(0.2)
