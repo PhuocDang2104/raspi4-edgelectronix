@@ -6,8 +6,8 @@ ser = serial.Serial('/dev/serial0', baudrate=115200, timeout=1)
 
 while True:
     # Gửi chuỗi
-    ser.write(b'Hello from Pi\n')
-    print("Đã gửi: Hello from Pi")
+    ser.write(b'PING')
+    print("Đã gửi: PING")
 
     # Thử đọc dữ liệu
     data = ser.readline().decode('utf-8').strip()
