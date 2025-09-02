@@ -6,3 +6,5 @@ redis
 psycopg2
 pandas
 spacy
+serial
+paho-mqtt

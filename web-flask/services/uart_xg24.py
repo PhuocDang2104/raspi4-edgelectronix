@@ -2,7 +2,7 @@ import serial
 import time
 
 # Mở UART
-ser = serial.Serial('/dev/serial0', baudrate=9600, timeout=1)
+ser = serial.Serial('/dev/serial0', baudrate=115200, timeout=1)
 
 while True:
     # Gửi chuỗi
