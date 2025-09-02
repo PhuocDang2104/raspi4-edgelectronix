@@ -2,38 +2,48 @@ import redis
 import socket
 import time
 
-# Kết nối Redis
-redis_client = redis.Redis(host='localhost', port=6379, db=0)
+redis_client = redis.Redis(host='localhost', port=6379, db=0, decode_responses=True)
 
-# UDP socket IPv6
-UDP_IP = "::"   # Lắng nghe tất cả IPv6
+def ensure_hash_key(key: str):
+    """Đảm bảo key là hash. Nếu key tồn tại nhưng khác kiểu → rename làm backup."""
+    t = redis_client.type(key)  # 'none' | 'string' | 'hash' | ...
+    if t != 'hash' and t != 'none':
+        backup = f"{key}:backup:{int(time.time())}"
+        try:
+            redis_client.rename(key, backup)
+            print(f"ℹ️ Redis key '{key}' không phải hash (kiểu: {t}). Đã đổi tên thành '{backup}'.")
+        except redis.exceptions.ResponseError:
+            # nếu không rename được thì xoá
+            redis_client.delete(key)
+            print(f"ℹ️ Không rename được '{key}'. Đã xoá để tạo lại dưới dạng hash.")
+
+# Đảm bảo loại key ngay từ đầu
+ensure_hash_key('environment_monitor')
+
+UDP_IP = "::"
 UDP_PORT = 12345
 sock = socket.socket(socket.AF_INET6, socket.SOCK_DGRAM)
 sock.bind((UDP_IP, UDP_PORT))
+sock.settimeout(0.5)
 
 print("📡 Listening on UDP port", UDP_PORT)
 
-# Địa chỉ IPv6 cố định cho 2 device
-addr1_ip = "fdf3:907:f99e:9fa1:e09a:2d59:dd67:b31"    # Perfume selector
-addr2_ip = "fdf3:907:f99e:9fa1:17d8:992d:fecc:6346"   # Env + drop sensor
+# IPv6 cố định của 2 thiết bị
+addr1_ip = "fdf3:907:f99e:9fa1:e09a:2d59:dd67:b31"
+addr2_ip = "fdf3:907:f99e:9fa1:17d8:992d:fecc:6346"
 
 while True:
-    sock.settimeout(0.5)
     try:
         data, addr = sock.recvfrom(1024)
-        message = data.decode().strip()
+        message = data.decode(errors="ignore").strip()
         sender_ip = addr[0]
 
-        # ----------------
-        # Device 1 (Perfume)
-        # ----------------
+        # Thiết bị 1 (perfume selector)
         if sender_ip == addr1_ip:
             redis_client.set('selected_perfume_id_from_udp', message)
-            print(f"* [Perfume] Set Redis key 'selected_perfume_id_from_udp': {message}")
+            print(f"* [Perfume] Set 'selected_perfume_id_from_udp': {message}")
 
-        # ----------------
-        # Device 2 (Env + Drop)
-        # ----------------
+        # Thiết bị 2 (Env + Drop)
         elif sender_ip == addr2_ip:
             if message.lower() == "drop":
                 redis_client.set('drop_detect_event', "1")
@@ -41,28 +51,40 @@ while True:
 
             elif message.startswith("Temp"):
                 try:
-                    # Format: "Temp=28.5C,Hum=65%"
+                    # Format: "Temp=26.02C,Hum=57.4%"
                     parts = message.split(",")
                     temp_str = parts[0].replace("Temp=", "").replace("C", "")
-                    hum_str = parts[1].replace("Hum=", "").replace("%", "")
+                    hum_str  = parts[1].replace("Hum=", "").replace("%", "")
 
                     temperature = float(temp_str)
-                    humidity = float(hum_str)
+                    humidity    = float(hum_str)
 
-                    # Lưu vào Redis dạng hash
-                    redis_client.hset('environment_monitor', mapping={
-                        'temperature': temperature,
-                        'humidity': humidity
-                    })
+                    try:
+                        redis_client.hset('environment_monitor', mapping={
+                            'temperature': temperature,
+                            'humidity': humidity
+                        })
+                    except redis.exceptions.ResponseError as e:
+                        # Nếu key đang sai kiểu → sửa lại & thử lần 2
+                        if "WRONGTYPE" in str(e).upper():
+                            ensure_hash_key('environment_monitor')
+                            redis_client.hset('environment_monitor', mapping={
+                                'temperature': temperature,
+                                'humidity': humidity
+                            })
+                        else:
+                            raise
+
                     print(f"-- [Env] Nhiệt độ: {temperature}°C | Độ ẩm: {humidity}%")
 
                 except Exception as e:
-                    print(f"Lỗi parse message '{message}': {e}")
+                    print(f"⚠️ Lỗi parse message '{message}': {e}")
 
             else:
                 print(f"⚠️ [Device2] Unknown message format: {message}")
 
         else:
+            # Không khớp 2 IP đã cấu hình
             print(f"⚠️ Unknown device {sender_ip}, ignoring.")
 
     except socket.timeout:
