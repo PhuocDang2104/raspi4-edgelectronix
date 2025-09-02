@@ -1,17 +1,10 @@
-import serial
-import time
+import serial, time
 
-# Mở UART
-ser = serial.Serial('/dev/serial0', baudrate=115200, timeout=1)
+ser = serial.Serial("/dev/serial0", baudrate=115200, timeout=1)
 
 while True:
-    # Gửi chuỗi
-    ser.write(b'PING')
-    print("Đã gửi: PING")
-
-    # Thử đọc dữ liệu
-    data = ser.readline().decode('utf-8').strip()
+    ser.write(b"ping\n")
+    time.sleep(0.5)
+    data = ser.readline()
     if data:
-        print("Nhận:", data)
-
-    time.sleep(1)
+        print("RX:", data.decode().strip())
