@@ -14,7 +14,7 @@ print("📡 Listening on UDP port", UDP_PORT)
 
 # Gán sẵn IPv6
 addr1_ip = "fdf3:907:f99e:9fa1:e09a:2d59:dd67:b31"
-addr2_ip = "fdf3:907:f99e:9fa1:4bca:b459:e447:40b1"
+addr2_ip = "fdf3:907:f99e:9fa1:17d8:992d:fecc:6346"
 
 while True:
     sock.settimeout(0.5)
