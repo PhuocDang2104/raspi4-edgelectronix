@@ -31,7 +31,7 @@ while True:
 
         elif addr2_ip is None or addr[0] == addr2_ip:
             addr2_ip = addr[0]
-            if message.upper().startswith("TEMP:"):
+            if message.upper().startswith("Temp:"):
                 try:
                     parts = message.split(",")
                     temp_str = parts[0].replace("Temp=", "").replace("C", "")
