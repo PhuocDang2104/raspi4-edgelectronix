@@ -895,87 +895,179 @@ document.addEventListener('DOMContentLoaded', () => {
 
 
 
-  /* -------------------------
+/* -------------------------
    AI Results received from UART
    ------------------------- */
-   // --- 1) cache catalog khi update_perfume_catalog về client ---
-window.latestPerfumeCatalog = []; // global cache
+// global cache
+window.latestPerfumeCatalog = []; // global cache for xg24 results
 
-socket.on('update_perfume_xg24_result', (data) => {
-  if (!data || data.length === 0) return;
-  window.latestPerfumeCatalog = data; // cache toàn bộ catalog cho lookup nhanh
-  // --- giữ nguyên chức năng hiện tại (nếu bạn muốn vẫn xử lý first item) ---
-  const perfume = data[0];
-  // ... (giữ các cập nhật UI hiện có)
-});
-
-// --- 2) helper để tìm perfume bằng id (P001) ---
-function findPerfumeById(id) {
-  if (!window.latestPerfumeCatalog || window.latestPerfumeCatalog.length === 0) return null;
-  return window.latestPerfumeCatalog.find(p => (p.perfume_id || p.id || p.ID || p.perfumeId) === id) || null;
+// Helper to ensure value is array
+function asArray(maybeArray) {
+  if (!maybeArray) return [];
+  return Array.isArray(maybeArray) ? maybeArray : [maybeArray];
 }
 
-// --- 3) percent helper (giống bạn dùng trước) ---
+// 1) Receive XG24 result (perfumes_6col) -> cache + show immediately
+socket.on('update_perfume_xg24_result', (data) => {
+  console.log("📡 Received update_perfume_xg24_result:", data);
+  if (!data) {
+    console.warn("⚠️ update_perfume_xg24_result is empty or null");
+    return;
+  }
+
+  // normalize to array of objects
+  const arr = asArray(data);
+  if (arr.length === 0) {
+    console.warn("⚠️ update_perfume_xg24_result array empty");
+    return;
+  }
+
+  // cache for lookup
+  window.latestPerfumeCatalog = arr;
+
+  // show first item immediately
+  const first = arr[0];
+  if (!first) return;
+  // normalize key names if needed
+  if (!first.perfume_id && (first.id || first.ID)) first.perfume_id = first.id || first.ID;
+
+  try {
+    showPerfumeResult(first);
+    console.log("✅ Shown perfumeResult for", first.perfume_id || first.id);
+  } catch (err) {
+    console.error("❌ Error showing perfumeResult from update_perfume_xg24_result:", err);
+  }
+});
+
+// 2) helper để tìm perfume bằng id (P001)
+function findPerfumeById(id) {
+  if (!id) return null;
+  if (!window.latestPerfumeCatalog || window.latestPerfumeCatalog.length === 0) return null;
+  return window.latestPerfumeCatalog.find(p => {
+    const pid = (p.perfume_id || p.id || p.ID || p.perfumeId || '').toString();
+    return pid === id.toString();
+  }) || null;
+}
+
+// 3) percent helper (giống bạn dùng trước)
 const maxStat = 5;
 const percent = (val) => `${(val / maxStat) * 100}%`;
 
-// --- 4) show/hide & populate function ---
+// 4) show/hide & populate function
 function showPerfumeResult(perfume) {
   const panel = document.getElementById('perfumeResult');
-  if (!panel) return;
-  // populate
-  document.getElementById('pr-id').textContent = perfume.perfume_id || perfume.ID || perfume.id || 'N/A';
-  document.getElementById('pr-title').textContent = perfume.title || formatTitle(perfume.title) || 'Unknown';
-  document.getElementById('pr-subtitle').textContent = perfume.subtitle || perfume.description || '-';
+  if (!panel) {
+    console.warn("perfumeResult panel not found in DOM");
+    return;
+  }
 
-  // images: prefer using id-safe filename; fallback to title
-  const imgName = perfume.image_filename || (perfume.perfume_id + '.png') || `${(perfume.title||'').replace(/\s+/g,'_')}.png`;
-  document.getElementById('pr-bottle-img').src = `/static/images/${imgName}`;
-  document.getElementById('pr-extra-img').src = perfume.extra_image || `/static/images/${imgName}`;
+  // populate safe access
+  const pid = perfume.perfume_id || perfume.ID || perfume.id || 'N/A';
+  const title = perfume.title || perfume.perfume_name || perfume.name || '';
+  const subtitle = perfume.subtitle || perfume.description || '-';
 
-  // stats (ensure numeric)
-  document.getElementById('pr-longevity').style.width = percent(Number(perfume.longevity) || 0);
-  document.getElementById('pr-sillage').style.width = percent(Number(perfume.sillage) || 0);
-  document.getElementById('pr-projection').style.width = percent(Number(perfume.projection) || 0);
+  document.getElementById('pr-id').textContent = pid;
+  document.getElementById('pr-title').textContent = formatTitle(title) || title || 'Unknown';
+  document.getElementById('pr-subtitle').textContent = subtitle;
 
-  // show panel
+  // build image filename (safe)
+  let imgName = '';
+  try {
+    if (perfume.image_filename) imgName = perfume.image_filename;
+    else if (pid && typeof pid === 'string') imgName = `${pid}.png`;
+    else if (title) imgName = `${title.replace(/\s+/g,'_')}.png`;
+  } catch (e) {
+    imgName = 'placeholder.png';
+  }
+
+  // set images (no error if missing)
+  const bottleImg = document.getElementById('pr-bottle-img');
+  const extraImg = document.getElementById('pr-extra-img');
+  if (bottleImg) bottleImg.src = `/static/images/${imgName}`;
+  if (extraImg) extraImg.src = perfume.extra_image || `/static/images/${imgName}`;
+
+  // stats (coerce numeric)
+  const lon = Number(perfume.longevity || 0);
+  const sil = Number(perfume.sillage || 0);
+  const proj = Number(perfume.projection || 0);
+
+  const lonEl = document.getElementById('pr-longevity');
+  const silEl = document.getElementById('pr-sillage');
+  const projEl = document.getElementById('pr-projection');
+  if (lonEl) lonEl.style.width = percent(lon);
+  if (silEl) silEl.style.width = percent(sil);
+  if (projEl) projEl.style.width = percent(proj);
+
+  // finally show panel with simple visible style
   panel.style.display = 'flex';
-  // optional: auto-hide after X seconds
+
+  // optional: clear previous timer and auto-hide after 12s
   if (window._perfumeResultAutoHideTimer) clearTimeout(window._perfumeResultAutoHideTimer);
   window._perfumeResultAutoHideTimer = setTimeout(() => {
     panel.style.display = 'none';
-  }, 12000); // 12s, thay đổi nếu cần
+  }, 12000);
 }
 
-// close button
-document.getElementById('closePerfumeResult').addEventListener('click', () => {
-  const panel = document.getElementById('perfumeResult');
-  panel.style.display = 'none';
-  if (window._perfumeResultAutoHideTimer) clearTimeout(window._perfumeResultAutoHideTimer);
-});
+// close button (safe attach)
+const closeBtnPR = document.getElementById('closePerfumeResult');
+if (closeBtnPR) {
+  closeBtnPR.addEventListener('click', () => {
+    const panel = document.getElementById('perfumeResult');
+    if (panel) panel.style.display = 'none';
+    if (window._perfumeResultAutoHideTimer) clearTimeout(window._perfumeResultAutoHideTimer);
+  });
+}
 
-// --- 5) Lắng nghe event từ server: khi server emit id từ Redis/serial ---
+// 5) Lắng nghe event từ server: khi server emit id từ Redis/serial
 socket.on('uart_model_result', (payload) => {
-  // payload có thể là string id hoặc object { id: 'P001' }
-  const id = (typeof payload === 'string') ? payload : (payload.id || payload.uart || payload.value);
-  if (!id) return console.warn('uart_model_result empty payload', payload);
+  console.log("🔔 Received uart_model_result (raw):", payload);
 
-  console.log('🔔 Received uart_model_result:', id);
-  // try find in cached catalog
+  // payload có thể là string id hoặc object { id: 'P001' }
+  let id;
+  if (typeof payload === 'string') id = payload;
+  else if (payload && (payload.id || payload.uart || payload.value)) id = payload.id || payload.uart || payload.value;
+  else if (payload && payload.update_perfume_xg24_result) {
+    // defensive: if server accidentally sends array inside payload
+    const arr = asArray(payload.update_perfume_xg24_result);
+    if (arr.length) {
+      window.latestPerfumeCatalog = arr;
+      showPerfumeResult(arr[0]);
+      return;
+    }
+  }
+
+  if (!id) {
+    console.warn('uart_model_result empty payload', payload);
+    return;
+  }
+
+  id = id.toString().trim();
+  console.log("Looking up perfume id in cache:", id);
   const p = findPerfumeById(id);
+  console.log("findPerfumeById ->", p);
+
   if (p) {
     showPerfumeResult(p);
-  } else {
-    // nếu không có catalog, yêu cầu server trả dữ liệu chi tiết cho id này
-    socket.emit('get_perfume_by_id', { id });
-    // sẽ chờ server emit 'perfume_by_id' dưới đây
+    return;
   }
+
+  // cache miss -> request server for details
+  console.log("Cache miss for", id, "-> requesting server get_perfume_by_id");
+  socket.emit('get_perfume_by_id', { id });
 });
 
 // server trả chi tiết cho get_perfume_by_id
 socket.on('perfume_by_id', (perfume) => {
+  console.log("Received perfume_by_id from server:", perfume);
   if (!perfume) return;
-  showPerfumeResult(perfume);
+  // in case server returns array or object
+  const item = Array.isArray(perfume) ? perfume[0] : perfume;
+  if (!item) return;
+  // normalize key
+  if (!item.perfume_id && (item.id || item.ID)) item.perfume_id = item.id || item.ID;
+  // cache it (put front)
+  window.latestPerfumeCatalog = [item].concat(window.latestPerfumeCatalog || []);
+  showPerfumeResult(item);
 });
 
 });
