@@ -1027,9 +1027,15 @@ function showPerfumeResult(perfume) {
 function hidePerfumeResult() {
   const panel = document.getElementById('perfumeResult');
   if (!panel) return;
-  if (window._perfumeResultAutoHideTimer) clearTimeout(window._perfumeResultAutoHideTimer);
+  // animate out
   panel.classList.remove('entered', 'show');
+  // after transition, hide
   setTimeout(() => { panel.style.display = 'none'; }, 260);
+  // clear any leftover timer variable
+  if (window._perfumeResultAutoHideTimer) {
+    clearTimeout(window._perfumeResultAutoHideTimer);
+    window._perfumeResultAutoHideTimer = null;
+  }
 }
 
 // attach close button (if not attached already)
