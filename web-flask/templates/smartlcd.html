@@ -511,19 +511,39 @@
         <div class="pr-right">
           <div class="pr-stats">
             <div class="stat-title">Fragrance Performance</div>
-            <div class="stat-row"><label>Longevity</label>
+            <div class="stat-row">
+              <label>Longevity</label>
               <div class="bar"><div id="pr-longevity" class="bar-fill" style="width:0%"></div></div>
             </div>
-            <div class="stat-row"><label>Sillage</label>
+            <div class="stat-row">
+              <label>Sillage</label>
               <div class="bar"><div id="pr-sillage" class="bar-fill" style="width:0%"></div></div>
             </div>
-            <div class="stat-row"><label>Projection</label>
+            <div class="stat-row">
+              <label>Projection</label>
               <div class="bar"><div id="pr-projection" class="bar-fill" style="width:0%"></div></div>
             </div>
           </div>
 
+          <!-- extra image  -->
           <div class="pr-extra-image">
             <img id="pr-extra-img" src="/static/images/placeholder2.png" alt="extra" />
+          </div>
+
+          <!-- new block for top 2 & 3 -->
+          <div class="pr-top2-3">
+            <div class="top2-3-title">You can also try:</div>
+            <div class="pr-sub-images">
+              <figure class="sub-figure">
+                <img id="pr-sub-img2" src="/static/images/placeholder2.png" alt="suggestion 1" title=""/>
+                <figcaption id="pr-sub-title2" class="sub-caption">Perfume 2</figcaption>
+              </figure>
+
+              <figure class="sub-figure">
+                <img id="pr-sub-img3" src="/static/images/placeholder3.png" alt="suggestion 2" title=""/>
+                <figcaption id="pr-sub-title3" class="sub-caption">Perfume 3</figcaption>
+              </figure>
+            </div>
           </div>
         </div>
       </div>
@@ -939,6 +959,94 @@ socket.on('update_perfume_xg24_result', (data) => {
   }
 });
 
+/* ---------- ADD: handle top-2 / top-3 suggestions ---------- */
+
+// helper để build tên ảnh cho sub-slot (dùng special map hoặc fallback theo id/title)
+function buildSubImageName(perfumeId, title) {
+  const specialImageMap = {
+    "P001": "alien.png",
+    "P005": "individuel.png",
+    "P007": "burberry-women.png",
+    "P017": "bvlgari-man.png",
+    "P020": "bee.png",
+    "P026": "lacoste-pour-homme.png",
+    "P030": "geranium-pour-monsieur.png",
+    "P045": "far-away-royale.png",
+    "P047": "gardenia.png",
+    "P049": "the-iceberg-fragrance.png"
+  };
+  if (perfumeId && specialImageMap[perfumeId]) return specialImageMap[perfumeId];
+  if (perfumeId) return `${perfumeId}.png`;
+  if (title) return `${title.replace(/\s+/g, '_').toLowerCase()}.png`;
+  return 'placeholder2.png';
+}
+
+// nhận suggestions từ server -> hiển thị top2 / top3
+socket.on('update_perfume_suggestions', (suggestions) => {
+  console.log("📡 Received update_perfume_suggestions:", suggestions);
+  const arr = Array.isArray(suggestions) ? suggestions : (suggestions ? [suggestions] : []);
+  const img2 = document.getElementById('pr-sub-img2');
+  const title2 = document.getElementById('pr-sub-title2');
+  const img3 = document.getElementById('pr-sub-img3');
+  const title3 = document.getElementById('pr-sub-title3');
+  const container = document.querySelector('.pr-top2-3');
+
+  // nếu không có gợi ý, ẩn block / đặt placeholder
+  if (!arr || arr.length === 0) {
+    if (container) container.style.display = 'none';
+    if (img2) { img2.src = '/static/images/placeholder2.png'; img2.removeAttribute('data-pid'); }
+    if (title2) title2.textContent = '—';
+    if (img3) { img3.src = '/static/images/placeholder3.png'; img3.removeAttribute('data-pid'); }
+    if (title3) title3.textContent = '—';
+    return;
+  }
+
+  if (container) container.style.display = '';
+
+  function applySuggestionToSlot(slotIndex, obj) {
+    const imgEl = slotIndex === 2 ? img2 : img3;
+    const titleEl = slotIndex === 2 ? title2 : title3;
+    if (!obj) {
+      if (imgEl) imgEl.src = `/static/images/placeholder${slotIndex === 2 ? '2' : '3'}.png`;
+      if (titleEl) titleEl.textContent = '-';
+      if (imgEl) imgEl.removeAttribute('data-pid');
+      if (titleEl) titleEl.removeAttribute('data-pid');
+      return;
+    }
+    const pid = obj.perfume_id || obj.id || obj.ID || '';
+    const t = obj.title || obj.perfume_name || '';
+    const filename = obj.image_filename || buildSubImageName(pid, t);
+    if (imgEl) {
+      imgEl.src = `/static/images/${filename}`;
+      imgEl.dataset.pid = pid || '';
+      imgEl.style.cursor = 'pointer';
+    }
+    if (titleEl) {
+      titleEl.textContent = (t && typeof t === 'string') ? formatTitle(t) : (pid || 'Unknown');
+      titleEl.dataset.pid = pid || '';
+      titleEl.style.cursor = 'pointer';
+    }
+  }
+
+  applySuggestionToSlot(2, arr[0]);
+  applySuggestionToSlot(3, arr[1] || null);
+
+  const tryShowOrRequest = (pid) => {
+    if (!pid) return;
+    const p = findPerfumeById(pid);
+    if (p) {
+      showPerfumeResult(p);
+    } else {
+      socket.emit('get_perfume_by_id', { id: pid });
+    }
+  };
+
+  if (img2) img2.onclick = (e) => tryShowOrRequest(e.currentTarget.dataset.pid);
+  if (title2) title2.onclick = (e) => tryShowOrRequest(e.currentTarget.dataset.pid);
+  if (img3) img3.onclick = (e) => tryShowOrRequest(e.currentTarget.dataset.pid);
+  if (title3) title3.onclick = (e) => tryShowOrRequest(e.currentTarget.dataset.pid);
+});
+
 // 2) helper để tìm perfume bằng id (P001)
 function findPerfumeById(id) {
   if (!id) return null;
@@ -1003,6 +1111,7 @@ function showPerfumeResult(perfume) {
 } catch (e) {
   imgName = 'placeholder.png';
 }
+
 
   const bottleImg = document.getElementById('pr-bottle-img');
   const extraImg = document.getElementById('pr-extra-img');

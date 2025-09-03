@@ -137,23 +137,56 @@ def read_from_uart():
                     key = "RESULT,"
                     idx = rx_data.upper().find(key)
                     if idx != -1:
-                        # lấy phần sau "RESULT,"
+                        # phần sau RESULT,
                         tail = rx_data[idx + len(key):].lstrip()
-                        # tách tới dấu phẩy tiếp theo hoặc tới cuối
-                        parts = tail.split(",", 1)
-                        num_str = parts[0].strip()
-                        # lọc ký tự hợp lệ (số, dấu + - .)
-                        filtered = ''.join(ch for ch in num_str if ch.isdigit() or ch in '+-.')
-                        try:
-                            num = int(float(filtered))
-                            formatted = f"P{num:03d}"
+                        # tách theo dấu phẩy, bỏ rỗng
+                        tokens = [t.strip() for t in tail.split(",") if t.strip() != ""]
+
+                        ids = []
+                        # các token ở vị trí 0,2,4,... là id theo format của bạn
+                        for i in range(0, len(tokens), 2):
+                            num_token = tokens[i]
+                            m = re.search(r'[-+]?\d+', num_token)
+                            if m:
+                                try:
+                                    num = int(m.group())
+                                    ids.append(f"P{num:03d}")
+                                except Exception as e:
+                                    print(f"[Warn] Không thể convert '{m.group()}' -> int:", e)
+                            else:
+                                print(f"[Warn] Không tìm thấy số trong token id: '{num_token}'")
+
+                        if len(ids) == 0:
+                            print("[Info] Không tìm thấy id hợp lệ sau 'RESULT,'")
+                        else:
+                            # 1) giữ tương thích: uart_model_result -> top1 (string)
+                            top1 = ids[0]
                             try:
-                                redis_client.set("uart_model_result", formatted)
-                                print(f"[Parsed] uart_model_result -> {formatted}")
+                                redis_client.set("uart_model_result", top1)
                             except Exception as e:
-                                print("Lỗi khi lưu Redis:", e)
-                        except Exception as e:
-                            print("Không thể chuyển số thành int từ:", num_str, "->", e)
+                                print("Lỗi khi lưu top1 vào Redis:", e)
+
+                            # 2) lưu top2 / top3 vào key khác (hoặc xóa nếu không có)
+                            try:
+                                if len(ids) > 1:
+                                    redis_client.set("uart_model_result_2", ids[1])
+                                else:
+                                    redis_client.delete("uart_model_result_2")
+
+                                if len(ids) > 2:
+                                    redis_client.set("uart_model_result_3", ids[2])
+                                else:
+                                    redis_client.delete("uart_model_result_3")
+                            except Exception as e:
+                                print("Lỗi khi lưu top2/top3 vào Redis:", e)
+
+                            # 3) optional: lưu toàn bộ mảng dưới dạng JSON (tiện cho frontend nếu muốn)
+                            try:
+                                redis_client.set("uart_model_result_all", json.dumps(ids))
+                            except Exception as e:
+                                print("Lỗi khi lưu result_all vào Redis:", e)
+
+                            print(f"[Parsed] top1 -> {top1} ; top2/3 -> {ids[1:3] if len(ids)>1 else []}")
                     else:
                         print("[Info] Không tìm thấy 'RESULT,<num>' trong dòng nhận được.")
             except Exception:

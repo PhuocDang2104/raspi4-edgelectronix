@@ -944,6 +944,20 @@ input[type="checkbox"]:focus {
   filter: blur(4px);
   pointer-events: none; /* không cho click vào phía sau */
 }
+
+.pr-top2-3 { margin-top: 16px; }
+.top2-3-title { font-weight: 700; margin-bottom: 8px; font-size: 0.95rem; }
+
+.pr-sub-images { display:flex; gap:12px; align-items:flex-start; }
+.sub-figure { display:flex; flex-direction:column; align-items:center; width:82px; }
+.sub-figure img { width:82px; height:82px; object-fit:cover; border-radius:6px; cursor:pointer; transition: transform .16s ease; }
+.sub-figure img:hover { transform: scale(1.05); }
+.sub-caption { margin-top:6px; font-size:0.75rem; text-align:center; color:#444; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; max-width:82px; }
+
+.pr-sub-images img:hover {
+  transform: scale(1.05);
+}
+
 /* Mobile tweaks */
 @media (max-width: 560px) {
   .perfume-result-panel { padding:14px; width: 96%; max-width: 560px; gap:10px; }

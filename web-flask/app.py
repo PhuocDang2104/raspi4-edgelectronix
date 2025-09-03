@@ -40,6 +40,12 @@ def redis_listener():
                     socketio.emit('update_perfume_xg24_result', payload['update_perfume_xg24_result'])
                     print(f"📦 Forwarded XG24 result → socketio: {payload['update_perfume_xg24_result']}")
 
+                # Gửi brief suggestions (top2/top3) — mới thêm
+                if 'update_perfume_suggestions' in payload:
+                    socketio.emit('update_perfume_suggestions', payload['update_perfume_suggestions'])
+                    print(f"➡ Emitted socketio: update_perfume_suggestions ({payload['update_perfume_suggestions']})")
+
+
 
             except Exception as e:
                 print(f"❌ Redis listener error: {e}")

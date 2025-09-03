@@ -45,6 +45,9 @@ def run_emit_loop():
     last_sent_uart_id = None
     last_sent_uart_data = None
 
+    # For suggestions (top2/top3 brief titles)
+    last_sent_suggestions = None  # store list of dicts for comparison
+
     while True:
         try:
             # ---------------------------
@@ -88,6 +91,8 @@ def run_emit_loop():
             # 3) UART-driven path: check uart_model_result key and lookup perfumes_6col
             # ---------------------------
             uart_val = redis_client.get('uart_model_result')
+
+            
             if uart_val:
                 try:
                     uart_id = uart_val.decode().strip()
@@ -119,6 +124,64 @@ def run_emit_loop():
                     else:
                         # no change -> do nothing
                         pass
+                        
+                        # ---------------------------
+                        # 4) Fetch top2 & top3 brief titles and publish separately
+                        # ---------------------------
+                        try:
+                            # read top2 / top3 from redis keys set by uart reader
+                            raw2 = redis_client.get('uart_model_result_2')
+                            raw3 = redis_client.get('uart_model_result_3')
+                            id2 = None
+                            id3 = None
+                            if raw2:
+                                try:
+                                    id2 = raw2.decode().strip()
+                                except:
+                                    id2 = raw2 if isinstance(raw2, str) else None
+                            if raw3:
+                                try:
+                                    id3 = raw3.decode().strip()
+                                except:
+                                    id3 = raw3 if isinstance(raw3, str) else None
+
+                            suggestions = []
+                            # query brief info for each (preserve order 2 then 3)
+                            for cand_id in (id2, id3):
+                                if not cand_id:
+                                    continue
+                                try:
+                                    with psycopg2.connect(**POSTGRES_CONFIG) as conn:
+                                        with conn.cursor() as cur:
+                                            cur.execute("""
+                                                SELECT perfume_id, title
+                                                FROM perfumes_6col
+                                                WHERE perfume_id = %s
+                                            """, (cand_id,))
+                                            row = cur.fetchone()
+                                            if row:
+                                                suggestions.append({
+                                                    'perfume_id': row[0],
+                                                    'title': row[1]
+                                                })
+                                except Exception as e:
+                                    print(f"❌ Error querying brief title for {cand_id}: {e}")
+                                    # continue to next
+
+                            # Publish suggestions if changed (or if previously None -> first time)
+                            if suggestions != last_sent_suggestions:
+                                # publish under a separate key inside the same 'dashboard_updates' channel
+                                redis_client.publish('dashboard_updates', json.dumps({
+                                    'update_perfume_suggestions': suggestions
+                                }))
+                                print(f"🔎 Published suggestions (top2/top3) → dashboard_updates (update_perfume_suggestions): {suggestions}")
+                                last_sent_suggestions = suggestions
+
+                        except Exception as e:
+                            print("❌ Error building/publishing suggestions:", e)
+
+                    # Optional: clear uart key to mark consumed (uncomment if desired)
+                    # redis_client.delete('uart_model_result')
 
                     # Optional: clear uart key to mark consumed (uncomment if desired)
                     # redis_client.delete('uart_model_result')
