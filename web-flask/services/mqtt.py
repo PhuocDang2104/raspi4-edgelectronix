@@ -3,7 +3,7 @@ import time
 import paho.mqtt.client as mqtt
 
 # MQTT broker (cài trên Raspi hoặc Desktop, miễn trong LAN)
-BROKER = "192.168.1.66"   # IP của broker (nếu broker chạy trên Raspi thì dùng IP Raspi)
+BROKER = "192.168.1.66"   # IP của broker (broker chạy trên Raspi -> dùng IP Raspi)
 TOPIC = "sensors/env"
 
 client = mqtt.Client()

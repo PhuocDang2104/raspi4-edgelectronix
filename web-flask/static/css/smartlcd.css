@@ -1,3 +1,7 @@
+/* ===========================
+   ORIGINAL CSS (kept intact)
+   =========================== */
+
 body {
     margin: 0;
     padding: 0;
@@ -649,3 +653,243 @@ width: 30px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
+/* ===========================
+   CSI1 - Modal & Manual Mode improvements (new)
+   (kept separate and appended to override previous modal styles)
+   =========================== */
+
+/* Make modal wider, taller and avoid whole-modal scrolling */
+.modal-overlay .modal-content {
+  width: 720px;
+  max-width: calc(100% - 40px);
+  max-height: 80vh;
+  overflow: hidden; /* keep scroll inside panels */
+  padding: 18px;
+  border-radius: 8px;
+  box-sizing: border-box;
+}
+
+/* form layout: each row = label (fixed) + control (flex) */
+.manual-form {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  font-size: 14px;
+  margin-top: 6px; /* gentle spacing */
+}
+
+/* New helper row layout used in Manual Mode */
+.field-row {
+  display: grid;
+  grid-template-columns: 140px 1fr;
+  gap: 12px;
+  align-items: start;
+}
+
+/* compact label for field-row */
+.field-row > label {
+  font-weight: 600;
+  padding-top: 6px;
+  color: #333;
+}
+
+/* Checkbox container: grid of checkboxes, internal scroll */
+.multi-checkbox {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0,1fr)); /* 2 columns on desktop */
+  gap: 6px 12px;
+  max-height: 120px;
+  overflow-y: auto;
+  padding: 8px;
+  border-radius: 6px;
+  border: 1px solid #e6e6e6;
+  background: #fff;
+}
+
+/* each checkbox label */
+.multi-checkbox label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 4px 6px;
+  box-sizing: border-box;
+  min-height: 28px;           /* đồng đều chiều cao hàng */
+  line-height: 1;
+}
+
+.multi-checkbox .cb-text {
+  display: inline-block;
+  flex: 1;                    /* chiếm phần còn lại để text wrap đẹp */
+  font-size: 13px;
+  color: #333;
+}
+
+.multi-checkbox input[type="checkbox"] {
+  width: 16px;
+  height: 16px;
+  margin: 0;
+  flex: 0 0 auto;
+}
+
+/* filter bar style */
+.checkbox-filter {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  margin-bottom: 8px;
+}
+.checkbox-filter input[type="search"] {
+  width: 100%;
+  padding: 6px 8px;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  box-sizing: border-box;
+  font-size: 13px;
+}
+
+/* hide items gracefully */
+.multi-checkbox label.hidden {
+  display: none;
+}
+
+/* controls row above checkbox sets */
+.checkbox-controls {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 8px;
+  justify-content: flex-end;
+}
+
+/* small utility buttons */
+.small-btn {
+  font-size: 12px;
+  padding: 5px 8px;
+  border: 1px solid #ccc;
+  background: #fafafa;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background .15s, transform .08s;
+}
+.small-btn:hover { background: #f0f0f0; transform: translateY(-1px); }
+
+/* Responsive adjustments: on small screens modal becomes full-width and fields stack */
+@media (max-width: 760px) {
+  .modal-overlay .modal-content {
+    width: calc(100% - 24px);
+    max-height: 92vh;
+    padding: 14px;
+  }
+/* responsive: reduce padding on small screens */
+@media (max-width: 760px) {
+  .multi-checkbox label { padding: 4px 4px; min-height: 26px; }
+  .checkbox-filter input[type="search"] { font-size: 13px; }
+}
+  .field-row {
+    grid-template-columns: 1fr; /* stack label + control vertically for mobile */
+  }
+
+  .multi-checkbox {
+    grid-template-columns: repeat(1, minmax(0,1fr)); /* single column on small screens */
+    max-height: 240px;
+  }
+
+  .manual-form { gap: 10px; }
+}
+
+/* Optional: make multi-checkbox 3 columns on wider screens */
+@media (min-width: 1100px) {
+  .multi-checkbox {
+    grid-template-columns: repeat(3, minmax(0,1fr));
+  }
+}
+
+/* Ensure modal textarea and controls fill properly */
+.modal-content textarea {
+  width: 100%;
+  box-sizing: border-box;
+}
+
+/* tweak modal-actions layout to avoid overflow */
+.modal-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+  margin-top: 10px;
+  flex-wrap: wrap;
+}
+
+/* minor visual polish for checkbox scrollbars on supported browsers */
+.multi-checkbox::-webkit-scrollbar { width: 8px; height: 8px; }
+.multi-checkbox::-webkit-scrollbar-thumb { background: rgba(0,0,0,0.12); border-radius: 8px; }
+
+/* keep old .field-group in case some parts still rely on it */
+.field-group {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+/* ensure older rules for .field-group inputs still apply */
+.field-group input[type="text"],
+.field-group input[type="range"],
+.field-group select {
+  flex: 1;
+  min-width: 0;
+  padding: 6px;
+  font-size: 14px;
+  box-sizing: border-box;
+}
+
+/* Accessibility: focus states */
+input[type="checkbox"]:focus + label,
+input[type="checkbox"]:focus {
+  outline: 2px solid rgba(34,34,34,0.12);
+  outline-offset: 2px;
+}
+
+/* End of CSI1 block */
+
+
+
+
+/* Perfume result styles (add to smartlcd.css) */
+.perfume-result-panel {
+  position: fixed;
+  right: 20px;
+  top: 80px;
+  width: 520px;
+  background: rgba(255,255,255,0.98);
+  border-radius: 12px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.25);
+  padding: 16px;
+  display: flex;
+  gap: 12px;
+  z-index: 1200;
+  align-items: stretch;
+  font-family: Roboto, sans-serif;
+}
+
+.perfume-result-panel .pr-left { width: 48%; display:flex; flex-direction:column; gap:8px; }
+.perfume-result-panel .pr-right { width: 52%; display:flex; flex-direction:column; gap:10px; }
+
+.pr-bottle img { width:100%; height:auto; border-radius:8px; object-fit:contain; }
+.pr-maininfo h3 { margin:0; font-size:1.15rem; font-weight:700; font-family:'Playfair Display', serif; }
+.pr-sub { font-size:0.85rem; color:#555; margin-top:4px; }
+
+.stat-title { font-weight:600; margin-bottom:6px; }
+.stat-row { display:flex; align-items:center; gap:8px; margin-bottom:8px; }
+.stat-row label { width:80px; font-size:0.9rem; color:#333; }
+.bar { flex:1; background:#eee; height:12px; border-radius:8px; overflow:hidden; }
+.bar-fill { height:100%; border-radius:8px; width:0%; background:linear-gradient(90deg, rgba(0,0,0,0.12), rgba(0,0,0,0.05)); }
+
+.pr-extra-image img { width:100%; height:110px; object-fit:cover; border-radius:8px; }
+
+.close-result {
+  position:absolute;
+  top:8px;
+  right:8px;
+  border:none;
+  background:transparent;
+  font-size:18px;
+  cursor:pointer;
+}

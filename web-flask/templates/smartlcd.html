@@ -111,24 +111,28 @@
       <!-- Manual Mode -->
       <div id="manualMode" style="display: none;">
         <div class="manual-form">
-          <div class="field-group">
+
+          <div class="field-row">
             <label for="ageRange">Age:</label>
-            <input type="range" id="ageRange" min="10" max="100" value="30">
-            <div id="ageValue"><strong>30</strong></div>
+            <div>
+              <input type="range" id="ageRange" min="10" max="100" value="30" style="width:100%;">
+              <div id="ageValue" style="text-align:right;"><strong>30</strong></div>
+            </div>
           </div>
-      
-          <div class="field-group">
+
+          <div class="field-row">
             <label for="gender">Gender:</label>
-            <select id="gender">
+            <select id="gender" style="width:100%;"> 
+              <option value="Any">Any</option>
               <option value="men">Men</option>
               <option value="women">Women</option>
               <option value="unisex">Unisex</option>
             </select>
           </div>
-      
-          <div class="field-group">
+
+          <div class="field-row">
             <label for="personality">Personality:</label>
-            <select id="personality">
+            <select id="personality" style="width:100%;">
               <option value="elegant">Elegant</option>
               <option value="sporty">Sporty</option>
               <option value="bold">Bold</option>
@@ -143,17 +147,305 @@
               <option value="mysterious">Mysterious</option>
             </select>
           </div>
-      
-          <div class="field-group">
-            <label for="accord">Preferred Accord:</label>
-            <div class="input-wrapper">
-              <input id="accord" type="text" placeholder="Let S.C.E.N.T know ur scent ..." />
+
+          <!-- Brand -->
+          <div class="field-row">
+            <label for="brandSelect">Brand:</label>
+            <select id="brandSelect" style="width:100%;">
+              <option value="Any">Any</option>
+              <option value="antonio-puig">antonio-puig</option>
+              <option value="avon">avon</option>
+              <option value="balenciaga">balenciaga</option>
+              <option value="bdk-parfums">bdk-parfums</option>
+              <option value="burberry">burberry</option>
+              <option value="bvlgari">bvlgari</option>
+              <option value="by-kilian">by-kilian</option>
+              <option value="carolina-herrera">carolina-herrera</option>
+              <option value="cerruti">cerruti</option>
+              <option value="coty">coty</option>
+              <option value="escada">escada</option>
+              <option value="fragonard">fragonard</option>
+              <option value="frederic-malle">frederic-malle</option>
+              <option value="givenchy">givenchy</option>
+              <option value="goldfield-banks-australia">goldfield-banks-australia</option>
+              <option value="guerlain">guerlain</option>
+              <option value="hugo-boss">hugo-boss</option>
+              <option value="iceberg">iceberg</option>
+              <option value="issey-miyake">issey-miyake</option>
+              <option value="jean-paul-gaultier">jean-paul-gaultier</option>
+              <option value="juicy-couture">juicy-couture</option>
+              <option value="kenneth-cole">kenneth-cole</option>
+              <option value="lacoste-fragrances">lacoste-fragrances</option>
+              <option value="lalique">lalique</option>
+              <option value="lancome">lancome</option>
+              <option value="lanvin">lanvin</option>
+              <option value="lorenzo-villoresi">lorenzo-villoresi</option>
+              <option value="montblanc">montblanc</option>
+              <option value="mugler">mugler</option>
+              <option value="narciso-rodriguez">narciso-rodriguez</option>
+              <option value="natura">natura</option>
+              <option value="paco-rabanne">paco-rabanne</option>
+              <option value="the-body-shop">the-body-shop</option>
+              <option value="trussardi">trussardi</option>
+              <option value="vilhelm-parfumerie">vilhelm-parfumerie</option>
+              <option value="xerjoff">xerjoff</option>
+              <option value="yves-saint-laurent">yves-saint-laurent</option>
+              <option value="zadig-voltaire">zadig-voltaire</option>
+              <option value="zara">zara</option>
+              <option value="zoologist-perfumes">zoologist-perfumes</option>
+            </select>
+          </div>
+
+          <!-- Preferred Accords -->
+          <div class="field-row">
+            <label>Preferred Accords:</label>
+            <div>
+              <div class="checkbox-controls">
+                <button type="button" class="small-btn" onclick="selectAllCheckboxes('preferred_accords')">Select all</button>
+                <button type="button" class="small-btn" onclick="clearAllCheckboxes('preferred_accords')">Clear</button>
+              </div>
+
+              <!-- FILTER BAR -->
+              <div class="checkbox-filter">
+                <input id="accordsFilter" type="search" placeholder="Filter accords..." aria-label="Filter accords">
+              </div>
+
+              <div class="input-wrapper multi-checkbox" id="accordsContainer">
+                <!-- shortened: keep all accord checkboxes here -->
+                <label><input type="checkbox" name="preferred_accords" value="aldehydic"> aldehydic</label>
+                <label><input type="checkbox" name="preferred_accords" value="amber"> amber</label>
+                <label><input type="checkbox" name="preferred_accords" value="animalic"> animalic</label>
+                <label><input type="checkbox" name="preferred_accords" value="aquatic"> aquatic</label>
+                <label><input type="checkbox" name="preferred_accords" value="aromatic"> aromatic</label>
+                <label><input type="checkbox" name="preferred_accords" value="balsamic"> balsamic</label>
+                <label><input type="checkbox" name="preferred_accords" value="beeswax"> beeswax</label>
+                <label><input type="checkbox" name="preferred_accords" value="cannabis"> cannabis</label>
+                <label><input type="checkbox" name="preferred_accords" value="cherry"> cherry</label>
+                <label><input type="checkbox" name="preferred_accords" value="chocolate"> chocolate</label>
+                <label><input type="checkbox" name="preferred_accords" value="citrus"> citrus</label>
+                <label><input type="checkbox" name="preferred_accords" value="coconut"> coconut</label>
+                <label><input type="checkbox" name="preferred_accords" value="coffee"> coffee</label>
+                <label><input type="checkbox" name="preferred_accords" value="earthy"> earthy</label>
+                <label><input type="checkbox" name="preferred_accords" value="floral"> floral</label>
+                <label><input type="checkbox" name="preferred_accords" value="fresh"> fresh</label>
+                <label><input type="checkbox" name="preferred_accords" value="fresh spicy"> fresh spicy</label>
+                <label><input type="checkbox" name="preferred_accords" value="fruity"> fruity</label>
+                <label><input type="checkbox" name="preferred_accords" value="green"> green</label>
+                <label><input type="checkbox" name="preferred_accords" value="herbal"> herbal</label>
+                <label><input type="checkbox" name="preferred_accords" value="honey"> honey</label>
+                <label><input type="checkbox" name="preferred_accords" value="iris"> iris</label>
+                <label><input type="checkbox" name="preferred_accords" value="lactonic"> lactonic</label>
+                <label><input type="checkbox" name="preferred_accords" value="lavender"> lavender</label>
+                <label><input type="checkbox" name="preferred_accords" value="leather"> leather</label>
+                <label><input type="checkbox" name="preferred_accords" value="mossy"> mossy</label>
+                <label><input type="checkbox" name="preferred_accords" value="musky"> musky</label>
+                <label><input type="checkbox" name="preferred_accords" value="ozonic"> ozonic</label>
+                <label><input type="checkbox" name="preferred_accords" value="powdery"> powdery</label>
+                <label><input type="checkbox" name="preferred_accords" value="rose"> rose</label>
+                <label><input type="checkbox" name="preferred_accords" value="smoky"> smoky</label>
+                <label><input type="checkbox" name="preferred_accords" value="sweet"> sweet</label>
+                <label><input type="checkbox" name="preferred_accords" value="tobacco"> tobacco</label>
+                <label><input type="checkbox" name="preferred_accords" value="tropical"> tropical</label>
+                <label><input type="checkbox" name="preferred_accords" value="tuberose"> tuberose</label>
+                <label><input type="checkbox" name="preferred_accords" value="vanilla"> vanilla</label>
+                <label><input type="checkbox" name="preferred_accords" value="violet"> violet</label>
+                <label><input type="checkbox" name="preferred_accords" value="warm spicy"> warm spicy</label>
+                <label><input type="checkbox" name="preferred_accords" value="whiskey"> whiskey</label>
+                <label><input type="checkbox" name="preferred_accords" value="white floral"> white floral</label>
+                <label><input type="checkbox" name="preferred_accords" value="woody"> woody</label>
+                <label><input type="checkbox" name="preferred_accords" value="yellow floral"> yellow floral</label>
+              </div>
             </div>
           </div>
-      
-          <div class="field-group">
+
+          <!-- Notes -->
+          <div class="field-row">
+            <label>Notes:</label>
+            <div>
+              <div class="checkbox-controls">
+                <button type="button" class="small-btn" onclick="selectAllCheckboxes('notes')">Select all</button>
+                <button type="button" class="small-btn" onclick="clearAllCheckboxes('notes')">Clear</button>
+              </div>
+
+              <!-- FILTER BAR -->
+              <div class="checkbox-filter">
+                <input id="notesFilter" type="search" placeholder="Filter notes..." aria-label="Filter notes">
+              </div>
+
+              <div class="input-wrapper multi-checkbox" id="notesContainer">
+                <!-- Long list of notes as checkboxes -->
+                <label><input type="checkbox" name="notes" value="agarwood (oud)"> agarwood (oud)</label>
+                <label><input type="checkbox" name="notes" value="aldehydes"> aldehydes</label>
+                <label><input type="checkbox" name="notes" value="almond"> almond</label>
+                <label><input type="checkbox" name="notes" value="amalfi lemon"> amalfi lemon</label>
+                <label><input type="checkbox" name="notes" value="amber"> amber</label>
+                <label><input type="checkbox" name="notes" value="ambergris"> ambergris</label>
+                <label><input type="checkbox" name="notes" value="ambroxan"> ambroxan</label>
+                <label><input type="checkbox" name="notes" value="apple"> apple</label>
+                <label><input type="checkbox" name="notes" value="apricot"> apricot</label>
+                <label><input type="checkbox" name="notes" value="artemisia"> artemisia</label>
+                <label><input type="checkbox" name="notes" value="australian sandalwood"> australian sandalwood</label>
+                <label><input type="checkbox" name="notes" value="basil"> basil</label>
+                <label><input type="checkbox" name="notes" value="beeswax"> beeswax</label>
+                <label><input type="checkbox" name="notes" value="benzoin"> benzoin</label>
+                <label><input type="checkbox" name="notes" value="bergamot"> bergamot</label>
+                <label><input type="checkbox" name="notes" value="big strawberry"> big strawberry</label>
+                <label><input type="checkbox" name="notes" value="birch leaf"> birch leaf</label>
+                <label><input type="checkbox" name="notes" value="bitter orange"> bitter orange</label>
+                <label><input type="checkbox" name="notes" value="black amber"> black amber</label>
+                <label><input type="checkbox" name="notes" value="black currant"> black currant</label>
+                <label><input type="checkbox" name="notes" value="black pepper"> black pepper</label>
+                <label><input type="checkbox" name="notes" value="black tea"> black tea</label>
+                <label><input type="checkbox" name="notes" value="blood orange"> blood orange</label>
+                <label><input type="checkbox" name="notes" value="broom"> broom</label><br>
+                <label><input type="checkbox" name="notes" value="bulgarian rose"> bulgarian rose</label>
+                <label><input type="checkbox" name="notes" value="calabrian bergamot"> calabrian bergamot</label>
+                <label><input type="checkbox" name="notes" value="calone"> calone</label>
+                <label><input type="checkbox" name="notes" value="candy apple"> candy apple</label>
+                <label><input type="checkbox" name="notes" value="cannabis"> cannabis</label>
+                <label><input type="checkbox" name="notes" value="caramel"> caramel</label>
+                <label><input type="checkbox" name="notes" value="caraway"> caraway</label>
+                <label><input type="checkbox" name="notes" value="cardamom"> cardamom</label>
+                <label><input type="checkbox" name="notes" value="carnation"> carnation</label>
+                <label><input type="checkbox" name="notes" value="casablanca lily"> casablanca lily</label>
+                <label><input type="checkbox" name="notes" value="cashmeran"> cashmeran</label>
+                <label><input type="checkbox" name="notes" value="cashmere wood"> cashmere wood</label>
+                <label><input type="checkbox" name="notes" value="cedar"> cedar</label>
+                <label><input type="checkbox" name="notes" value="ceylon cinnamon"> ceylon cinnamon</label>
+                <label><input type="checkbox" name="notes" value="cherry"> cherry</label>
+                <label><input type="checkbox" name="notes" value="chestnut"> chestnut</label>
+                <label><input type="checkbox" name="notes" value="chocolate"> chocolate</label>
+                <label><input type="checkbox" name="notes" value="cinnamon"> cinnamon</label>
+                <label><input type="checkbox" name="notes" value="cinnamon leaf"> cinnamon leaf</label>
+                <label><input type="checkbox" name="notes" value="citruses"> citruses</label>
+                <label><input type="checkbox" name="notes" value="civet"> civet</label>
+                <label><input type="checkbox" name="notes" value="clementine"> clementine</label>
+                <label><input type="checkbox" name="notes" value="clove"> clove</label>
+                <label><input type="checkbox" name="notes" value="coconut"> coconut</label>
+                <label><input type="checkbox" name="notes" value="coffee"> coffee</label>
+                <label><input type="checkbox" name="notes" value="coriander"> coriander</label>
+                <label><input type="checkbox" name="notes" value="coriander extract"> coriander extract</label>
+                <label><input type="checkbox" name="notes" value="cypress"> cypress</label>
+                <label><input type="checkbox" name="notes" value="dried plum"> dried plum</label>
+                <label><input type="checkbox" name="notes" value="floral notes"> floral notes</label>
+                <label><input type="checkbox" name="notes" value="fruity notes"> fruity notes</label>
+                <label><input type="checkbox" name="notes" value="gardenia"> gardenia</label>
+                <label><input type="checkbox" name="notes" value="geranium"> geranium</label>
+                <label><input type="checkbox" name="notes" value="ginger"> ginger</label>
+                <label><input type="checkbox" name="notes" value="ginger flower"> ginger flower</label>
+                <label><input type="checkbox" name="notes" value="grapefruit"> grapefruit</label>
+                <label><input type="checkbox" name="notes" value="grasse rose"> grasse rose</label>
+                <label><input type="checkbox" name="notes" value="green mandarin"> green mandarin</label>
+                <label><input type="checkbox" name="notes" value="green notes"> green notes</label>
+                <label><input type="checkbox" name="notes" value="heliotrope"> heliotrope</label>
+                <label><input type="checkbox" name="notes" value="hibiscus"> hibiscus</label>
+                <label><input type="checkbox" name="notes" value="honey"> honey</label>
+                <label><input type="checkbox" name="notes" value="honeysuckle"> honeysuckle</label>
+                <label><input type="checkbox" name="notes" value="hyacinth"> hyacinth</label>
+                <label><input type="checkbox" name="notes" value="incense"> incense</label>
+                <label><input type="checkbox" name="notes" value="indian tuberose"> indian tuberose</label>
+                <label><input type="checkbox" name="notes" value="indonesian patchouli leaf"> indonesian patchouli leaf</label>
+                <label><input type="checkbox" name="notes" value="iris"> iris</label>
+                <label><input type="checkbox" name="notes" value="jasmine"> jasmine</label><br>
+                <label><input type="checkbox" name="notes" value="jasmine sambac"> jasmine sambac</label>
+                <label><input type="checkbox" name="notes" value="juniper"> juniper</label>
+                <label><input type="checkbox" name="notes" value="laurels"> laurels</label>
+                <label><input type="checkbox" name="notes" value="lavender"> lavender</label>
+                <label><input type="checkbox" name="notes" value="leather"> leather</label>
+                <label><input type="checkbox" name="notes" value="lemon"> lemon</label>
+                <label><input type="checkbox" name="notes" value="lily"> lily</label>
+                <label><input type="checkbox" name="notes" value="lily-of-the-valley"> lily-of-the-valley</label>
+                <label><input type="checkbox" name="notes" value="litchi"> litchi</label>
+                <label><input type="checkbox" name="notes" value="lotus"> lotus</label>
+                <label><input type="checkbox" name="notes" value="madagascar vanilla"> madagascar vanilla</label>
+                <label><input type="checkbox" name="notes" value="madagascar ylang-ylang"> madagascar ylang-ylang</label>
+                <label><input type="checkbox" name="notes" value="magnolia"> magnolia</label>
+                <label><input type="checkbox" name="notes" value="mandarin orange"> mandarin orange</label>
+                <label><input type="checkbox" name="notes" value="mango"> mango</label>
+                <label><input type="checkbox" name="notes" value="may rose"> may rose</label>
+                <label><input type="checkbox" name="notes" value="mimosa"> mimosa</label>
+                <label><input type="checkbox" name="notes" value="mint"> mint</label>
+                <label><input type="checkbox" name="notes" value="mirabilis"> mirabilis</label>
+                <label><input type="checkbox" name="notes" value="moss"> moss</label>
+                <label><input type="checkbox" name="notes" value="musk"> musk</label>
+                <label><input type="checkbox" name="notes" value="myrrh"> myrrh</label>
+                <label><input type="checkbox" name="notes" value="narcissus"> narcissus</label>
+                <label><input type="checkbox" name="notes" value="neroli"> neroli</label>
+                <label><input type="checkbox" name="notes" value="nutmeg"> nutmeg</label>
+                <label><input type="checkbox" name="notes" value="oakmoss"> oakmoss</label>
+                <label><input type="checkbox" name="notes" value="olive blossom"> olive blossom</label>
+                <label><input type="checkbox" name="notes" value="orange"> orange</label>
+                <label><input type="checkbox" name="notes" value="orange blossom"> orange blossom</label>
+                <label><input type="checkbox" name="notes" value="orris"> orris</label>
+                <label><input type="checkbox" name="notes" value="passionfruit"> passionfruit</label>
+                <label><input type="checkbox" name="notes" value="patchouli"> patchouli</label>
+                <label><input type="checkbox" name="notes" value="peach"> peach</label>
+                <label><input type="checkbox" name="notes" value="pear"> pear</label>
+                <label><input type="checkbox" name="notes" value="peony"> peony</label>
+                <label><input type="checkbox" name="notes" value="pepper"> pepper</label>
+                <label><input type="checkbox" name="notes" value="peru balsam"> peru balsam</label>
+                <label><input type="checkbox" name="notes" value="petitgrain"> petitgrain</label>
+                <label><input type="checkbox" name="notes" value="pine tree"> pine tree</label>
+                <label><input type="checkbox" name="notes" value="pineapple"> pineapple</label>
+                <label><input type="checkbox" name="notes" value="pink pepper"> pink pepper</label>
+                <label><input type="checkbox" name="notes" value="pistachio"> pistachio</label>
+                <label><input type="checkbox" name="notes" value="plum"> plum</label>
+                <label><input type="checkbox" name="notes" value="powdery notes"> powdery notes</label>
+                <label><input type="checkbox" name="notes" value="raspberry"> raspberry</label>
+                <label><input type="checkbox" name="notes" value="red berries"> red berries</label>
+                <label><input type="checkbox" name="notes" value="red currant"> red currant</label>
+                <label><input type="checkbox" name="notes" value="red fruits"> red fruits</label>
+                <label><input type="checkbox" name="notes" value="rice"> rice</label>
+                <label><input type="checkbox" name="notes" value="rose"> rose</label>
+                <label><input type="checkbox" name="notes" value="rosebay willowherb"> rosebay willowherb</label>
+                <label><input type="checkbox" name="notes" value="rosemary"> rosemary</label>
+                <label><input type="checkbox" name="notes" value="rum"> rum</label>
+                <label><input type="checkbox" name="notes" value="saffron"> saffron</label>
+                <label><input type="checkbox" name="notes" value="sage"> sage</label>
+                <label><input type="checkbox" name="notes" value="salt"> salt</label>
+                <label><input type="checkbox" name="notes" value="sandalwood"> sandalwood</label>
+                <label><input type="checkbox" name="notes" value="silkwood blossom"> silkwood blossom</label>
+                <label><input type="checkbox" name="notes" value="star anise"> star anise</label>
+                <label><input type="checkbox" name="notes" value="suede"> suede</label>
+                <label><input type="checkbox" name="notes" value="sugar"> sugar</label>
+                <label><input type="checkbox" name="notes" value="tahitian vanilla"> tahitian vanilla</label>
+                <label><input type="checkbox" name="notes" value="tangerine"> tangerine</label>
+                <label><input type="checkbox" name="notes" value="tea"> tea</label>
+                <label><input type="checkbox" name="notes" value="texas cedar"> texas cedar</label>
+                <label><input type="checkbox" name="notes" value="tiare flower"> tiare flower</label>
+                <label><input type="checkbox" name="notes" value="tobacco"> tobacco</label>
+                <label><input type="checkbox" name="notes" value="tobacco leaf"> tobacco leaf</label>
+                <label><input type="checkbox" name="notes" value="tonka bean"> tonka bean</label>
+                <label><input type="checkbox" name="notes" value="tuberose"> tuberose</label>
+                <label><input type="checkbox" name="notes" value="tunisian neroli"> tunisian neroli</label>
+                <label><input type="checkbox" name="notes" value="turkish rose"> turkish rose</label>
+                <label><input type="checkbox" name="notes" value="vanilla"> vanilla</label>
+                <label><input type="checkbox" name="notes" value="vanille"> vanille</label>
+                <label><input type="checkbox" name="notes" value="vetiver"> vetiver</label>
+                <label><input type="checkbox" name="notes" value="vetyver"> vetyver</label>
+                <label><input type="checkbox" name="notes" value="violet"> violet</label>
+                <label><input type="checkbox" name="notes" value="violet leaf"> violet leaf</label>
+                <label><input type="checkbox" name="notes" value="virginia cedar"> virginia cedar</label>
+                <label><input type="checkbox" name="notes" value="water mint"> water mint</label>
+                <label><input type="checkbox" name="notes" value="west indian bay"> west indian bay</label>
+                <label><input type="checkbox" name="notes" value="whipped cream"> whipped cream</label>
+                <label><input type="checkbox" name="notes" value="whiskey"> whiskey</label>
+                <label><input type="checkbox" name="notes" value="white honey"> white honey</label>
+                <label><input type="checkbox" name="notes" value="white musk"> white musk</label>
+                <label><input type="checkbox" name="notes" value="white peach"> white peach</label>
+                <label><input type="checkbox" name="notes" value="white pepper"> white pepper</label>
+                <label><input type="checkbox" name="notes" value="white woods"> white woods</label>
+                <label><input type="checkbox" name="notes" value="woodsy notes"> woodsy notes</label>
+                <label><input type="checkbox" name="notes" value="woody notes"> woody notes</label>
+                <label><input type="checkbox" name="notes" value="ylang-ylang"> ylang-ylang</label>
+              </div>
+            </div>
+          </div>
+
+          <div class="field-row">
             <label for="occasion">Occasion:</label>
-            <select id="occasion">
+            <select id="occasion" style="width:100%;">
+              <option value="Any">Any</option>
               <option value="Work">Work</option>
               <option value="Casual">Casual</option>
               <option value="Date Night">Date Night</option>
@@ -166,36 +458,76 @@
               <option value="Relaxing at Home">Relaxing at Home</option>
             </select>
           </div>
-      
-          <div class="field-group">
+
+          <div class="field-row">
             <label for="sillage">Sillage:</label>
-            <select id="sillage">
-              <option value="Light">Light</option>
-              <option value="Medium">Medium</option>
+            <select id="sillage" style="width:100%;">
+              <option value="Any">Any</option>
+              <option value="Soft">Soft</option>
+              <option value="Moderate">Moderate</option>
               <option value="Strong">Strong</option>
-              <option value="Very Strong">Very Strong</option>
             </select>
           </div>
-      
-          <div class="field-group">
+
+          <div class="field-row">
             <label for="longevity">Longevity:</label>
-            <select id="longevity">
-              <option value="Short">Short</option>
-              <option value="Medium">Medium</option>
-              <option value="Long">Long</option>
+            <select id="longevity" style="width:100%;">
+              <option value="Any">Any</option>
+              <option value="Light">Short</option>
+              <option value="Moderate">Moderate</option>
+              <option value="Strong">Long</option>
+              <option value="Very Strong">Very Long</option>
             </select>
           </div>
-      
-          <div class="field-group">
+
+          <div class="field-row">
             <label for="price">Price:</label>
-            <select id="price">
+            <select id="price" style="width:100%;">
+              <option value="Any">Any</option>
               <option value="Affordable">Affordable</option>
               <option value="Average">Average</option>
               <option value="High-end">High-end</option>
             </select>
           </div>
+
         </div>
       </div>
+      
+
+      <!-- Perfume result panel (default hidden) -->
+      <div id="perfumeResult" class="perfume-result-panel" style="display:none;">
+        <button id="closePerfumeResult" class="close-result">✕</button>
+
+        <div class="pr-left">
+          <div class="pr-bottle">
+            <img id="pr-bottle-img" src="/static/images/placeholder.png" alt="bottle" />
+          </div>
+          <div class="pr-maininfo">
+            <h3 id="pr-title">Perfume Name</h3>
+            <div class="pr-sub">ID: <span id="pr-id">P000</span> • <span id="pr-subtitle">Subtitle</span></div>
+          </div>
+        </div>
+
+        <div class="pr-right">
+          <div class="pr-stats">
+            <div class="stat-title">Fragrance Performance</div>
+            <div class="stat-row"><label>Longevity</label>
+              <div class="bar"><div id="pr-longevity" class="bar-fill" style="width:0%"></div></div>
+            </div>
+            <div class="stat-row"><label>Sillage</label>
+              <div class="bar"><div id="pr-sillage" class="bar-fill" style="width:0%"></div></div>
+            </div>
+            <div class="stat-row"><label>Projection</label>
+              <div class="bar"><div id="pr-projection" class="bar-fill" style="width:0%"></div></div>
+            </div>
+          </div>
+
+          <div class="pr-extra-image">
+            <img id="pr-extra-img" src="/static/images/placeholder2.png" alt="extra" />
+          </div>
+        </div>
+      </div>
+
 
     <div class="modal-actions">
       <button id="sendBtn">Send</button>
@@ -305,11 +637,20 @@
         socket.emit('ai_request', { NLP_input: text });
 
       } else if (currentMode === 'manual') {
+        // lấy các checkbox đã chọn cho preferred accords
+        const accords = Array.from(document.querySelectorAll('input[name="preferred_accords"]:checked'))
+                            .map(el => el.value);
+
+        // lấy các checkbox đã chọn cho notes
+        const notes = Array.from(document.querySelectorAll('input[name="notes"]:checked'))
+                            .map(el => el.value);
+
         const data = {
           AGE: document.getElementById('ageRange').value,
           GENDER: document.getElementById('gender').value,
           PERSONALITY: document.getElementById('personality').value,
-          PREFERRED_ACCORD: document.getElementById('accord').value,
+          PREFERRED_ACCORD: accords,   // mảng
+          NOTES: notes,               // mảng
           USAGE_SITUATION: document.getElementById('occasion').value,
           SILLAGE: document.getElementById('sillage').value,
           LONGEVITY: document.getElementById('longevity').value,
@@ -437,6 +778,207 @@
     ageRange.oninput = () => {
       ageValue.innerHTML = `<strong>${ageRange.value}</strong>`;
     };
+
+   /* -------------------------
+   Manual-mode helpers & events
+   ------------------------- */
+
+/* Select / Clear helpers (works for both accords & notes) */
+function selectAllCheckboxes(name) {
+  document.querySelectorAll(`input[name="${name}"]`).forEach(cb => cb.checked = true);
+}
+function clearAllCheckboxes(name) {
+  document.querySelectorAll(`input[name="${name}"]`).forEach(cb => cb.checked = false);
+}
+
+/* Normalize labels: bọc text node thành <span class="cb-text"> nếu cần và ensure flex */
+function normalizeCheckboxLabels(containerId) {
+  const container = document.getElementById(containerId);
+  if (!container) return;
+  // remove accidental <br> if any
+  container.querySelectorAll('br').forEach(b => b.remove());
+  const labels = container.querySelectorAll('label');
+  labels.forEach(label => {
+    if (!label.querySelector('.cb-text')) {
+      const textNodes = Array.from(label.childNodes).filter(n => n.nodeType === 3 && n.textContent.trim());
+      textNodes.forEach(tn => {
+        const span = document.createElement('span');
+        span.className = 'cb-text';
+        span.textContent = tn.textContent.trim();
+        tn.parentNode.replaceChild(span, tn);
+      });
+    }
+    // ensure layout
+    label.style.display = 'flex';
+    label.style.alignItems = 'center';
+    label.style.gap = '8px';
+    label.style.width = '100%';
+  });
+}
+
+/* Debounce util */
+function debounce(fn, wait) {
+  let t;
+  return function(...args) {
+    clearTimeout(t);
+    t = setTimeout(() => fn.apply(this, args), wait);
+  };
+}
+
+/* Attach filter to a container of labels */
+function attachFilter(inputId, containerId) {
+  const input = document.getElementById(inputId);
+  const container = document.getElementById(containerId);
+  if (!input || !container) return;
+  const labels = () => Array.from(container.querySelectorAll('label'));
+  const doFilter = () => {
+    const q = input.value.trim().toLowerCase();
+    if (!q) {
+      labels().forEach(l => l.style.display = 'flex');
+      return;
+    }
+    labels().forEach(l => {
+      const txt = (l.textContent || '').toLowerCase();
+      const val = l.querySelector('input')?.value.toLowerCase() || '';
+      const matched = txt.includes(q) || val.includes(q);
+      l.style.display = matched ? 'flex' : 'none';
+    });
+  };
+  input.addEventListener('input', debounce(doFilter, 150));
+  input.addEventListener('keydown', (e) => { if (e.key === 'Escape') { input.value = ''; doFilter(); }});
+}
+
+/* Hook up the manual send logic to include brand + arrays for accords/notes */
+function getManualFormData() {
+  const accords = Array.from(document.querySelectorAll('input[name="preferred_accords"]:checked')).map(el => el.value);
+  const notes = Array.from(document.querySelectorAll('input[name="notes"]:checked')).map(el => el.value);
+
+  return {
+    AGE: document.getElementById('ageRange').value,
+    GENDER: document.getElementById('gender').value,
+    PERSONALITY: document.getElementById('personality').value,
+    BRAND: document.getElementById('brandSelect') ? document.getElementById('brandSelect').value : 'Any',
+    PREFERRED_ACCORD: accords,
+    NOTES: notes,
+    USAGE_SITUATION: document.getElementById('occasion').value,
+    SILLAGE: document.getElementById('sillage').value,
+    LONGEVITY: document.getElementById('longevity').value,
+    PRICE: document.getElementById('price').value
+  };
+}
+
+/* Replace existing sendBtn onclick behavior for manual part (keeps voice part intact) */
+const _oldSendBtn = document.getElementById('sendBtn');
+if (_oldSendBtn) {
+  _oldSendBtn.onclick = () => {
+    if (currentMode === 'voice') {
+      const text = aiInput.value.trim();
+      if (!text) return alert("Please speak something.");
+      socket.emit('ai_request', { NLP_input: text });
+      return;
+    }
+    // manual
+    const data = getManualFormData();
+    console.log("🔼 Sending form data:", data);
+    socket.emit('ai_request', { form_input: data });
+  };
+}
+
+/* init on DOM ready */
+document.addEventListener('DOMContentLoaded', () => {
+  normalizeCheckboxLabels('accordsContainer');
+  normalizeCheckboxLabels('notesContainer');
+  attachFilter('accordsFilter', 'accordsContainer');
+  attachFilter('notesFilter', 'notesContainer');
+
+  // ensure selects that have "Any" behave fine (no additional JS required).
+
+
+
+  /* -------------------------
+   AI Results received from UART
+   ------------------------- */
+   // --- 1) cache catalog khi update_perfume_catalog về client ---
+window.latestPerfumeCatalog = []; // global cache
+
+socket.on('update_perfume_catalog', (data) => {
+  if (!data || data.length === 0) return;
+  window.latestPerfumeCatalog = data; // cache toàn bộ catalog cho lookup nhanh
+  // --- giữ nguyên chức năng hiện tại (nếu bạn muốn vẫn xử lý first item) ---
+  const perfume = data[0];
+  // ... (giữ các cập nhật UI hiện có)
+});
+
+// --- 2) helper để tìm perfume bằng id (P001) ---
+function findPerfumeById(id) {
+  if (!window.latestPerfumeCatalog || window.latestPerfumeCatalog.length === 0) return null;
+  return window.latestPerfumeCatalog.find(p => (p.perfume_id || p.id || p.ID || p.perfumeId) === id) || null;
+}
+
+// --- 3) percent helper (giống bạn dùng trước) ---
+const maxStat = 5;
+const percent = (val) => `${(val / maxStat) * 100}%`;
+
+// --- 4) show/hide & populate function ---
+function showPerfumeResult(perfume) {
+  const panel = document.getElementById('perfumeResult');
+  if (!panel) return;
+  // populate
+  document.getElementById('pr-id').textContent = perfume.perfume_id || perfume.ID || perfume.id || 'N/A';
+  document.getElementById('pr-title').textContent = perfume.title || formatTitle(perfume.title) || 'Unknown';
+  document.getElementById('pr-subtitle').textContent = perfume.subtitle || perfume.description || '-';
+
+  // images: prefer using id-safe filename; fallback to title
+  const imgName = perfume.image_filename || (perfume.perfume_id + '.png') || `${(perfume.title||'').replace(/\s+/g,'_')}.png`;
+  document.getElementById('pr-bottle-img').src = `/static/images/${imgName}`;
+  document.getElementById('pr-extra-img').src = perfume.extra_image || `/static/images/${imgName}`;
+
+  // stats (ensure numeric)
+  document.getElementById('pr-longevity').style.width = percent(Number(perfume.longevity) || 0);
+  document.getElementById('pr-sillage').style.width = percent(Number(perfume.sillage) || 0);
+  document.getElementById('pr-projection').style.width = percent(Number(perfume.projection) || 0);
+
+  // show panel
+  panel.style.display = 'flex';
+  // optional: auto-hide after X seconds
+  if (window._perfumeResultAutoHideTimer) clearTimeout(window._perfumeResultAutoHideTimer);
+  window._perfumeResultAutoHideTimer = setTimeout(() => {
+    panel.style.display = 'none';
+  }, 12000); // 12s, thay đổi nếu cần
+}
+
+// close button
+document.getElementById('closePerfumeResult').addEventListener('click', () => {
+  const panel = document.getElementById('perfumeResult');
+  panel.style.display = 'none';
+  if (window._perfumeResultAutoHideTimer) clearTimeout(window._perfumeResultAutoHideTimer);
+});
+
+// --- 5) Lắng nghe event từ server: khi server emit id từ Redis/serial ---
+socket.on('uart_model_result', (payload) => {
+  // payload có thể là string id hoặc object { id: 'P001' }
+  const id = (typeof payload === 'string') ? payload : (payload.id || payload.uart || payload.value);
+  if (!id) return console.warn('uart_model_result empty payload', payload);
+
+  console.log('🔔 Received uart_model_result:', id);
+  // try find in cached catalog
+  const p = findPerfumeById(id);
+  if (p) {
+    showPerfumeResult(p);
+  } else {
+    // nếu không có catalog, yêu cầu server trả dữ liệu chi tiết cho id này
+    socket.emit('get_perfume_by_id', { id });
+    // sẽ chờ server emit 'perfume_by_id' dưới đây
+  }
+});
+
+// server trả chi tiết cho get_perfume_by_id
+socket.on('perfume_by_id', (perfume) => {
+  if (!perfume) return;
+  showPerfumeResult(perfume);
+});
+
+});
 
   </script>
 </body>

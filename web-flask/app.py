@@ -60,7 +60,7 @@ def handle_ai_request(data):
     if 'form_input' in data:
         form_input = data['form_input']
         udp_message = json.dumps(form_input)
-        redis_client.set("udp_outgoing_message", udp_message)
+        redis_client.set("uart_outgoing_message", udp_message)
         print("- Received Manual Form Input:")
         for key, value in form_input.items():
             print(f"{key}: {value}")
@@ -81,9 +81,9 @@ def handle_ai_request(data):
             results[label.lower()] = normalized
             print(results)
             try:
-                udp_message = json.dumps(results)
-                redis_client.set("udp_outgoing_message", udp_message)
-                print(f"Queued message for EFR32 via Redis: {udp_message}")
+                uart_message = json.dumps(results)
+                redis_client.set("uart_outgoing_message", uart_message)
+                print(f"Queued message for EFR32 via Redis: {uart_message}")
             except Exception as e:
                 print(f"❌ Failed to queue message for UDP: {e}")
 
