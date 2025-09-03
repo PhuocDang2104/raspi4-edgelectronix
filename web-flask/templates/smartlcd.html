@@ -980,7 +980,6 @@ function showPerfumeResult(perfume) {
     imgName = 'placeholder.png';
   }
 
-  // set images (no error if missing)
   const bottleImg = document.getElementById('pr-bottle-img');
   const extraImg = document.getElementById('pr-extra-img');
   if (bottleImg) bottleImg.src = `/static/images/${imgName}`;
@@ -998,14 +997,52 @@ function showPerfumeResult(perfume) {
   if (silEl) silEl.style.width = percent(sil);
   if (projEl) projEl.style.width = percent(proj);
 
-  // finally show panel with simple visible style
-  panel.style.display = 'flex';
+  // Optional: hide AI modal if open (uncomment if desired)
+  const aiModal = document.getElementById('aiModal');
+  if (aiModal && aiModal.style.display === 'flex') {
+    // hide the AI modal so perfumeResult appears centered and unobstructed
+    aiModal.style.display = 'none';
+  }
 
-  // optional: clear previous timer and auto-hide after 12s
+  // ---- animation classes ----
+  // ensure classes reset
+  panel.classList.remove('entering', 'entered', 'show');
+  // prepare for enter animation
+  panel.style.display = 'flex';
+  panel.classList.add('entering');
+
+  // force reflow so transition applies
+  // eslint-disable-next-line no-unused-expressions
+  void panel.offsetWidth;
+
+  // switch to entered state (triggers CSS transition)
+  panel.classList.remove('entering');
+  panel.classList.add('entered', 'show');
+
+  // auto-hide handling: clear any previous timer and set new one
   if (window._perfumeResultAutoHideTimer) clearTimeout(window._perfumeResultAutoHideTimer);
   window._perfumeResultAutoHideTimer = setTimeout(() => {
-    panel.style.display = 'none';
-  }, 12000);
+    // animate out: remove 'entered'/'show' so CSS transitions can run
+    panel.classList.remove('entered', 'show');
+    // after transition time, hide element (240ms matches CSS)
+    setTimeout(() => { panel.style.display = 'none'; }, 260);
+  }, 12000); // 12s, adjust if needed
+}
+
+/* ---------- hide helper & close button hookup ---------- */
+function hidePerfumeResult() {
+  const panel = document.getElementById('perfumeResult');
+  if (!panel) return;
+  if (window._perfumeResultAutoHideTimer) clearTimeout(window._perfumeResultAutoHideTimer);
+  panel.classList.remove('entered', 'show');
+  setTimeout(() => { panel.style.display = 'none'; }, 260);
+}
+
+// attach close button (if not attached already)
+const _closePR = document.getElementById('closePerfumeResult');
+if (_closePR) {
+  _closePR.removeEventListener?.('click', hidePerfumeResult); // safe remove if exists
+  _closePR.addEventListener('click', hidePerfumeResult);
 }
 
 // close button (safe attach)
