@@ -932,17 +932,9 @@ input[type="checkbox"]:focus {
 .modal-overlay, .modal-content { z-index: 1000; } /* keep original */
 .perfume-result-panel { z-index: 2000; }
 
-/* overlay mờ nền */
-#perfumeResult.show::before {
-  content: "";
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100vw;
-  height: 100vh;
-  background: rgba(0,0,0,0.3); /* nền tối mờ */
-  backdrop-filter: blur(6px);  /* làm mờ */
-  z-index: -1; /* nằm sau nội dung perfumeResult */
+.modal-content.blur {
+  filter: blur(6px);
+  pointer-events: none; /* không cho click vào phía sau */
 }
 
 /* Mobile tweaks */
