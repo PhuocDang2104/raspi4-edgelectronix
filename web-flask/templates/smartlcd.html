@@ -1116,7 +1116,27 @@ function showPerfumeResult(perfume) {
   const bottleImg = document.getElementById('pr-bottle-img');
   const extraImg = document.getElementById('pr-extra-img');
   if (bottleImg) bottleImg.src = `/static/images/${imgName}`;
-  if (extraImg) extraImg.src = perfume.extra_image || `/static/images/${imgName}`;
+  if (extraImg) {
+  // danh sách 8 file đặc biệt
+  const specialImgsl = [
+    "alien.png",
+    "individuel.png",
+    "burberry-women.png",
+    "bvlgari-man.png",
+    "bee.png",
+    "lacoste-pour-homme.png",
+    "geranium-pour-monsieur.png",
+    "far-away-royale.png",
+    "gardenia.png",
+    "the-iceberg-fragrance.png"
+  ];
+
+  if (specialImgsl.includes(imgName)) {
+    extraImg.src = perfume.extra_image || `/static/images/location-${imgName}`;
+  } else {
+    extraImg.src = "/static/images/location-none.png";
+  }
+}
 
   // stats (coerce numeric)
   const lon = Number(perfume.longevity || 0);
