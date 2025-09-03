@@ -133,9 +133,30 @@ def read_from_uart():
                 rx_data = ser.readline().decode(errors="ignore").strip()
                 if rx_data:
                     print(f"\nRX: {rx_data}")
-                    redis_client.set("uart_model_result", rx_data)
+
+                    key = "RESULT,"
+                    idx = rx_data.upper().find(key)
+                    if idx != -1:
+                        # lấy phần sau "RESULT,"
+                        tail = rx_data[idx + len(key):].lstrip()
+                        # tách tới dấu phẩy tiếp theo hoặc tới cuối
+                        parts = tail.split(",", 1)
+                        num_str = parts[0].strip()
+                        # lọc ký tự hợp lệ (số, dấu + - .)
+                        filtered = ''.join(ch for ch in num_str if ch.isdigit() or ch in '+-.')
+                        try:
+                            num = int(float(filtered))
+                            formatted = f"P{num:03d}"
+                            try:
+                                redis_client.set("uart_model_result", formatted)
+                                print(f"[Parsed] uart_model_result -> {formatted}")
+                            except Exception as e:
+                                print("Lỗi khi lưu Redis:", e)
+                        except Exception as e:
+                            print("Không thể chuyển số thành int từ:", num_str, "->", e)
+                    else:
+                        print("[Info] Không tìm thấy 'RESULT,<num>' trong dòng nhận được.")
             except Exception:
-                # keep thread running on decode/serial errors
                 traceback.print_exc()
                 time.sleep(0.5)
     except Exception:
