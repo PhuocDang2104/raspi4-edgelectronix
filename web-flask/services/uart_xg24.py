@@ -13,6 +13,8 @@ import json
 import time
 import sys
 import traceback
+import re
+
 
 # -------------------------
 # Vocabularies (same as GUI)
