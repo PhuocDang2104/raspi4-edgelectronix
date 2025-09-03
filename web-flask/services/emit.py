@@ -112,6 +112,7 @@ def run_emit_loop():
                         redis_client.publish('dashboard_updates', json.dumps({
                             'update_perfume_xg24_result': data_x
                         }))
+                        print(f"📦 UART lookup result for {uart_id}: {data_x}")
                         print(f"🔔 Published UART lookup {uart_id} → dashboard_updates (update_perfume_xg24_result), rows={len(data_x)}")
                         last_sent_uart_id = uart_id
                         last_sent_uart_data = data_x
