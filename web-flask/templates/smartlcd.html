@@ -1006,6 +1006,8 @@ function showPerfumeResult(perfume) {
   panel.classList.add('entering');
   // thêm blur vào modal-content
   document.querySelector('.manual-form')?.classList.add('blur');
+  document.querySelector('.ai-mode-tabs')?.classList.add('blur');
+  document.querySelector('.modal-actions')?.classList.add('blur');
   // force reflow so transition applies
   // eslint-disable-next-line no-unused-expressions
   void panel.offsetWidth;
@@ -1022,6 +1024,9 @@ function showPerfumeResult(perfume) {
     // after transition time, hide element (240ms matches CSS)
     setTimeout(() => { panel.style.display = 'none'; }, 260);
   }, 60000); // 60s, adjust if needed
+  document.querySelector('.manual-form')?.classList.remove('blur');
+  document.querySelector('.ai-mode-tabs')?.classList.remove('blur');
+  document.querySelector('.modal-actions')?.classList.remove('blur');
 }
 
 /* ---------- hide helper & close button hookup ---------- */
@@ -1039,6 +1044,8 @@ function hidePerfumeResult() {
   }
   // bỏ blur khi đóng
   document.querySelector('.manual-form')?.classList.remove('blur');
+  document.querySelector('.ai-mode-tabs')?.classList.remove('blur');
+  document.querySelector('.modal-actions')?.classList.remove('blur');
 }
 
 // attach close button (if not attached already)
