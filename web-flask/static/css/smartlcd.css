@@ -932,7 +932,7 @@ input[type="checkbox"]:focus {
 .modal-overlay, .modal-content { z-index: 1000; } /* keep original */
 .perfume-result-panel { z-index: 2000; }
 
-.modal-content.blur {
+.manual-form.blur {
   filter: blur(6px);
   pointer-events: none; /* không cho click vào phía sau */
 }

@@ -1005,7 +1005,7 @@ function showPerfumeResult(perfume) {
   panel.style.display = 'flex';
   panel.classList.add('entering');
   // thêm blur vào modal-content
-  document.querySelector('.modal-content')?.classList.add('blur');
+  document.querySelector('.manual-form')?.classList.add('blur');
   // force reflow so transition applies
   // eslint-disable-next-line no-unused-expressions
   void panel.offsetWidth;
@@ -1038,7 +1038,7 @@ function hidePerfumeResult() {
     window._perfumeResultAutoHideTimer = null;
   }
   // bỏ blur khi đóng
-  document.querySelector('.modal-content')?.classList.remove('blur');
+  document.querySelector('.manual-form')?.classList.remove('blur');
 }
 
 // attach close button (if not attached already)
