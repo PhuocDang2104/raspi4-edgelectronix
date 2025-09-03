@@ -23,7 +23,7 @@ redis_client = redis.Redis(host='127.0.0.1', port=6379, db=0)
 #  Redis listener task – chạy song song
 def redis_listener():
     pubsub = redis_client.pubsub()
-    pubsub.subscribe('dashboard_updates')
+    pubsub.subscribe('dashboard_updates', 'xg24_result')
 
     for message in pubsub.listen():
         if message['type'] == 'message':
@@ -35,12 +35,11 @@ def redis_listener():
                 if 'update_perfume_catalog' in payload:
                     socketio.emit('update_perfume_catalog', payload['update_perfume_catalog'])
 
-                # (Tuỳ chọn) Nếu sau này muốn dùng lại update_shelf_stock hoặc update_kpi
-                # if 'update_shelf_stock' in payload:
-                #     socketio.emit('update_shelf_stock', payload['update_shelf_stock'])
+                # Bắt thêm luồng XG24 result
+                if 'update_perfume_xg24_result' in payload:
+                    socketio.emit('update_perfume_xg24_result', payload['update_perfume_xg24_result'])
+                    print(f"📦 Forwarded XG24 result → socketio: {payload['update_perfume_xg24_result']}")
 
-                # if 'update_kpi' in payload:
-                #     socketio.emit('update_kpi', payload['update_kpi'])
 
             except Exception as e:
                 print(f"❌ Redis listener error: {e}")

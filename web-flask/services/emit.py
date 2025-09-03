@@ -109,7 +109,7 @@ def run_emit_loop():
 
                     # Publish if new/different
                     if uart_id != last_sent_uart_id or data_x != last_sent_uart_data:
-                        redis_client.publish('dashboard_updates', json.dumps({
+                        redis_client.publish('xg24_result', json.dumps({
                             'update_perfume_xg24_result': data_x
                         }))
                         print(f"📦 UART lookup result for {uart_id}: {data_x}")
