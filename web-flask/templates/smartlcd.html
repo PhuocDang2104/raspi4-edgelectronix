@@ -1016,18 +1016,21 @@ function showPerfumeResult(perfume) {
   panel.classList.remove('entering');
   panel.classList.add('entered', 'show');
 
-  // auto-hide handling: clear any previous timer and set new one
+  // auto-hide handling
   if (window._perfumeResultAutoHideTimer) clearTimeout(window._perfumeResultAutoHideTimer);
   window._perfumeResultAutoHideTimer = setTimeout(() => {
-    // animate out: remove 'entered'/'show' so CSS transitions can run
     panel.classList.remove('entered', 'show');
-    // after transition time, hide element (240ms matches CSS)
-    setTimeout(() => { panel.style.display = 'none'; }, 260);
-  }, 60000); // 60s, adjust if needed
-  document.querySelector('.manual-form')?.classList.remove('blur');
-  document.querySelector('.ai-mode-tabs')?.classList.remove('blur');
-  document.querySelector('.modal-actions')?.classList.remove('blur');
+    setTimeout(() => {
+      panel.style.display = 'none';
+
+      // ➖ remove blur khi panel ẩn hẳn
+      document.querySelector('.manual-form')?.classList.remove('blur');
+      document.querySelector('.ai-mode-tabs')?.classList.remove('blur');
+      document.querySelector('.modal-actions')?.classList.remove('blur');
+    }, 260);
+  }, 60000); // 60s
 }
+
 
 /* ---------- hide helper & close button hookup ---------- */
 function hidePerfumeResult() {
