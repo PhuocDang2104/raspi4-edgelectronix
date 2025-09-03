@@ -971,14 +971,38 @@ function showPerfumeResult(perfume) {
   document.getElementById('pr-subtitle').textContent = subtitle;
 
   // build image filename (safe)
+
+  // map các id đặc biệt sang tên file
+  const specialImageMap = {
+    "P001": "alien.png",
+    "P005": "individuel.png",
+    "P007": "burberry-women.png",
+    "P017": "bvlgari-man.png",
+    "P020": "bee.png",
+    "P026": "lacoste-pour-homme.png",
+    "P030": "geranium-pour-monsieur.png",
+    "P045": "far-away-royale.png",
+    "P047": "gardenia.png",
+    "P049": "the-iceberg-fragrance.png"
+  };
+
   let imgName = '';
   try {
-    if (perfume.image_filename) imgName = perfume.image_filename;
-    else if (pid && typeof pid === 'string') imgName = `${pid}.png`;
-    else if (title) imgName = `${title.replace(/\s+/g,'_')}.png`;
-  } catch (e) {
-    imgName = 'placeholder.png';
+    if (perfume.image_filename) {
+    imgName = perfume.image_filename;
+  } else if (pid && specialImageMap[pid]) {
+    // dùng tên ảnh từ map ngoại lệ
+    imgName = specialImageMap[pid];
+  } else if (pid && typeof pid === 'string') {
+    // fallback: lấy id + .png
+    imgName = `${pid}.png`;
+  } else if (title) {
+    // fallback: lấy tên perfume thay space bằng _
+    imgName = `${title.replace(/\s+/g, '_').toLowerCase()}.png`;
   }
+} catch (e) {
+  imgName = 'placeholder.png';
+}
 
   const bottleImg = document.getElementById('pr-bottle-img');
   const extraImg = document.getElementById('pr-extra-img');
