@@ -901,7 +901,7 @@ document.addEventListener('DOMContentLoaded', () => {
    // --- 1) cache catalog khi update_perfume_catalog về client ---
 window.latestPerfumeCatalog = []; // global cache
 
-socket.on('update_perfume_catalog', (data) => {
+socket.on('update_perfume_xg24_result', (data) => {
   if (!data || data.length === 0) return;
   window.latestPerfumeCatalog = data; // cache toàn bộ catalog cho lookup nhanh
   // --- giữ nguyên chức năng hiện tại (nếu bạn muốn vẫn xử lý first item) ---

@@ -1,5 +1,4 @@
-### Updated emit.py with filtering by selected perfume_id
-
+# emit.py — publish both update_perfume_catalog (existing) and update_perfume_xg24_result (from UART -> perfumes_6col)
 import psycopg2
 import time
 import json
@@ -17,22 +16,24 @@ POSTGRES_CONFIG = {
 # Redis config
 redis_client = redis.Redis(host='localhost', port=6379, db=0)
 
-# Selected perfume ID 
+# Selected perfume ID (UI selector / UDP key)
 SELECTED_ID = 'P005'
 
 def listen_perfume_selector():
+    """Optional background listener for UI selector channel."""
     global SELECTED_ID
     pubsub = redis_client.pubsub()
     pubsub.subscribe('perfume_selector_channel')
-    print("📡 Listening for perfume_id selection...")
-
+    print("📡 Listening for perfume_id selection on 'perfume_selector_channel' ...")
     for msg in pubsub.listen():
         if msg['type'] == 'message':
-            new_id = msg['data'].decode()
-            print(f"🆕 Received new SELECTED_ID: {new_id}")
-            SELECTED_ID = new_id
+            try:
+                new_id = msg['data'].decode().strip()
+                print(f"🆕 Received new SELECTED_ID from channel: {new_id}")
+                SELECTED_ID = new_id
+            except Exception as e:
+                print("Error decoding selector msg:", e)
 
-# Start pubsub listener in background thread
 threading.Thread(target=listen_perfume_selector, daemon=True).start()
 
 def run_emit_loop():
@@ -40,45 +41,92 @@ def run_emit_loop():
     last_sent_id = None
     last_sent_data = None
 
+    # For XG/uart path (perfumes_6col)
+    last_sent_uart_id = None
+    last_sent_uart_data = None
+
     while True:
         try:
-            # 🔁 Cập nhật SELECTED_ID nếu Redis key có thay đổi
+            # ---------------------------
+            # 1) Keep SELECTED_ID in sync (UDP/other key)
+            # ---------------------------
             udp_selected_id = redis_client.get('selected_perfume_id_from_udp')
             if udp_selected_id:
-                udp_selected_id = udp_selected_id.decode()
-                if udp_selected_id != SELECTED_ID:
-                    print(f"🔄 SELECTED_ID updated from Redis key: {udp_selected_id}")
+                try:
+                    udp_selected_id = udp_selected_id.decode().strip()
+                except:
+                    pass
+                if udp_selected_id and udp_selected_id != SELECTED_ID:
+                    print(f"🔄 SELECTED_ID updated from Redis key selected_perfume_id_from_udp: {udp_selected_id}")
                     SELECTED_ID = udp_selected_id
 
+            # ---------------------------
+            # 2) Existing lookup on table `perfumes` for SELECTED_ID
+            # ---------------------------
             with psycopg2.connect(**POSTGRES_CONFIG) as conn:
                 with conn.cursor() as cur:
                     cur.execute("""
                         SELECT perfume_id, title, subtitle, description, star, review, volume, price,
-                                longevity, sillage, projection, occasion_1, occasion_2, occasion_3,
-                                note_1, note_2, note_3, note_4, note_5, country, brand, year
+                               longevity, sillage, projection, occasion_1, occasion_2, occasion_3,
+                               note_1, note_2, note_3, note_4, note_5, country, brand, year
                         FROM perfumes
                         WHERE perfume_id = %s
                     """, (SELECTED_ID,))
                     rows = cur.fetchall()
-                    columns = [desc[0] for desc in cur.description]
-                    data = [dict(zip(columns, row)) for row in rows]
+                    columns = [desc[0] for desc in cur.description] if rows else []
+                    data = [dict(zip(columns, row)) for row in rows] if rows else []
 
-            # 📌 Kiểm tra xem dữ liệu có thay đổi không
             if SELECTED_ID != last_sent_id or data != last_sent_data:
                 redis_client.publish('dashboard_updates', json.dumps({
                     'update_perfume_catalog': data
                 }))
-                print(f"✅ Published new perfume {SELECTED_ID} to Redis → dashboard_updates")
+                print(f"✅ Published new perfume {SELECTED_ID} to Redis → dashboard_updates (update_perfume_catalog)")
                 last_sent_id = SELECTED_ID
                 last_sent_data = data
-            else:
-                # Không in spam nữa
-                pass
+
+            # ---------------------------
+            # 3) UART-driven path: check uart_model_result key and lookup perfumes_6col
+            # ---------------------------
+            uart_val = redis_client.get('uart_model_result')
+            if uart_val:
+                try:
+                    uart_id = uart_val.decode().strip()
+                except:
+                    uart_id = uart_val if isinstance(uart_val, str) else None
+
+                if uart_id:
+                    # Query perfumes_6col for this uart_id
+                    with psycopg2.connect(**POSTGRES_CONFIG) as conn:
+                        with conn.cursor() as cur:
+                            cur.execute("""
+                                SELECT perfume_id, title, subtitle, longevity, sillage, projection
+                                FROM perfumes_6col
+                                WHERE perfume_id = %s
+                            """, (uart_id,))
+                            rows_x = cur.fetchall()
+                            cols_x = [desc[0] for desc in cur.description] if rows_x else []
+                            data_x = [dict(zip(cols_x, r)) for r in rows_x] if rows_x else []
+
+                    # Publish if new/different
+                    if uart_id != last_sent_uart_id or data_x != last_sent_uart_data:
+                        redis_client.publish('dashboard_updates', json.dumps({
+                            'update_perfume_xg24_result': data_x
+                        }))
+                        print(f"🔔 Published UART lookup {uart_id} → dashboard_updates (update_perfume_xg24_result), rows={len(data_x)}")
+                        last_sent_uart_id = uart_id
+                        last_sent_uart_data = data_x
+                    else:
+                        # no change -> do nothing
+                        pass
+
+                    # Optional: clear uart key to mark consumed (uncomment if desired)
+                    # redis_client.delete('uart_model_result')
 
         except Exception as e:
             print(f"❌ Emit error: {e}")
 
-        time.sleep(1)
+        # small sleep to avoid busy-loop
+        time.sleep(0.9)
 
 if __name__ == '__main__':
     run_emit_loop()
