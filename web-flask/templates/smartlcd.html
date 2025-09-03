@@ -997,12 +997,6 @@ function showPerfumeResult(perfume) {
   if (silEl) silEl.style.width = percent(sil);
   if (projEl) projEl.style.width = percent(proj);
 
-  // Optional: hide AI modal if open (uncomment if desired)
-  const aiModal = document.getElementById('aiModal');
-  if (aiModal && aiModal.style.display === 'flex') {
-    // hide the AI modal so perfumeResult appears centered and unobstructed
-    aiModal.style.display = 'none';
-  }
 
   // ---- animation classes ----
   // ensure classes reset
