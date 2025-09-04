@@ -83,21 +83,18 @@ note_to_idx      = {n.lower():i for i,n in enumerate(NOTE_NAMES)}
 # Helpers
 # -------------------------
 def gen_csv(gender, brand, notes, accords, sillage, longevity, price):
-    # Normalize input (None -> "Any")
     gender = (gender or "Any")
     brand  = (brand  or "Any")
     sillage = (sillage or "Any")
     longevity = (longevity or "Any")
     price = (price or "Any")
 
-    # Any -> -1 mapping, case-insensitive lookup
     g = gender_to_idx.get(gender.lower(), -1) if gender != "Any" else -1
     b = brand_to_idx.get(brand.lower(), -1) if brand != "Any" else -1
     s = sillage_to_idx.get(sillage.lower(), -1) if sillage != "Any" else -1
     l = longevity_to_idx.get(longevity.lower(), -1) if longevity != "Any" else -1
     p = price_to_idx.get(price.lower(), -1) if price != "Any" else -1
 
-    # notes and accords are lists of strings; match case-insensitively and ignore unknowns
     notes_part = ":".join(
         str(note_to_idx[n.strip().lower()]) for n in (notes or []) 
         if isinstance(n, str) and n.strip().lower() in note_to_idx
@@ -112,11 +109,9 @@ def gen_csv(gender, brand, notes, accords, sillage, longevity, price):
 # -------------------------
 # Redis + UART setup
 # -------------------------
-# Redis config - adjust host/port/db if needed
 redis_client = redis.Redis(host='localhost', port=6379, db=0)
 
-# UART: change device path if on Windows or different port
-UART_DEVICE = "/dev/serial0"   # example for Raspberry Pi; on Windows use "COM3" etc.
+UART_DEVICE = "/dev/serial0"
 UART_BAUDRATE = 115200
 
 try:
@@ -126,7 +121,7 @@ except Exception as e:
     sys.exit(1)
 
 # -------------------------
-# Thread: read from UART and print incoming lines
+# Thread: read from UART
 # -------------------------
 def read_from_uart():
     try:
@@ -139,58 +134,35 @@ def read_from_uart():
                     key = "RESULT,"
                     idx = rx_data.upper().find(key)
                     if idx != -1:
-                        # phần sau RESULT,
                         tail = rx_data[idx + len(key):].lstrip()
-                        # tách theo dấu phẩy, bỏ rỗng
                         tokens = [t.strip() for t in tail.split(",") if t.strip() != ""]
 
                         ids = []
-                        # các token ở vị trí 0,2,4,... là id theo format của bạn
                         for i in range(0, len(tokens), 2):
-                            num_token = tokens[i]
-                            m = re.search(r'[-+]?\d+', num_token)
+                            m = re.search(r'[-+]?\d+', tokens[i])
                             if m:
                                 try:
                                     num = int(m.group())
                                     ids.append(f"P{num:03d}")
                                 except Exception as e:
-                                    print(f"[Warn] Không thể convert '{m.group()}' -> int:", e)
-                            else:
-                                print(f"[Warn] Không tìm thấy số trong token id: '{num_token}'")
+                                    print(f"[Warn] Không convert được '{m.group()}' -> int:", e)
 
-                        if len(ids) == 0:
-                            print("[Info] Không tìm thấy id hợp lệ sau 'RESULT,'")
-                        else:
-                            # 1) giữ tương thích: uart_model_result -> top1 (string)
-                            top1 = ids[0]
+                        if ids:
                             try:
-                                redis_client.set("uart_model_result", top1)
-                            except Exception as e:
-                                print("Lỗi khi lưu top1 vào Redis:", e)
-
-                            # 2) lưu top2 / top3 vào key khác (hoặc xóa nếu không có)
-                            try:
+                                redis_client.set("uart_model_result", ids[0])
                                 if len(ids) > 1:
                                     redis_client.set("uart_model_result_2", ids[1])
                                 else:
                                     redis_client.delete("uart_model_result_2")
-
                                 if len(ids) > 2:
                                     redis_client.set("uart_model_result_3", ids[2])
                                 else:
                                     redis_client.delete("uart_model_result_3")
-                            except Exception as e:
-                                print("Lỗi khi lưu top2/top3 vào Redis:", e)
-
-                            # 3) optional: lưu toàn bộ mảng dưới dạng JSON (tiện cho frontend nếu muốn)
-                            try:
                                 redis_client.set("uart_model_result_all", json.dumps(ids))
                             except Exception as e:
-                                print("Lỗi khi lưu result_all vào Redis:", e)
+                                print("Lỗi lưu Redis:", e)
 
-                            print(f"[Parsed] top1 -> {top1} ; top2/3 -> {ids[1:3] if len(ids)>1 else []}")
-                    else:
-                        print("[Info] Không tìm thấy 'RESULT,<num>' trong dòng nhận được.")
+                            print(f"[Parsed] top1 -> {ids[0]} ; top2/3 -> {ids[1:3] if len(ids)>1 else []}")
             except Exception:
                 traceback.print_exc()
                 time.sleep(0.5)
@@ -198,75 +170,66 @@ def read_from_uart():
         traceback.print_exc()
 
 # -------------------------
-# Thread: poll Redis key, convert JSON -> PREF CSV, send via UART
+# Thread: poll Redis -> UART
 # -------------------------
 REDIS_KEY = "uart_outgoing_message"
-POLL_INTERVAL = 0.5  # seconds
+POLL_INTERVAL = 0.5
 
 def redis_poller():
     try:
         while True:
-            try:
-                raw = redis_client.get(REDIS_KEY)
-            except Exception as e:
-                print("Lỗi khi đọc Redis:", e)
-                raw = None
-
+            raw = redis_client.get(REDIS_KEY)
             if raw:
-                # raw is bytes (b'...'), decode to str
                 try:
-                    if isinstance(raw, bytes):
-                        s = raw.decode('utf-8', errors='ignore')
-                    else:
-                        s = str(raw)
-                    # If Redis stored a Python repr like b'{"..."}' (rare), strip leading b' and trailing '
-                    # But usually it's a plain JSON string bytes.
-                    s = s.strip()
-                    # parse JSON
-                    data = json.loads(s)
+                    s = raw.decode('utf-8') if isinstance(raw, bytes) else str(raw)
+                    data = json.loads(s.strip())
                 except Exception as e:
-                    print("Không parse được JSON từ Redis value:", e)
-                    print("Raw value:", raw)
-                    # remove bad key to avoid spinning on bad content
-                    try:
-                        redis_client.delete(REDIS_KEY)
-                    except Exception:
-                        pass
+                    print("Không parse được JSON:", e, "Raw:", raw)
+                    redis_client.delete(REDIS_KEY)
                     time.sleep(POLL_INTERVAL)
                     continue
 
-                # Extract fields (case-insensitive keys possible)
-                # Try upper-case keys first (since your example uses uppercase keys), else lower-case
                 def get_field(d, *keys, default=None):
                     for k in keys:
                         if k in d:
                             return d[k]
-                    # case-insensitive
                     for kk in d:
                         if kk.lower() in [k.lower() for k in keys]:
                             return d[kk]
                     return default
 
-                gender = get_field(data, "GENDER", "gender", default="Any")
-                brand  = get_field(data, "BRAND", "brand", default="Any")
-                notes  = get_field(data, "NOTES", "notes", default=[])
-                accords= get_field(data, "PREFERRED_ACCORD", "PREFERRED_ACCORDS", "preferred_accord", "preferred_accords", "accords", default=[])
-                sillage= get_field(data, "SILLAGE", "sillage", default="Any")
-                longevity = get_field(data, "LONGEVITY", "longevity", default="Any")
-                price  = get_field(data, "PRICE", "price", default="Any")
+                # Detect AI NLP case
+                is_ai_nlp = all(k in data for k in ("preferred_accord", "longevity", "price"))
 
-                # Ensure lists
-                if isinstance(notes, str):
-                    # maybe comma-separated
-                    notes = [x.strip() for x in notes.split(",") if x.strip()]
-                if isinstance(accords, str):
-                    accords = [x.strip() for x in accords.split(",") if x.strip()]
+                if is_ai_nlp:
+                    gender = "Any"
+                    brand  = "Any"
+                    sillage= "Any"
+                    accords = data.get("preferred_accord", [])
+                    longevity = data.get("longevity", "Any")
+                    price = data.get("price", "Any")
 
-                # Generate CSV line
+                    if isinstance(accords, str):
+                        accords = [x.strip() for x in accords.split(",") if x.strip()]
+                    notes = accords.copy()  # duplicate accords to notes
+                else:
+                    gender = get_field(data, "GENDER", "gender", default="Any")
+                    brand  = get_field(data, "BRAND", "brand", default="Any")
+                    notes  = get_field(data, "NOTES", "notes", default=[])
+                    accords= get_field(data, "PREFERRED_ACCORD", "preferred_accord", "accords", default=[])
+                    sillage= get_field(data, "SILLAGE", "sillage", default="Any")
+                    longevity = get_field(data, "LONGEVITY", "longevity", default="Any")
+                    price  = get_field(data, "PRICE", "price", default="Any")
+
+                    if isinstance(notes, str):
+                        notes = [x.strip() for x in notes.split(",") if x.strip()]
+                    if isinstance(accords, str):
+                        accords = [x.strip() for x in accords.split(",") if x.strip()]
+
                 try:
                     csv_line = gen_csv(gender, brand, notes, accords, sillage, longevity, price)
                 except Exception as e:
-                    print("Lỗi khi tạo CSV:", e)
+                    print("Lỗi tạo CSV:", e)
                     csv_line = None
 
                 if csv_line:
@@ -274,14 +237,9 @@ def redis_poller():
                         ser.write((csv_line + "\n").encode())
                         print(f"--> Gửi qua UART: {csv_line}")
                     except Exception as e:
-                        print("Lỗi khi gửi UART:", e)
+                        print("Lỗi UART:", e)
 
-                # Remove key so we don't resend
-                try:
-                    redis_client.delete(REDIS_KEY)
-                except Exception as e:
-                    print("Không xóa được key Redis:", e)
-
+                redis_client.delete(REDIS_KEY)
             time.sleep(POLL_INTERVAL)
     except Exception:
         traceback.print_exc()
@@ -290,7 +248,6 @@ def redis_poller():
 # Main
 # -------------------------
 if __name__ == "__main__":
-    # start threads
     t_uart = threading.Thread(target=read_from_uart, daemon=True)
     t_poll = threading.Thread(target=redis_poller, daemon=True)
     t_uart.start()
@@ -301,10 +258,7 @@ if __name__ == "__main__":
         while True:
             msg = input("> ")
             if msg:
-                try:
-                    ser.write((msg + "\n").encode())
-                except Exception as e:
-                    print("Lỗi gửi UART:", e)
+                ser.write((msg + "\n").encode())
     except KeyboardInterrupt:
         print("\nThoát terminal.")
     finally:
@@ -313,5 +267,3 @@ if __name__ == "__main__":
         except Exception:
             pass
         print("Closed UART. Bye.")
-
-
