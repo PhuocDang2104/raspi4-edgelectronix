@@ -5,7 +5,7 @@ import json
 import redis
 import paho.mqtt.client as mqtt
 
-BROKER = "192.168.1.66"
+BROKER = "192.168.162.66"
 TOPIC_ENV = "sensors/env"
 TOPIC_EVENTS = "sensors/events"   # topic để gửi event drop tới laptop
 
