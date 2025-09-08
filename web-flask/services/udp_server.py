@@ -40,8 +40,16 @@ while True:
 
         # Thiết bị 1 (perfume selector)
         if sender_ip == addr1_ip:
-            redis_client.set('selected_perfume_id_from_udp', message)
-            print(f"* [Perfume] Set 'selected_perfume_id_from_udp': {message}")
+            if message.startswith("P"):  # ví dụ: "P020"
+                redis_client.set('selected_perfume_id_from_udp', message)
+                print(f"* [Perfume] Set 'selected_perfume_id_from_udp': {message}")
+
+            elif message.startswith("CNT:") or message.startswith("QTY:"):
+                redis_client.set('pick_counts_from_udp', message)
+                print(f"* [Perfume] Set 'pick_counts_from_udp': {message}")
+
+            else:
+                print(f"⚠️ [Device1] Unknown message format: {message}")
 
         # Thiết bị 2 (Env + Drop)
         elif sender_ip == addr2_ip:
