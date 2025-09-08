@@ -43,50 +43,50 @@ body.bg-alien::before {
 
 /* === INDIVIDUEL - P005 === */
 body.bg-individuel {
-    background: linear-gradient(90deg, #f6fafd 0%, #c6d1dd 75%, #dde4ec 100%);
-    --note1-bg: linear-gradient(90deg, #f6fafd, #c6d1dd);
-    --note2-bg: linear-gradient(90deg, #f6fafd, #b9c4d0);
-    --note3-bg: linear-gradient(90deg, #f6fafd, #acb8c4);
-    --note4-bg: linear-gradient(90deg, #f6fafd, #9eabb7);
-    --note5-bg: linear-gradient(90deg, #f6fafd, #c6d1dd);
-    --note6-bg: linear-gradient(90deg, #f6fafd, #b9c4d0);
-    --note7-bg: linear-gradient(90deg, #f6fafd, #acb8c4);
-    --note8-bg: linear-gradient(90deg, #f6fafd, #9eabb7);
+    background: linear-gradient(90deg, #f6fafd 0%, #ddc6dd 75%, #dde4ec 100%);
+    --note1-bg: linear-gradient(90deg, #f6fafd, #ddc6dc);
+    --note2-bg: linear-gradient(90deg, #f6fafd, #d0b9cf);
+    --note3-bg: linear-gradient(90deg, #f6fafd, #c4acc3);
+    --note4-bg: linear-gradient(90deg, #f6fafd, #b59eb7);
+    --note5-bg: linear-gradient(90deg, #f6fafd, #ddc6da);
+    --note6-bg: linear-gradient(90deg, #f6fafd, #d0b9d0);
+    --note7-bg: linear-gradient(90deg, #f6fafd, #c4acc0);
+    --note8-bg: linear-gradient(90deg, #f6fafd, #b79eb5);
 }
 body.bg-individuel::before {
-    background: radial-gradient(circle, #c6d1dd 80%, #f6fafd 100%);
+    background: radial-gradient(circle, #ddc6dd 80%, #f6fafd 100%);
 }
 
 /* === BURBERRY-WOMEN - P007 === */
 body.bg-burberry-women {
-    background: linear-gradient(90deg, #f6fafd 0%, #f0cb8a 80%, #eedbc1 100%);
-    --note1-bg: linear-gradient(90deg, #f6fafd, #f0cb8a);
-    --note2-bg: linear-gradient(90deg, #f6fafd, #e6bf7d);
-    --note3-bg: linear-gradient(90deg, #f6fafd, #dcb370);
-    --note4-bg: linear-gradient(90deg, #f6fafd, #d0a964);
-    --note5-bg: linear-gradient(90deg, #f6fafd, #f0cb8a);
-    --note6-bg: linear-gradient(90deg, #f6fafd, #e6bf7d);
-    --note7-bg: linear-gradient(90deg, #f6fafd, #dcb370);
-    --note8-bg: linear-gradient(90deg, #f6fafd, #d0a964);
+    background: linear-gradient(90deg, #f6fafd 0%, #117a7a 80%, #d9b97d 100%);
+    --note1-bg: linear-gradient(90deg, #f6fafd, #1d8c8c);
+    --note2-bg: linear-gradient(90deg, #f6fafd, #239999);
+    --note3-bg: linear-gradient(90deg, #f6fafd, #2aa6a6);
+    --note4-bg: linear-gradient(90deg, #f6fafd, #30b3b3);
+    --note5-bg: linear-gradient(90deg, #f6fafd, #1d8c8c);
+    --note6-bg: linear-gradient(90deg, #f6fafd, #239999);
+    --note7-bg: linear-gradient(90deg, #f6fafd, #2aa6a6);
+    --note8-bg: linear-gradient(90deg, #f6fafd, #30b3b3);
 }
 body.bg-burberry-women::before {
-    background: radial-gradient(circle, #ffd993 80%, #f6fafd 100%);
+    background: radial-gradient(circle, #d9b97d 70%, #117a7a 100%);
 }
 
 /* === BVLGARI-MAN - P017 === */
 body.bg-bvlgari-man {
-    background: linear-gradient(90deg, #f6fafd 0%, #c9ced1 75%, #d2d4d6 100%);
-    --note1-bg: linear-gradient(90deg, #f6fafd, #c9ced1);
-    --note2-bg: linear-gradient(90deg, #f6fafd, #bcc1c4);
-    --note3-bg: linear-gradient(90deg, #f6fafd, #b0b5b8);
-    --note4-bg: linear-gradient(90deg, #f6fafd, #a3a8ab);
-    --note5-bg: linear-gradient(90deg, #f6fafd, #c9ced1);
-    --note6-bg: linear-gradient(90deg, #f6fafd, #bcc1c4);
-    --note7-bg: linear-gradient(90deg, #f6fafd, #b0b5b8);
-    --note8-bg: linear-gradient(90deg, #f6fafd, #a3a8ab);
+    background: linear-gradient(90deg,  #f6fafd 0%, #e8b869 85%,#efcea8  100%);
+    --note1-bg: linear-gradient(90deg, #f6fafd, #e8b869);
+    --note2-bg: linear-gradient(90deg, #f6fafd, #ddab59);
+    --note3-bg: linear-gradient(90deg, #f6fafd, #d39f4b);
+    --note4-bg: linear-gradient(90deg, #f6fafd, #c9923d);
+    --note5-bg: linear-gradient(90deg, #f6fafd, #e8b869);
+    --note6-bg: linear-gradient(90deg, #f6fafd, #ddab59);
+    --note7-bg: linear-gradient(90deg, #f6fafd, #d39f4b);
+    --note8-bg: linear-gradient(90deg, #f6fafd, #c9923d);
 }
 body.bg-bvlgari-man::before {
-    background: radial-gradient(circle, #f0f5f8 80%, #f6fafd 100%);
+    background: radial-gradient(circle, #d99843 60%,  #f6fafd 100%);
 }
 
 /* === BEE - P020 === */
@@ -155,34 +155,34 @@ body.bg-far-away-royale::before {
 
 /* === GARDENIA - P047 === */
 body.bg-gardenia {
-    background: linear-gradient(90deg, #edd8ff 0%, #8f6ba4 85%,#9880a6 100%);
-    --note1-bg: linear-gradient(90deg, #f6fafd, #8f6ba4);
+    background: linear-gradient(90deg, #edd8ff 0%, #a46ba4 85%,#a6809b 100%);
+    --note1-bg: linear-gradient(90deg, #f6fafd, #a46b90);
     --note2-bg: linear-gradient(90deg, #f6fafd, #826298);
-    --note3-bg: linear-gradient(90deg, #f6fafd, #75588b);
-    --note4-bg: linear-gradient(90deg, #f6fafd, #684f7e);
-    --note5-bg: linear-gradient(90deg, #f6fafd, #8f6ba4);
-    --note6-bg: linear-gradient(90deg, #f6fafd, #826298);
-    --note7-bg: linear-gradient(90deg, #f6fafd, #75588b);
-    --note8-bg: linear-gradient(90deg, #f6fafd, #684f7e);
+    --note3-bg: linear-gradient(90deg, #f6fafd, #8b5878);
+    --note4-bg: linear-gradient(90deg, #f6fafd, #7e4f78);
+    --note5-bg: linear-gradient(90deg, #f6fafd, #a46b9a);
+    --note6-bg: linear-gradient(90deg, #f6fafd, #956298);
+    --note7-bg: linear-gradient(90deg, #f6fafd, #8b5888);
+    --note8-bg: linear-gradient(90deg, #f6fafd, #7e4f78);
 }
 body.bg-gardenia::before {
-    background: radial-gradient(circle, #9880a6 80%, #f6fafd  100%);
+    background: radial-gradient(circle, #a680a5 80%, #f6fafd  100%);
 }
 
 /* === THE ICEBERG FRAGRANCE - P049 === */
 body.bg-the-iceberg-fragrance {
-    background: linear-gradient(90deg, #f6fafd 0%, #f6fafd 55%, #f3e3c7 100%);
-    --note1-bg: linear-gradient(90deg, #f6fafd, #f3e3c7);
-    --note2-bg: linear-gradient(90deg, #f6fafd, #e9d9bd);
-    --note3-bg: linear-gradient(90deg, #f6fafd, #dfcfb3);
-    --note4-bg: linear-gradient(90deg, #f6fafd, #d5c5a9);
-    --note5-bg: linear-gradient(90deg, #f6fafd, #f3e3c7);
-    --note6-bg: linear-gradient(90deg, #f6fafd, #e9d9bd);
-    --note7-bg: linear-gradient(90deg, #f6fafd, #dfcfb3);
-    --note8-bg: linear-gradient(90deg, #f6fafd, #d5c5a9);
+    background: linear-gradient(90deg, #e8f8ff 0%, #e8f8ff 55%, #f8e6ff 100%);
+    --note1-bg: linear-gradient(90deg, #e8f8ff, #f8e6ff);
+    --note2-bg: linear-gradient(90deg, #e8f8ff, #f2d6ff);
+    --note3-bg: linear-gradient(90deg, #e8f8ff, #e8c8ff);
+    --note4-bg: linear-gradient(90deg, #e8f8ff, #ddb8ff);
+    --note5-bg: linear-gradient(90deg, #e8f8ff, #f8e6ff);
+    --note6-bg: linear-gradient(90deg, #e8f8ff, #f2d6ff);
+    --note7-bg: linear-gradient(90deg, #e8f8ff, #e8c8ff);
+    --note8-bg: linear-gradient(90deg, #e8f8ff, #ddb8ff);
 }
 body.bg-the-iceberg-fragrance::before {
-    background: radial-gradient(circle, #f3e3c7 80%, #f6fafd 100%);
+    background: radial-gradient(circle, #f2d6ff 80%, #e8f8ff 100%);
 }
 
 /* Animation cho body background */
@@ -968,3 +968,47 @@ input[type="checkbox"]:focus {
   .pr-left, .pr-right { width: 100%; }
   .pr-right .pr-extra-image img { height:100px; }
 }
+
+
+/* star rating */
+#ratingModal {
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    background: rgba(0,0,0,0.5);
+    display: flex; justify-content: center; align-items: center;
+    z-index: 2000;
+  }
+  #ratingModal .modal-content {
+    background: white;
+    padding: 20px;
+    border-radius: 12px;
+    text-align: center;
+    width: 360px;
+  }
+  .rating-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin: 12px 0;
+  }
+  .star-select i {
+    font-size: 1.8rem;
+    cursor: pointer;
+    color: #ccc;
+  }
+  .star-select i.active {
+    color: gold;
+  }
+  .modal-actions {
+    margin-top: 15px;
+  }
+  .modal-actions button {
+    margin: 0 5px;
+    padding: 6px 14px;
+    border-radius: 6px;
+    border: none;
+    cursor: pointer;
+  }
+  #submitRatingBtn { background:#007bff; color:white; }
+  #closeRatingBtn { background:#ccc; }

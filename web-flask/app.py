@@ -46,9 +46,17 @@ def redis_listener():
                     print(f"➡ Emitted socketio: update_perfume_suggestions ({payload['update_perfume_suggestions']})")
 
 
-
             except Exception as e:
                 print(f"❌ Redis listener error: {e}")
+
+def watch_trigger():
+    while True:
+        perfume_id = redis_client.get("trigger_rating_request")
+        if perfume_id:
+            perfume_id = perfume_id.decode()
+            print(f"⭐ Trigger rating UI for perfume {perfume_id}")
+            socketio.emit("show_rating_request", {"perfume_id": perfume_id})
+            redis_client.delete("trigger_rating_request")  # xoá để không lặp
 
 # 🌐 Routes
 @app.route('/')
@@ -99,11 +107,29 @@ def handle_ai_request(data):
         
 
 
+@socketio.on("submit_rating")
+def handle_rating(data):
+    perfume_id = data.get("perfume_id")
+    product_rating = data.get("product_rating")
+    ai_rating = data.get("ai_rating")
+
+    if not perfume_id or not product_rating or not ai_rating:
+        return
+
+    entry = {
+        "perfume_id": perfume_id,
+        "product_rating": product_rating,
+        "ai_rating": ai_rating
+    }
+    redis_client.rpush("ratings", json.dumps(entry))
+
+    print(f"[⭐] Rating received → {entry}")
 
 
 # Main app entry
 if __name__ == '__main__':
     socketio.start_background_task(target=redis_listener)
+    socketio.start_background_task(target=watch_trigger)
 
     def get_local_ip():
         s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)

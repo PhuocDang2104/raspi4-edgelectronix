@@ -553,8 +553,46 @@
       <button id="sendBtn">Send</button>
       <button id="closeBtn">Close</button>
     </div>
-
   </div>
+
+<!-- Modal Rating -->
+<div id="ratingModal" class="modal-overlay" style="display:none;">
+  <div class="modal-content">
+    <h3>Rate this perfume</h3>
+
+    <div class="rating-row">
+      <span>Product's Rating:</span>
+      <div id="userRatingStars" class="star-select">
+        <i class="bi bi-star" data-value="1"></i>
+        <i class="bi bi-star" data-value="2"></i>
+        <i class="bi bi-star" data-value="3"></i>
+        <i class="bi bi-star" data-value="4"></i>
+        <i class="bi bi-star" data-value="5"></i>
+      </div>
+    </div>
+
+    <div class="rating-row">
+      <span>S.C.E.N.T AI Rating:</span>
+      <div id="aiRatingStars" class="star-select">
+        <i class="bi bi-star" data-value="1"></i>
+        <i class="bi bi-star" data-value="2"></i>
+        <i class="bi bi-star" data-value="3"></i>
+        <i class="bi bi-star" data-value="4"></i>
+        <i class="bi bi-star" data-value="5"></i>
+      </div>
+    </div>
+
+    <div class="modal-actions">
+      <button id="submitRatingBtn">Submit</button>
+      <button id="closeRatingBtn">Cancel</button>
+    </div>
+
+    <p id="thankMessage" style="display:none; margin-top:12px; font-weight:bold; color:#28a745;">
+      Thanks deared customer! 💖
+    </p>
+  </div>
+</div>
+
 </div>
 
 
@@ -1275,6 +1313,70 @@ socket.on('perfume_by_id', (perfume) => {
 
 });
 
+let currentPerfumeId = null;
+let productRating = 0;
+let aiRating = 0;
+
+// Hàm chọn sao
+function setupStars(containerId, callback) {
+  document.querySelectorAll(`#${containerId} i`).forEach(star => {
+    star.addEventListener("click", () => {
+      let val = parseInt(star.dataset.value);
+      callback(val);
+      document.querySelectorAll(`#${containerId} i`).forEach(s => {
+        s.classList.toggle("active", parseInt(s.dataset.value) <= val);
+      });
+    });
+  });
+}
+
+// Nhận trigger từ server
+socket.on("show_rating_request", (data) => {
+  console.log("⭐ Show rating request:", data);
+  currentPerfumeId = data.perfume_id;
+  productRating = 0;
+  aiRating = 0;
+
+  // Reset stars
+  document.querySelectorAll("#userRatingStars i, #aiRatingStars i").forEach(s => s.classList.remove("active"));
+
+  // Reset thank message
+  document.getElementById("thankMessage").style.display = "none";
+
+  // Show modal
+  document.getElementById("ratingModal").style.display = "flex";
+});
+
+// Gán handler cho 2 bộ sao
+setupStars("userRatingStars", (val) => productRating = val);
+setupStars("aiRatingStars", (val) => aiRating = val);
+
+// Submit
+document.getElementById("submitRatingBtn").onclick = () => {
+  if (!currentPerfumeId || !productRating || !aiRating) {
+    alert("Please select both ratings!");
+    return;
+  }
+  socket.emit("submit_rating", {
+    perfume_id: currentPerfumeId,
+    product_rating: productRating,
+    ai_rating: aiRating
+  });
+  console.log("📤 Sent rating:", currentPerfumeId, productRating, aiRating);
+
+  // Show thank message
+  document.getElementById("thankMessage").style.display = "block";
+
+  // 1.5s sau tự đóng modal
+  setTimeout(() => {
+    document.getElementById("ratingModal").style.display = "none";
+  }, 1500);
+};
+
+// Cancel
+document.getElementById("closeRatingBtn").onclick = () => {
+  document.getElementById("ratingModal").style.display = "none";
+};
   </script>
 </body>
 </html>

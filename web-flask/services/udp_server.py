@@ -29,7 +29,7 @@ sock.settimeout(0.5)
 print("📡 Listening on UDP port", UDP_PORT)
 
 # IPv6 cố định của 2 thiết bị
-addr1_ip = "fd85:946:886f:1:c1a8:a5f8:bae0:741e"
+addr1_ip = "fdb2:571d:54f5:9b58:afe4:32d9:b041:8f0f"
 addr2_ip = "fdb2:571d:54f5:9b58:39a1:581f:e709:5f9c"
 
 while True:
