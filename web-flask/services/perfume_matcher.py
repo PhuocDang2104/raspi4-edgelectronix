@@ -3,7 +3,7 @@ import time
 
 redis_client = redis.Redis(host="localhost", port=6379, db=0, decode_responses=True)
 
-# TTL (giây) cho suggest id
+# TTL (giây) cho suggest id trước khi hết hiệu lực
 SUGGEST_TTL = 20
 
 def main():
