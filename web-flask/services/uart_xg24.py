@@ -182,13 +182,13 @@ def read_from_uart():
 
                         if ids:
                             try:
-                                redis_client.set("uart_model_result", ids[0])
+                                redis_client.set("uart_model_result", ids[0] + 1)
                                 if len(ids) > 1:
-                                    redis_client.set("uart_model_result_2", ids[1])
+                                    redis_client.set("uart_model_result_2", ids[1] + 1)
                                 else:
                                     redis_client.delete("uart_model_result_2")
                                 if len(ids) > 2:
-                                    redis_client.set("uart_model_result_3", ids[2])
+                                    redis_client.set("uart_model_result_3", ids[2] + 1)
                                 else:
                                     redis_client.delete("uart_model_result_3")
                                 redis_client.set("uart_model_result_all", json.dumps(ids))
