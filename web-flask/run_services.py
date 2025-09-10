@@ -10,6 +10,7 @@ def run_raspi():
     # Các file trong /services
     service_scripts = [
         "mqtt_ai_confidence.py",
+        "mqtt_customer_data.py",
         "mqtt_ratings.py",
         "mqtt_shelf_data.py",
         "mqtt.py",
