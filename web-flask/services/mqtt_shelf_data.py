@@ -1,77 +1,51 @@
-# mqtt_shelf_data.py (Desktop) - subscribe CNT + QTY
-# CNT -> Redis, QTY -> PostgreSQL
+# mqtt_shelf_data.py (Raspi4) - publish CNT + QTY từ Redis
+import time
+import threading
 import json
 import redis
-import psycopg2
 import paho.mqtt.client as mqtt
 
-BROKER = "192.168.178.66"       # IP broker (cùng LAN với Raspi)
-TOPIC_SHELF = "sensors/shelf"
+BROKER = "192.168.162.66"       # ⚠️ check lại IP broker mỗi lần chạy
+TOPIC_SHELF = "sensors/shelf"   # topic gửi dữ liệu kệ
 
-# ⚙️ PostgreSQL config
-POSTGRES_CONFIG = {
-    'host': 'localhost',
-    'database': 'postgres',
-    'user': 'postgres',
-    'password': 'admin'
-}
+# MQTT client
+client = mqtt.Client()
+client.connect(BROKER, 1883, 60)
+client.loop_start()
 
-# Kết nối PostgreSQL
-conn = psycopg2.connect(**POSTGRES_CONFIG)
-conn.autocommit = True
-cur = conn.cursor()
-
-# Redis client (chỉ để lưu CNT)
+# Redis client
 r = redis.Redis(host="localhost", port=6379, db=0, decode_responses=True)
 
-def on_connect(client, userdata, flags, rc):
-    if rc == 0:
-        print("✅ Connected to MQTT broker")
-        client.subscribe(TOPIC_SHELF)
-    else:
-        print("❌ Failed to connect, return code:", rc)
+def shelf_publisher():
+    while True:
+        try:
+            cnt = r.get("pick_count_from_udp")
+            qty = r.get("pick_qty_from_udp")
 
-def on_message(client, userdata, msg):
+            if cnt or qty:
+                data = {
+                    "counts": cnt.split(",") if cnt else [],
+                    "qty": qty.split(",") if qty else [],
+                    "timestamp": int(time.time())
+                }
+                payload = json.dumps(data)
+                client.publish(TOPIC_SHELF, payload)
+                print("📤 Publish shelf data:", payload)
+        except Exception as e:
+            print("❌ Shelf publisher error:", e)
+        time.sleep(2)  # mỗi 2s gửi một lần
+
+if __name__ == "__main__":
     try:
-        data = json.loads(msg.payload.decode())
-        print(f"📥 Received shelf data: {data}")
-
-        # --- Lưu CNT vào Redis ---
-        if "counts" in data:
-            cnt_str = "CNT:" + ",".join(data["counts"])
-            r.set("pick_count_from_mqtt", cnt_str)
-            print("💾 Saved CNT to Redis:", cnt_str)
-
-        # --- Ghi QTY vào PostgreSQL ---
-        qty = data.get("qty", [])
-        if qty:
-            qty_str = "QTY:" + ",".join(qty)
-            print("📦 Shelf QTY:", qty_str)
-
-            perfume_ids = [
-                "P001", "P030", "P007", "P017", "P020",
-                "P026", "P005", "P045", "P047", "P049"
-            ]
-
-            for pid, stock in zip(perfume_ids, qty):
-                cur.execute(
-                    """
-                    UPDATE shelf_stock
-                    SET shelf_stock = %s
-                    WHERE perfume_id = %s
-                    """,
-                    (int(stock), pid)
-                )
-
-            print("💾 PostgreSQL updated with new QTY values")
-
-    except Exception as e:
-        print("❌ Error parsing or updating:", e)
-
-# MQTT client setup
-client = mqtt.Client()
-client.on_connect = on_connect
-client.on_message = on_message
-
-client.connect(BROKER, 1883, 60)
-client.loop_forever()
+        t = threading.Thread(target=shelf_publisher, daemon=True)
+        t.start()
+        while True:
+            time.sleep(1)
+    except KeyboardInterrupt:
+        print("Exiting...")
+    finally:
+        try:
+            client.loop_stop()
+            client.disconnect()
+        except Exception:
+            pass
