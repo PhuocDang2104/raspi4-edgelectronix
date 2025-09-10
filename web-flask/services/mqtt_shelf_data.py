@@ -5,7 +5,7 @@ import redis
 import psycopg2
 import paho.mqtt.client as mqtt
 
-BROKER = "192.168.162.66"       # IP broker (cùng LAN với Raspi)
+BROKER = "192.168.178.66"       # IP broker (cùng LAN với Raspi)
 TOPIC_SHELF = "sensors/shelf"
 
 # ⚙️ PostgreSQL config
