@@ -1004,15 +1004,15 @@ socket.on('update_perfume_xg24_result', (data) => {
 function buildSubImageName(perfumeId, title) {
   const specialImageMap = {
     "P001": "alien.png",
-    "P005": "individuel.png",
-    "P007": "burberry-women.png",
-    "P017": "bvlgari-man.png",
+    "P005": "gucci-bamboo.png",
+    "P007": "amber-elixir-crystal.png",
+    "P017": "gucci-bloom-profumo-di-fiori.png",
     "P020": "bee.png",
-    "P026": "lacoste-pour-homme.png",
+    "P026": "polo-club-sexy-eau.png",
     "P030": "geranium-pour-monsieur.png",
-    "P045": "far-away-royale.png",
+    "P045": "polo-club-braze-eau.png",
     "P047": "gardenia.png",
-    "P049": "the-iceberg-fragrance.png"
+    "P049": "incanto-charms.png"
   };
   if (perfumeId && specialImageMap[perfumeId]) return specialImageMap[perfumeId];
   if (perfumeId) return `${perfumeId}.png`;
@@ -1159,15 +1159,15 @@ function showPerfumeResult(perfume) {
   // danh sách 8 file đặc biệt
   const specialImgsl = [
     "alien.png",
-    "individuel.png",
-    "burberry-women.png",
-    "bvlgari-man.png",
+    "gucci-bamboo.png",
+    "amber-elixir-crystal.png",
+    "gucci-bloom-profumo-di-fiori.png",
     "bee.png",
-    "lacoste-pour-homme.png",
+    "polo-club-sexy-eau.png",
     "geranium-pour-monsieur.png",
-    "far-away-royale.png",
+    "polo-club-braze-eau.png",
     "gardenia.png",
-    "the-iceberg-fragrance.png"
+    "incanto-charms.png"
   ];
 
   if (specialImgsl.includes(imgName)) {
