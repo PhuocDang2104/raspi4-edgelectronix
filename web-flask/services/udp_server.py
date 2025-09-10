@@ -51,6 +51,15 @@ while True:
                     cnt_part = parts[0].replace("CNT:", "").strip()
                     qty_part = parts[1].strip() if len(parts) > 1 else ""
 
+                    if qty_part:
+                                qty_list = [int(x) for x in qty_part.split(",")]
+
+                                for i in range(2, len(qty_list)):
+                                    if qty_list[i] in (0, 1):  # chỉ đảo bit 0/1
+                                        qty_list[i] = 1 - qty_list[i]
+
+                                qty_part = ",".join(str(x) for x in qty_list)
+
                     # Lưu riêng vào Redis
                     redis_client.set("pick_count_from_udp", cnt_part)
                     redis_client.set("pick_qty_from_udp", qty_part)
