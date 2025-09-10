@@ -5,7 +5,7 @@ import json
 import redis
 import paho.mqtt.client as mqtt
 
-BROKER = "192.168.162.66"       # ⚠️ check lại IP broker mỗi lần chạy
+BROKER = "192.168.178.66"       # ⚠️ check lại IP broker mỗi lần chạy
 TOPIC_SHELF = "sensors/shelf"   # topic gửi dữ liệu kệ
 
 # MQTT client
