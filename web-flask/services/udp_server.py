@@ -44,9 +44,22 @@ while True:
                 redis_client.set('selected_perfume_id_from_udp', message)
                 print(f"* [Perfume] Set 'selected_perfume_id_from_udp': {message}")
 
-            elif message.startswith("CNT:") or message.startswith("QTY:"):
-                redis_client.set('pick_counts_from_udp', message)
-                print(f"* [Perfume] Set 'pick_counts_from_udp': {message}")
+            elif message.startswith("CNT:"):
+                try:
+                    # Tách CNT và QTY
+                    parts = message.split("QTY:")
+                    cnt_part = parts[0].replace("CNT:", "").strip()
+                    qty_part = parts[1].strip() if len(parts) > 1 else ""
+
+                    # Lưu riêng vào Redis
+                    redis_client.set("pick_count_from_udp", cnt_part)
+                    redis_client.set("pick_qty_from_udp", qty_part)
+
+                    print(f"* [Perfume] CNT = {cnt_part}")
+                    print(f"* [Perfume] QTY = {qty_part}")
+
+                except Exception as e:
+                    print(f"[Perfume] Error parsing CNT/QTY: {e}, msg={message}")
 
             else:
                 print(f"⚠️ [Device1] Unknown message format: {message}")
