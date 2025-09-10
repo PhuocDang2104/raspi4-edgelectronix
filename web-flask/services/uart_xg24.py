@@ -176,19 +176,20 @@ def read_from_uart():
                             if m:
                                 try:
                                     num = int(m.group())
+                                    num += 1
                                     ids.append(f"P{num:03d}")
                                 except Exception as e:
                                     print(f"[Warn] Không convert được '{m.group()}' -> int:", e)
 
                         if ids:
                             try:
-                                redis_client.set("uart_model_result", ids[0] + 1)
+                                redis_client.set("uart_model_result", ids[0])
                                 if len(ids) > 1:
-                                    redis_client.set("uart_model_result_2", ids[1] + 1)
+                                    redis_client.set("uart_model_result_2", ids[1])
                                 else:
                                     redis_client.delete("uart_model_result_2")
                                 if len(ids) > 2:
-                                    redis_client.set("uart_model_result_3", ids[2] + 1)
+                                    redis_client.set("uart_model_result_3", ids[2])
                                 else:
                                     redis_client.delete("uart_model_result_3")
                                 redis_client.set("uart_model_result_all", json.dumps(ids))
