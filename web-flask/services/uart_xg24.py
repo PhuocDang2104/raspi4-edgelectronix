@@ -230,7 +230,6 @@ def redis_poller():
                     data = json.loads(s.strip())
                 except Exception as e:
                     print("Không parse được JSON:", e, "Raw:", raw)
-                    redis_client.delete(REDIS_KEY)
                     time.sleep(POLL_INTERVAL)
                     continue
 
