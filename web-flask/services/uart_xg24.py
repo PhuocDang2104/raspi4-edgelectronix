@@ -283,7 +283,6 @@ def redis_poller():
                     except Exception as e:
                         print("Lỗi UART:", e)
 
-                redis_client.delete(REDIS_KEY)
             time.sleep(POLL_INTERVAL)
     except Exception:
         traceback.print_exc()
