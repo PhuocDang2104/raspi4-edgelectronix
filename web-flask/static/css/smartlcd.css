@@ -155,7 +155,7 @@ body.bg-far-away-royale::before {
 
 /* === GARDENIA - P047 === */
 body.bg-gardenia {
-    background: linear-gradient(90deg, #edd8ff 0%, #a46ba4 85%,#a6809b 100%);
+    background: linear-gradient(90deg, #fbf6ff 0%, #ffedfc 85%,#a6809b 100%);
     --note1-bg: linear-gradient(90deg, #f6fafd, #a46b90);
     --note2-bg: linear-gradient(90deg, #f6fafd, #826298);
     --note3-bg: linear-gradient(90deg, #f6fafd, #8b5878);
