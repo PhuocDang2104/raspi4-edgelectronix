@@ -242,33 +242,19 @@ def redis_poller():
                             return d[kk]
                     return default
 
-                # Detect AI NLP case
-                is_ai_nlp = all(k in data for k in ("preferred_accord", "longevity", "price"))
+                # Lấy fields theo chuẩn build_request_json
+                gender   = get_field(data, "gender", default="Any")
+                brand    = get_field(data, "brand", default="Any")
+                notes    = get_field(data, "notes", default=[])
+                accords  = get_field(data, "preferred_accord", "accords", default=[])
+                sillage  = get_field(data, "sillage", default="Any")
+                longevity= get_field(data, "longevity", default="Any")
+                price    = get_field(data, "price", default="Any")
 
-                if is_ai_nlp:
-                    gender = "Any"
-                    brand  = "Any"
-                    sillage= "Any"
-                    accords = data.get("preferred_accord", [])
-                    longevity = data.get("longevity", "Any")
-                    price = data.get("price", "Any")
-
-                    if isinstance(accords, str):
-                        accords = [x.strip() for x in accords.split(",") if x.strip()]
-                    notes = accords.copy()  # duplicate accords to notes
-                else:
-                    gender = get_field(data, "GENDER", "gender", default="Any")
-                    brand  = get_field(data, "BRAND", "brand", default="Any")
-                    notes  = get_field(data, "NOTES", "notes", default=[])
-                    accords= get_field(data, "PREFERRED_ACCORD", "preferred_accord", "accords", default=[])
-                    sillage= get_field(data, "SILLAGE", "sillage", default="Any")
-                    longevity = get_field(data, "LONGEVITY", "longevity", default="Any")
-                    price  = get_field(data, "PRICE", "price", default="Any")
-
-                    if isinstance(notes, str):
-                        notes = [x.strip() for x in notes.split(",") if x.strip()]
-                    if isinstance(accords, str):
-                        accords = [x.strip() for x in accords.split(",") if x.strip()]
+                if isinstance(notes, str):
+                    notes = [x.strip() for x in notes.split(",") if x.strip()]
+                if isinstance(accords, str):
+                    accords = [x.strip() for x in accords.split(",") if x.strip()]
 
                 try:
                     csv_line = gen_csv(gender, brand, notes, accords, sillage, longevity, price)

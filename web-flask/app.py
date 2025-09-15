@@ -1,13 +1,92 @@
 import eventlet
 eventlet.monkey_patch()
 
-from ai_models.ner_normalize import normalize_entity
+from ai_models.ner_normalize import normalize_entity, ner_normalize
 from flask import Flask, render_template, jsonify
 from flask_socketio import SocketIO
 import socket
 import redis
 import json
 import spacy
+
+def build_request_json(doc):
+    # build initial raw request from entities (same as before)
+    request = {
+        "gender": "Any",
+        "brand": "Any",
+        "notes": [],
+        "preferred_accord": [],
+        "sillage": "Any",
+        "longevity": "Any",
+        "price": "Any",
+    }
+
+    for ent in doc.ents:
+        raw_text = ent.text
+        label = ent.label_
+        normalized = normalize_entity(label, raw_text)
+
+        if not normalized:
+            continue
+
+        if label == "GENDER" and "gender" in normalized:
+            request["gender"] = normalized["gender"]
+
+        elif label == "BRAND" and "brand" in normalized:
+            request["brand"] = normalized["brand"]
+
+        elif label == "PREFERRED_ACCORD":
+            if "note" in normalized:
+                request["notes"].append(normalized["note"])
+            if "accord" in normalized:
+                request["preferred_accord"].append(normalized["accord"])
+
+        elif label == "SILLAGE" and "sillage" in normalized:
+            request["sillage"] = normalized["sillage"]
+
+        elif label == "LONGEVITY" and "longevity" in normalized:
+            request["longevity"] = normalized["longevity"]
+
+        elif label == "PRICE" and "price" in normalized:
+            request["price"] = normalized["price"]
+
+        elif label == "AGE" and "age" in normalized:
+            # chưa dùng, bỏ qua
+            pass
+
+    # loại trùng (keep order optional)
+    request["notes"] = list(dict.fromkeys(request["notes"]))
+    request["preferred_accord"] = list(dict.fromkeys(request["preferred_accord"]))
+
+    # --- CRITICAL: call ner_normalize to apply full normalization and accord->notes expansion ---
+    # ner_normalize returns: gender, brand, notes_canonical, accords_canonical, sillage, longevity, price
+    try:
+        gender, brand, notes_canonical, accords_canonical, sillage, longevity, price = ner_normalize(
+            {
+                "gender": request.get("gender", "Any"),
+                "brand": request.get("brand", "Any"),
+                "notes": request.get("notes", []),
+                "preferred_accord": request.get("preferred_accord", []),
+                "sillage": request.get("sillage", "Any"),
+                "longevity": request.get("longevity", "Any"),
+                "price": request.get("price", "Any"),
+                # optionally include raw text for detection:
+                # "text": doc.text
+            }
+        )
+        # update request using normalized results
+        request["gender"] = gender
+        request["brand"] = brand
+        request["notes"] = notes_canonical
+        request["preferred_accord"] = accords_canonical
+        request["sillage"] = sillage
+        request["longevity"] = longevity
+        request["price"] = price
+    except Exception as e:
+        # fallback: if ner_normalize fails, keep original request
+        print(f"❌ ner_normalize error: {e}")
+
+    return request
 
 # Load model 1 lần khi server khởi động
 nlp_model = spacy.load("ai_models/output/model-last")
@@ -80,25 +159,23 @@ def handle_ai_request(data):
     elif 'NLP_input' in data:
         NLP_input = data['NLP_input']
         print(f"- Received NLP Input: {NLP_input}")
+
         # Run inference
         doc = nlp_model(NLP_input)
-        results = {}
-        # Trích xuất entity kết quả
-        for ent in doc.ents:
-            raw_text = ent.text
-            label = ent.label_
-            normalized = normalize_entity(label, raw_text)
-            print(f"{raw_text} → {normalized} ({label})")
 
-            # Thêm vào kết quả theo dạng: label (viết thường) → normalized text
-            results[label.lower()] = normalized
-            print(results)
-            try:
-                uart_message = json.dumps(results)
-                redis_client.set("uart_outgoing_message", uart_message)
-                print(f"Queued message for EFR32 via Redis: {uart_message}")
-            except Exception as e:
-                print(f"❌ Failed to queue message for UDP: {e}")
+        # Gom JSON chuẩn
+        results = build_request_json(doc)
+
+        print("=== NLP normalized JSON ===")
+        for k, v in results.items():
+            print(f"{k}: {v}")
+
+        try:
+            uart_message = json.dumps(results)
+            redis_client.set("uart_outgoing_message", uart_message)
+            print(f"✅ Queued message for EFR32 via Redis: {uart_message}")
+        except Exception as e:
+            print(f"❌ Failed to queue message for UDP: {e}")
 
         #  Gửi lên frontend qua Socket.IO
         socketio.emit('ai_response', results)

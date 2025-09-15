@@ -1012,3 +1012,146 @@ input[type="checkbox"]:focus {
   }
   #submitRatingBtn { background:#007bff; color:white; }
   #closeRatingBtn { background:#ccc; }
+
+
+/* Record modal - clean black & white professional style */
+.record-modal {
+  display: none; /* shown via JS */
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.55);
+  z-index: 12000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+}
+
+.record-content {
+  /* match .modal-overlay .modal-content */
+  width: 720px;
+  max-width: calc(100% - 40px);
+  max-height: 80vh;        /* giới hạn chiều cao giống modal khác */
+  overflow: hidden;        /* tránh tràn, scroll nội bộ nếu cần */
+  padding: 18px;           /* same padding */
+  border-radius: 8px;
+  box-sizing: border-box;
+
+  /* layout inside */
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  background: #ffffff;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.35);
+}
+
+
+.record-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 12px;
+  font-size: 16px;
+  color: #222;
+}
+
+.record-header strong {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px; /* khoảng cách nhỏ giữa chữ và chấm đỏ */
+  font-weight: bold;
+}
+
+.close-x {
+  background: none;
+  border: none;
+  font-size: 20px;
+  cursor: pointer;
+  color: #000;
+  margin-left: auto;
+}
+
+#waveCanvas {
+  width: 100%;
+  /* a comfortable canvas height that fits modal — tweak if you want taller/shorter */
+  height: 160px;           /* thay đổi nếu muốn thấp hơn / cao hơn */
+  background: #ffffff;     /* nền trắng như bạn yêu cầu */
+  border-radius: 8px;
+  display: block;
+  box-shadow: inset 0 1px 0 rgba(0,0,0,0.04);
+  border: 1px solid rgba(0,0,0,0.06);
+}
+
+/* footer with status and stop */
+.record-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.status-group {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: #111;
+  font-weight: 600;
+}
+
+.rec-dot {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  margin-left: 8px;
+  background: #ff4b4b;
+  box-shadow: 0 0 8px rgba(255,75,75,0.9);
+  animation: recPulse 1.2s infinite;
+}
+
+@keyframes recPulse {
+  0% { transform: scale(1); opacity: 1; }
+  50% { transform: scale(1.35); opacity: 0.6; }
+  100% { transform: scale(1); opacity: 1; }
+}
+
+.btn {
+  padding: 8px 14px;
+  border-radius: 8px;
+  border: 1px solid #ddd;
+  background: #fff;
+  cursor: pointer;
+  font-weight: 600;
+}
+#recText {
+  margin-top: 10px;
+  font-size: 14px;
+  color: #333;
+}
+
+#recText ul {
+  margin: 0 0 0 15px;
+  padding: 0;
+  list-style-type: disc;
+}
+
+#recText li {
+  font-weight: normal;
+  margin: 3px 0;
+  color: #333;
+}
+.btn-stop {
+  background: #111;
+  color: #fff;
+  border-color: #111;
+}
+
+/* responsive */
+@media (max-width: 760px) {
+  .record-content {
+    width: calc(100% - 24px);
+    max-height: 92vh;
+    padding: 14px;
+  }
+  #waveCanvas {
+    height: 160px; /* smaller on mobile */
+  }
+}

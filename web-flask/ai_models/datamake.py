@@ -28,49 +28,158 @@ personality_map = {
     "mysterious": ["mysterious", "enigmatic", "intriguing", "elusive"]
 }
 
+# Updated accord_map: includes original accords plus many NOTE_NAMES mapped into appropriate accord buckets
 accord_map = {
-    "floral": ["floral", "flowery", "flower", "blooming", "blossom", "petal-like", "bouquet"],
-    "white floral": ["white floral", "delicate floral", "white flower", "soft floral", "pure bloom", "creamy flower", "jasmine-like"],
-    "yellow floral": ["yellow floral", "bright floral", "colorful flower", "sunny bloom", "golden flower", "cheerful floral", "sunflower"],
-    "woody": ["woody", "oak", "wood", "tree", "bark", "cedar", "piney", "dry wood", "forest", "pine tree"],
-    "earthy": ["earthy", "soil-like", "groundy", "damp earth", "natural", "humus", "clay", "soil"],
-    "mossy": ["mossy", "green moss"],
-    "citrus": ["citrus", "citrusy", "zesty", "lemony", "lime", "grapefruit", "tart", "fresh peel", "bitter orange", "blood orange",
-    "clementine", "mandarin orange", "orange"],
-    "sweet": ["sweet", "sugary", "candied", "chocolate",  "dark chocolate", "cocoa", "whipped cream", "dessert-like", "syrupy", "salted caramel","caramel"],
-    "powdery": ["powdery", "soft powder"],
-    "balsamic": ["balsamic", "resinous", "syrupy"],
-    "amber": ["amber", "warm", "resinous"],
-    "vanilla": ["vanilla", "creamy", "sweet vanilla"],
-    "fruity": ["fruity", "juicy", "fruit-like"],
-    "tropical": ["tropical", "island vibe", "exotic fruit", "beachy", "pineapple", "mango", "coconut"],
-    "spicy": ["spicy", "peppery", "hot", "peppery", "ginger", "ginger flower", "ceylon cinnamon", "saffron"],
-    "warm spicy": ["warm spicy", "cozy spice", "rich spice", "cinnamon-like", "amber spice", "comforting", "cinnamon"],
-    "fresh spicy": ["fresh spicy", "zingy spice", "green spice"],
-    "aromatic": ["aromatic", "herbal", "medicinal"],
-    "green": ["green", "leafy", "grassy"],
-    "aquatic": ["aquatic", "marine", "watery", "sea", "ocean", "fresh water"],
-    "ozonic": ["ozonic", "airy", "clean", "cool breeze", "mountain air", "clean breeze"],
-    "musky": ["musky", "animalic", "skin-like"],
-    "animalic": ["animalic", "feral", "musk-like"],
-    "leather": ["leather", "suede", "tanned hide"],
-    "smoky": ["smoky", "burnt", "charcoal", "campfire", "smoky tobacco"],
-    "aldehydic": ["aldehydic", "soapy", "metallic", "soap"],
-    "coffee": ["coffee", "roasted", "caffeinated","espresso", "bitter-sweet", "americano", "roasted coffee"],
-    "lactonic": ["lactonic", "milky", "creamy"],
-    "iris": ["iris", "powdery floral", "rooty floral", "buttery flower"],
-    "violet": ["violet", "sweet floral", "purple flower", "powdery violet", "candy floral"],
-    "rose": ["rose", "rosy", "romantic floral", "red flower", "velvety petal", "floral heart"],
-    "tuberose": ["tuberose", "heady floral", "white bloom"],
-    "lavender": ["lavender", "soothing herb", "purple herb"],
-    "herbal": ["herbal", "green plant", "botanical", "plant"],
-    "beeswax": ["beeswax", "waxen", "honeyed wax"],
-    "honey": ["honey", "sweet nectar", "bee-sweet"],
-    "whiskey": ["whiskey", "boozy", "aged alcohol", "alcohol", "liquor", "brandy"],
-    "cannabis": ["cannabis", "weed-like", "green narcotic"],
-    "cherry": ["cherry", "red fruit", "sweet cherry", "berry"],
-    "tobacco": ["tobacco", "smoked leaf", "nicotine scent", "burnt", "charcoal", "campfire", "cigarette"]
+    "aldehydic": [
+        "aldehydic", "soapy", "metallic", "soap", "aldehydes"
+    ],
+    "amber": [
+        "amber", "warm", "resinous", "ambergris", "ambroxan", "black amber"
+    ],
+    "animalic": [
+        "animalic", "feral", "musk-like", "civet"
+    ],
+    "aquatic": [
+        "aquatic", "marine", "watery", "sea", "ocean", "fresh water", "calone", "lotus"
+    ],
+    "aromatic": [
+        "aromatic", "herbal", "medicinal", "black tea", "tea", "rosemary"
+    ],
+    "balsamic": [
+        "balsamic", "resinous", "syrupy", "benzoin", "myrrh", "peru balsam", "incense"
+    ],
+    "beeswax": [
+        "beeswax", "waxen", "honeyed wax"
+    ],
+    "cannabis": [
+        "cannabis", "weed-like", "green narcotic", "hemp"
+    ],
+    "cherry": [
+        "cherry", "red fruit", "sweet cherry", "berry"
+    ],
+    "chocolate": [
+        "chocolate", "dark chocolate", "cocoa", "cacao", "milk chocolate"
+    ],
+    "citrus": [
+        "citrus", "citrusy", "zesty", "lemony", "lime", "grapefruit", "tart", "fresh peel",
+        "bitter orange", "blood orange", "clementine", "mandarin orange", "orange",
+        "bergamot", "calabrian bergamot", "green mandarin", "tangerine", "amalfi lemon",
+        "lemon", "citruses", "petitgrain"
+    ],
+    "coconut": [
+        "coconut", "coconut milk", "coconut water", "tropical coconut"
+    ],
+    "coffee": [
+        "coffee", "roasted", "caffeinated", "espresso", "bitter-sweet", "americano", "roasted coffee"
+    ],
+    "earthy": [
+        "earthy", "soil-like", "groundy", "damp earth", "natural", "humus", "clay", "soil",
+        "patchouli", "indonesian patchouli leaf", "moss"
+    ],
+    "floral": [
+        "floral", "flowery", "flower", "blooming", "blossom", "petal-like", "bouquet",
+        "broom", "geranium", "peony", "mirabilis", "rosebay willowherb", "floral notes",
+        "gardenia", "hyacinth", "carnation", "pink pepper"
+    ],
+    "fresh": [
+        "fresh", "airy", "clean"
+    ],
+    "fresh spicy": [
+        "fresh spicy", "zingy spice", "green spice", "white pepper", "pink pepper", "ginger"
+    ],
+    "fruity": [
+        "fruity", "juicy", "fruit-like", "apple", "apricot", "big strawberry", "black currant",
+        "dried plum", "litchi", "passionfruit", "peach", "pear", "plum", "raspberry",
+        "red berries", "red currant", "red fruits", "white peach", "mango", "pineapple",
+        "tropical", "cherry", "strawberry"
+    ],
+    "green": [
+        "green", "leafy", "grassy", "green notes", "mint", "juniper", "water mint"
+    ],
+    "herbal": [
+        "herbal", "green plant", "botanical", "plant", "basil", "sage", "laurels", "rosemary", "artemisia"
+    ],
+    "honey": [
+        "honey", "sweet nectar", "bee-sweet", "white honey"
+    ],
+    "iris": [
+        "iris", "powdery floral", "rooty floral", "buttery flower", "orris"
+    ],
+    "lactonic": [
+        "lactonic", "milky", "creamy"
+    ],
+    "lavender": [
+        "lavender", "soothing herb", "purple herb"
+    ],
+    "leather": [
+        "leather", "suede", "tanned hide"
+    ],
+    "mossy": [
+        "mossy", "green moss", "moss", "oakmoss"
+    ],
+    "musky": [
+        "musky", "animalic", "skin-like", "white musk", "musk"
+    ],
+    "ozonic": [
+        "ozonic", "airy", "clean", "cool breeze", "mountain air", "clean breeze", "salt"
+    ],
+    "powdery": [
+        "powdery", "soft powder", "heliotrope", "mimosa", "powdery notes", "rice", "silkwood blossom"
+    ],
+    "rose": [
+        "rose", "rosy", "romantic floral", "red flower", "velvety petal", "floral heart",
+        "bulgarian rose", "turkish rose", "may rose", "grasse rose"
+    ],
+    "smoky": [
+        "smoky", "burnt", "charcoal", "campfire", "smoky tobacco", "incense", "birch leaf"
+    ],
+    "sweet": [
+        "sweet", "sugary", "candied", "chocolate", "dark chocolate", "cocoa", "whipped cream",
+        "dessert-like", "syrupy", "salted caramel", "caramel", "almond", "candy apple",
+        "tonka bean", "sugar", "pistachio", "rum", "coconut", "chestnut"
+    ],
+    "tobacco": [
+        "tobacco", "smoked leaf", "nicotine scent", "burnt", "charcoal", "campfire",
+        "cigarette", "tobacco leaf"
+    ],
+    "tropical": [
+        "tropical", "island vibe", "exotic fruit", "beachy", "pineapple", "mango", "coconut",
+        "tiare flower", "passionfruit", "hibiscus", "madagascar ylang-ylang", "ylang-ylang"
+    ],
+    "tuberose": [
+        "tuberose", "heady floral", "white bloom", "indian tuberose"
+    ],
+    "vanilla": [
+        "vanilla", "creamy", "sweet vanilla", "madagascar vanilla", "tahitian vanilla", "vanille"
+    ],
+    "violet": [
+        "violet", "sweet floral", "purple flower", "powdery violet", "candy floral", "violet leaf"
+    ],
+    "warm spicy": [
+        "warm spicy", "cozy spice", "rich spice", "cinnamon-like", "amber spice", "comforting",
+        "cinnamon", "ceylon cinnamon", "clove", "saffron", "nutmeg"
+    ],
+    "whiskey": [
+        "whiskey", "boozy", "aged alcohol", "alcohol", "liquor", "brandy", "rum"
+    ],
+    "white floral": [
+        "white floral", "delicate floral", "white flower", "soft floral", "pure bloom",
+        "creamy flower", "jasmine-like", "jasmine", "jasmine sambac", "lily", "lily-of-the-valley",
+        "orange blossom", "neroli", "tuberose", "indian tuberose", "magnolia", "narcissus",
+        "casablanca lily", "honeysuckle", "lotus", "white honey"
+    ],
+    "woody": [
+        "woody", "oak", "wood", "tree", "bark", "cedar", "piney", "dry wood", "forest",
+        "pine tree", "agarwood (oud)", "australian sandalwood", "cashmeran", "cashmere wood",
+        "cypress", "sandalwood", "texas cedar", "virginia cedar", "woodsy notes", "woody notes",
+        "white woods", "birch leaf", "vetiver", "vetyver", "oakmoss"
+    ],
+    "yellow floral": [
+        "yellow floral", "bright floral", "colorful flower", "sunny bloom", "golden flower",
+        "cheerful floral", "sunflower"
+    ]
 }
+
 
 # Usage & attributes mapping
 usage_map = {
@@ -244,26 +353,17 @@ sillage_phrases = {
             "bold projection",
             "a lingering presence",
             "a prominent scent",
-            "dense sillage"
+            "dense sillage",
+            "very strong sillage",
+            "an intense scent trail",
+            "overpowering projection",
+            "a room-filling aroma"
         ],
         "verb": [
             "projects boldly",
             "leaves a powerful scent trail",
             "fills the air with a noticeable presence",
-            "is strong and persistent"
-        ]
-    },
-    "Very Strong": {
-        "noun": [
-            "very strong sillage",
-            "an intense scent trail",
-            "overpowering projection",
-            "a room-filling aroma",
-            "a room-filling projection",
-            "a room-filling sillage",
-            "an extremely dense sillage"
-        ],
-        "verb": [
+            "is strong and persistent",
             "fills the room instantly",
             "projects intensely",
             "overpowers the surroundings",
@@ -335,7 +435,7 @@ price_text = {
     "High-end": ["high-end", "expensive", "costly"]
 }
 
-# Các mẫu template câu
+# Các mẫu template câu (giữ như trước, đã loại bỏ accord_sub)
 sentence_templates_noun = [
     "I'm a {age} years old {gender} with a {personality} style I enjoy {accord} scents and wear them {usage} I prefer a perfume that has {longevity} and {price} fragrances",
     "As a {age}-year-old {gender} I love {accord} scents that suit my {personality} side especially {usage} My choice is usually anything that has {sillage} {longevity} and {price}",
@@ -367,7 +467,7 @@ sentence_templates_noun = [
     "To be honest {accord} scents are just perfect for my {personality} side I'm a {gender} {age} and wear them mostly {usage} I like them {sillage} and {price} Oh yeah and something must be {longevity}",
     "I'm {age} I am {gender} that has a {personality} style I enjoy {accord} scents and I intend to wear them {usage} For longevity I prefer fragrance that is {longevity} And sillage i would like something has {sillage} And yeah something that must be {price} in price",
     "I am {gender} about {age} years old I think that I'm a person I use them mostly {usage} Something that is {price} About longevity i think i'll go for {longevity} maybe {sillage} for sillage",
-    "I'm a {age} {gender} I think that i'm kinda a {personality} person My favourite recently has been {accord} I also wanna try some {accord_sub} scent as well The sillage and longevity must be {sillage} & {longevity} I'm into something that is {price} in terms of price",
+    "I'm a {age} {gender} I think that i'm kinda a {personality} person My favourite recently has been {accord} The sillage and longevity must be {sillage} & {longevity} I'm into something that is {price} in terms of price",
     "I'm a {age} My favorite accord is {accord} I would prefer something has a {sillage} and a {longevity} Something that i can use {usage}",
     "I'm {age} I would describe myself as {personality} I would prefer something has a {sillage} with {longevity} Something that i can use {usage}",
     "I'm {gender} I would describe myself a {personality} person I would like something has {longevity} and {sillage} Something that i can use {usage} And the perfume must be {price} also",
@@ -377,10 +477,9 @@ sentence_templates_noun = [
     "I'm kinda into an accord that smell like ocean I would go for something that has {sillage} and a {longevity} Must be {price} also I will use it for {usage}",
     "So I'm {gender} looking for an accord that fits my {personality} vibe It should has a {sillage} I need it for {usage}",
     "So I'm a {gender} about {age} trying to find a scent that matches my {personality} energy It should has a {longevity} I'm gonna use it for {usage}",
-    "I'm looking for something that smell like {accord} or {accord_sub} A perfume for {gender} by the way I like it having {longevity} {sillage} and {price} It's for {usage}",
+    "I'm looking for something that smell like {accord} A perfume for {gender} by the way I like it having {longevity} {sillage} and {price} It's for {usage}",
     "I'm {age} I'm a {gender} I'm kinda {personality} I'm using it for {usage} the perfume must have {sillage} and It should be {price} Would be nice if it has {accord} scent"
 ]
-
 
 sentence_templates_verb = [
     "I'm a {age}-year-old {gender} with a {personality} style I enjoy {accord} scents and wear them {usage} I prefer something that {longevity} and {sillage}",
@@ -412,11 +511,8 @@ sentence_templates_verb = [
     "I would like a scent that {longevity} and {sillage} I'm {age} a {gender} and into {accord} notes I plan to use it mostly {usage} and prefer something {price}",
     "Give me something that {longevity} {sillage} and I'm happy I'm a {gender} {age} pretty {personality} and prefer {accord} scents to wear {usage} {price} is ideal",
     "At {age} as a {gender} I feel like {accord} fragrances really bring out my {personality} I use them mostly {usage} and I go for perfumes that {sillage} and {longevity}",
-    "Being a {gender} in my {age}s I gravitate toward {accord} scents that give off that {personality} vibe I use them mostly {usage} and I like perfumes that {sillage} and {longevity}",
-    "For me being {age} and {gender} {accord} perfumes just click I'm into that whole {personality} feel I usually wear them {usage} and love when the scent {longevity} and {sillage}"
+    "Being a {gender} in my {age}s I gravitate toward {accord} scents that give off that {personality} vibe I use them mostly {usage} and I like perfumes that {sillage} and {longevity}"
 ]
-
-
 
 TRAIN_DATA = []
 skipped = 0
@@ -424,6 +520,31 @@ skipped = 0
 template_cycle_noun = itertools.cycle(sentence_templates_noun)
 template_cycle_verb = itertools.cycle(sentence_templates_verb)
 accord_cycle = itertools.cycle(list(accord_map.keys()))
+
+# Helper: tìm tất cả vị trí xuất hiện của một phrase trong sentence (case-insensitive)
+def find_all_occurrences(text, sub):
+    text_low = text.lower()
+    sub_low = sub.lower()
+    starts = []
+    start = 0
+    while True:
+        idx = text_low.find(sub_low, start)
+        if idx == -1:
+            break
+        starts.append(idx)
+        start = idx + len(sub_low)
+    return starts
+
+# Helper: nối list accord thành 1 chuỗi tự nhiên: "a, b và c" hoặc "a và b" hoặc "a"
+def join_accords(phrases):
+    if not phrases:
+        return ""
+    if len(phrases) == 1:
+        return phrases[0]
+    if len(phrases) == 2:
+        return f"{phrases[0]} and {phrases[1]}"
+    # 3 or more
+    return ", ".join(phrases[:-1]) + f" and {phrases[-1]}"
 
 for idx, row in df.iterrows():
     for _ in range(2000):  # tạo 2000 câu cho mỗi dòng 
@@ -436,18 +557,25 @@ for idx, row in df.iterrows():
 
         personality_base = random.choice(list(personality_map.keys())) # chọn random các personality
 
-        accord_base = next(accord_cycle)
+        # --- MULTI-ACCORDS: chọn từ 1 đến 4 accords khác nhau ---
+        max_accords = 4  # user requested max 4
+        n_accords = random.randint(1, max_accords)
+        # chọn n_accords khóa khác nhau từ accord_map
+        selected_accord_keys = random.sample(list(accord_map.keys()), k=n_accords)
+        # cho mỗi key chọn 1 synonym phrase
+        selected_accord_phrases = [random.choice(accord_map[k]) for k in selected_accord_keys]
+        # chuỗi sẽ thế vào template (thay vì 1 accord như trước)
+        accord = join_accords(selected_accord_phrases)
 
-        usage_key = random.choice(list(usage_map.keys()))  # Chọn 1 trong 10 usage chính
+        usage_key = random.choice(list(usage_map.keys()))  # Chọn 1 trong các usage
         usage = random.choice(usage_map[usage_key])
-        sillage = random.choice(["Light","Medium","Strong","Very Strong"])
+        # sillage: merge Strong + Very Strong -> chỉ dùng Light, Medium, Strong
+        sillage = random.choice(["Light","Medium","Strong"])
         longevity = random.choice(["Short", "Medium", "Long"])
         price = random.choice(["High-end", "Affordable", "Average"])
 
         # Chọn synonym nếu có
         personality = random.choice(personality_map.get(personality_base, [personality_base]))
-        accord = random.choice(accord_map.get(accord_base, [accord_base]))
-        accord_sub = random.choice(accord_map.get(accord_base, [accord_base]))
 
         usage_phrase = usage
 
@@ -459,12 +587,8 @@ for idx, row in df.iterrows():
         
         price_phrase = random.choice(price_text[price])
 
-
-        
-
-        
         # Chọn random xem câu này dùng template nào
-        template_type = random.choice(["noun", "verb"])
+        template_type = random.choice(["noun", "verb"]) 
 
         if template_type == "noun":
             template = next(template_cycle_noun)
@@ -474,7 +598,6 @@ for idx, row in df.iterrows():
                 gender_cap=gender,
                 personality=personality,
                 accord=accord,
-                accord_sub=accord_sub,
                 usage=usage_phrase,
                 sillage=sillage_noun,
                 longevity=longevity_noun,
@@ -488,7 +611,6 @@ for idx, row in df.iterrows():
                 gender_cap=gender,
                 personality=personality,
                 accord=accord,
-                accord_sub=accord_sub,
                 usage=usage_phrase,
                 sillage=sillage_verb,
                 longevity=longevity_verb,
@@ -507,25 +629,33 @@ for idx, row in df.iterrows():
                 pass  # Không thêm nếu không tìm thấy
 
         def try_find_lower(phrase, label):
-            try:
-                start = sentence.lower().index(phrase.lower())
-                end = start + len(phrase)
-                ents.append((start, end, label))
-            except ValueError:
-                pass
+            # tìm tất cả occurrence (case-insensitive)
+            starts = find_all_occurrences(sentence, phrase)
+            for s in starts:
+                ents.append((s, s + len(phrase), label))
 
         # Thử tìm từng entity, nếu không có thì bỏ qua
         try_find(str(age), "AGE")
         try_find_lower(gender, "GENDER")
         try_find_lower(personality, "PERSONALITY")
-        try_find_lower(accord, "PREFERRED_ACCORD")
-        try_find_lower(accord_sub, "PREFERRED_ACCORD")
+
+        # Với multi-accords: tìm từng phrase trong selected_accord_phrases và gán label PREFERRED_ACCORD
+        for acc_phrase in selected_accord_phrases:
+            try_find_lower(acc_phrase, "PREFERRED_ACCORD")
+
         try_find(usage_phrase, "USAGE_SITUATION")
         try_find(sillage_noun, "SILLAGE")
         try_find(sillage_verb, "SILLAGE")
         try_find(longevity_noun, "LONGEVITY")
         try_find(longevity_verb, "LONGEVITY")   
         try_find(price_phrase, "PRICE")
+
+        # Loại bỏ span trùng nhau (nếu có) và sắp xếp theo vị trí bắt đầu
+        unique_ents = {}
+        for (s, e, l) in ents:
+            key = (s, e, l)
+            unique_ents[key] = (s, e, l)
+        ents = sorted(unique_ents.values(), key=lambda x: x[0])
 
         # Chỉ thêm nếu có ít nhất 1 entity
         if ents:
@@ -546,3 +676,7 @@ for i, (text, annotation) in enumerate(TRAIN_DATA[:5]):
 with open("ner_training_data.json", "w", encoding="utf-8") as f:
     json.dump(TRAIN_DATA, f, ensure_ascii=False, indent=2)
 
+# --- GHI CHÚ ---
+# - Đã thêm nhiều note từ NOTE_NAMES vào các buckets hợp lý trong accord_map.
+# - Một số note ít phổ biến được gom vào 'misc' nếu không có bucket rõ ràng.
+# - Nếu bạn muốn một mapping khác (ví dụ giữ nguyên từng note làm khóa riêng), mình có thể thay đổi.
