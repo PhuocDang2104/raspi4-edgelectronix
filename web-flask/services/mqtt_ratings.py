@@ -4,7 +4,7 @@ import json
 import redis
 import paho.mqtt.client as mqtt
 
-BROKER = "192.168.178.66"       # Đặt IP của broker (raspi chạy broker)
+BROKER = "192.168.67.66"       # Đặt IP của broker (raspi chạy broker)
 TOPIC_RATING = "sensors/ratings"
 
 # MQTT client setup
