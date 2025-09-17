@@ -30,7 +30,7 @@ print("📡 Listening on UDP port", UDP_PORT)
 
 # IPv6 cố định của 2 thiết bị
 addr1_ip = "fdb2:571d:54f5:9b58:e618:c3a6:66ef:d3e7"
-addr2_ip = "fdb2:571d:54f5:9b58:14a4:b11c:752e:20cb"
+addr2_ip = "fdb2:571d:54f5:9b58:8ea4:5594:d5cb:753f"
 
 while True:
     try:
