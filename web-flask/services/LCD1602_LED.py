@@ -39,7 +39,7 @@ try:
             lcd.clear()
             lcd.write_string("DROP DETECTED !!!")
             lcd.crlf()
-            lcd.write_string("Please be careful!")
+            lcd.write_string("Pls be careful!")
             time.sleep(5)
 
             # Sau khi hiển thị cảnh báo thì reset key để tránh lặp lại
