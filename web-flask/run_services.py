@@ -17,6 +17,7 @@ def run_raspi():
         "perfume_matcher.py",
         "uart_xg24.py",
         "udp_server.py",
+        "LCD1602_LED.py"
     ]
 
     processes = []
