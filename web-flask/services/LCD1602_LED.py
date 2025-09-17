@@ -39,7 +39,7 @@ try:
             lcd.clear()
             lcd.write_string("DROP DETECTED !!!")
             lcd.crlf()
-            lcd.write_string("Pls be careful!")
+            lcd.write_string("Pls be careful !")
             time.sleep(5)
 
             # Sau khi hiển thị cảnh báo thì reset key để tránh lặp lại
@@ -60,9 +60,9 @@ try:
 
             # Hiển thị bình thường: nhiệt + ẩm
             lcd.clear()
-            lcd.write_string(f"Temp:{temperature:.1f}C")
+            lcd.write_string(f"Temp:      {temperature:.1f}C")
             lcd.crlf()
-            lcd.write_string(f"Humid:{humidity:.1f}%")
+            lcd.write_string(f"Humid:     {humidity:.1f}%")
             time.sleep(2)
 
 except KeyboardInterrupt:
