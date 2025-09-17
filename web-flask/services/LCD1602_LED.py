@@ -32,25 +32,38 @@ try:
         # Đọc trạng thái drop từ Redis
         drop_val = r.get("drop_detect_event")
         if drop_val == "1":
-            status = "DROP DETECTED !!!"
+            # Bật LED drop
             GPIO.output(LED_STATUS, GPIO.HIGH)
+
+            # Hiển thị cảnh báo trên LCD
+            lcd.clear()
+            lcd.write_string("DROP DETECTED !!!")
+            lcd.crlf()
+            lcd.write_string("Please be careful!")
+            time.sleep(5)
+
+            # Sau khi hiển thị cảnh báo thì reset key để tránh lặp lại
+            try:
+                r.set("drop_detect_event", "0")
+            except Exception:
+                pass
+
         else:
-            status = "NORMAL"
+            # Tắt LED drop
             GPIO.output(LED_STATUS, GPIO.LOW)
 
-        # LED cảnh báo nhiệt độ cao
-        if temperature >= 31.5:
-            GPIO.output(LED_WARNING, GPIO.HIGH)
-        else:
-            GPIO.output(LED_WARNING, GPIO.LOW)
+            # LED cảnh báo nhiệt độ cao
+            if temperature >= 31.5:
+                GPIO.output(LED_WARNING, GPIO.HIGH)
+            else:
+                GPIO.output(LED_WARNING, GPIO.LOW)
 
-        # Cập nhật LCD
-        lcd.clear()
-        lcd.write_string(f"Temp:{temperature:.1f}C Hum:{humidity:.1f}%")
-        lcd.crlf()
-        lcd.write_string(f"Status:{status}")
-
-        time.sleep(2)
+            # Hiển thị bình thường: nhiệt + ẩm
+            lcd.clear()
+            lcd.write_string(f"Temp:{temperature:.1f}C")
+            lcd.crlf()
+            lcd.write_string(f"Humid:{humidity:.1f}%")
+            time.sleep(2)
 
 except KeyboardInterrupt:
     lcd.clear()
