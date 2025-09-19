@@ -1,9 +1,10 @@
-# emit.py — publish both update_perfume_catalog (existing) and update_perfume_xg24_result (from UART -> perfumes_6col)
 import psycopg2
 import time
 import json
 import redis
 import threading
+import subprocess
+import random
 
 # PostgreSQL config
 POSTGRES_CONFIG = {
@@ -35,6 +36,31 @@ def listen_perfume_selector():
                 print("Error decoding selector msg:", e)
 
 threading.Thread(target=listen_perfume_selector, daemon=True).start()
+
+# TTS templates for model-top1 announcement (when UART lookup publishes)
+MODEL_TTS_TEMPLATES = [
+    "{title}: our model finds that this perfume suits you best.",
+    "{title}: best perfume for a customer like you.",
+    "{title}: this might be your perfect match.",
+    "{title}: our model recommends this one for you.",
+    "{title}: a great choice — give it a try.",
+    "{title}: this could be your next signature scent.",
+    "{title}: seems like an excellent pick for you.",
+    "{title}: we think you'll enjoy this fragrance."
+]
+
+def speak_nonblocking(text: str):
+    """Gọi espeak non-blocking với volume max (amplitude=200) và giọng tiếng Anh nữ."""
+    try:
+        subprocess.Popen([
+            "espeak",
+            "-s", "150",
+            "-a", "200",
+            "-v", "en+f3",
+            text
+        ])
+    except Exception as e:
+        print(f"❌ TTS error: {e}")
 
 def run_emit_loop():
     global SELECTED_ID
@@ -119,66 +145,78 @@ def run_emit_loop():
                         }))
                         print(f"📦 UART lookup result for {uart_id}: {data_x}")
                         print(f"🔔 Published UART lookup {uart_id} → dashboard_updates (update_perfume_xg24_result), rows={len(data_x)}")
+                        # --- TTS: announce top-1 model suggestion if available ---
+                        try:
+                            if data_x and len(data_x) > 0:
+                                top1 = data_x[0]
+                                title = top1.get('title') or top1.get('perfume_id') or uart_id
+                                template = random.choice(MODEL_TTS_TEMPLATES)
+                                tts_text = template.format(title=title)
+                                print(f"🔊 Model TTS: {tts_text}")
+                                speak_nonblocking(tts_text)
+                        except Exception as e:
+                            print(f"❌ TTS announce error: {e}")
+
                         last_sent_uart_id = uart_id
                         last_sent_uart_data = data_x
                     else:
                         # no change -> do nothing
                         pass
-                        
-                        # ---------------------------
-                        # 4) Fetch top2 & top3 brief titles and publish separately
-                        # ---------------------------
-                        try:
-                            # read top2 / top3 from redis keys set by uart reader
-                            raw2 = redis_client.get('uart_model_result_2')
-                            raw3 = redis_client.get('uart_model_result_3')
-                            id2 = None
-                            id3 = None
-                            if raw2:
-                                try:
-                                    id2 = raw2.decode().strip()
-                                except:
-                                    id2 = raw2 if isinstance(raw2, str) else None
-                            if raw3:
-                                try:
-                                    id3 = raw3.decode().strip()
-                                except:
-                                    id3 = raw3 if isinstance(raw3, str) else None
 
-                            suggestions = []
-                            # query brief info for each (preserve order 2 then 3)
-                            for cand_id in (id2, id3):
-                                if not cand_id:
-                                    continue
-                                try:
-                                    with psycopg2.connect(**POSTGRES_CONFIG) as conn:
-                                        with conn.cursor() as cur:
-                                            cur.execute("""
-                                                SELECT perfume_id, title
-                                                FROM perfumes_6col
-                                                WHERE perfume_id = %s
-                                            """, (cand_id,))
-                                            row = cur.fetchone()
-                                            if row:
-                                                suggestions.append({
-                                                    'perfume_id': row[0],
-                                                    'title': row[1]
-                                                })
-                                except Exception as e:
-                                    print(f"❌ Error querying brief title for {cand_id}: {e}")
-                                    # continue to next
+                    # ---------------------------
+                    # 4) Fetch top2 & top3 brief titles and publish separately
+                    # ---------------------------
+                    try:
+                        # read top2 / top3 from redis keys set by uart reader
+                        raw2 = redis_client.get('uart_model_result_2')
+                        raw3 = redis_client.get('uart_model_result_3')
+                        id2 = None
+                        id3 = None
+                        if raw2:
+                            try:
+                                id2 = raw2.decode().strip()
+                            except:
+                                id2 = raw2 if isinstance(raw2, str) else None
+                        if raw3:
+                            try:
+                                id3 = raw3.decode().strip()
+                            except:
+                                id3 = raw3 if isinstance(raw3, str) else None
 
-                            # Publish suggestions if changed (or if previously None -> first time)
-                            if suggestions != last_sent_suggestions:
-                                # publish under a separate key inside the same 'dashboard_updates' channel
-                                redis_client.publish('dashboard_updates', json.dumps({
-                                    'update_perfume_suggestions': suggestions
-                                }))
-                                print(f"🔎 Published suggestions (top2/top3) → dashboard_updates (update_perfume_suggestions): {suggestions}")
-                                last_sent_suggestions = suggestions
+                        suggestions = []
+                        # query brief info for each (preserve order 2 then 3)
+                        for cand_id in (id2, id3):
+                            if not cand_id:
+                                continue
+                            try:
+                                with psycopg2.connect(**POSTGRES_CONFIG) as conn:
+                                    with conn.cursor() as cur:
+                                        cur.execute("""
+                                            SELECT perfume_id, title
+                                            FROM perfumes_6col
+                                            WHERE perfume_id = %s
+                                        """, (cand_id,))
+                                        row = cur.fetchone()
+                                        if row:
+                                            suggestions.append({
+                                                'perfume_id': row[0],
+                                                'title': row[1]
+                                            })
+                            except Exception as e:
+                                print(f"❌ Error querying brief title for {cand_id}: {e}")
+                                # continue to next
 
-                        except Exception as e:
-                            print("❌ Error building/publishing suggestions:", e)
+                        # Publish suggestions if changed (or if previously None -> first time)
+                        if suggestions != last_sent_suggestions:
+                            # publish under a separate key inside the same 'dashboard_updates' channel
+                            redis_client.publish('dashboard_updates', json.dumps({
+                                'update_perfume_suggestions': suggestions
+                            }))
+                            print(f"🔎 Published suggestions (top2/top3) → dashboard_updates (update_perfume_suggestions): {suggestions}")
+                            last_sent_suggestions = suggestions
+
+                    except Exception as e:
+                        print("❌ Error building/publishing suggestions:", e)
 
                     # Optional: clear uart key to mark consumed (uncomment if desired)
                     # redis_client.delete('uart_model_result')

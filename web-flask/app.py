@@ -8,6 +8,7 @@ import socket
 import redis
 import json
 import spacy
+import subprocess
 
 def build_request_json(doc):
     # build initial raw request from entities (same as before)
@@ -135,6 +136,17 @@ def watch_trigger():
             perfume_id = perfume_id.decode()
             print(f"⭐ Trigger rating UI for perfume {perfume_id}")
             socketio.emit("show_rating_request", {"perfume_id": perfume_id})
+            # TTS non-blocking: ask user to rate (English)
+            try:
+                subprocess.Popen([
+                    "espeak",
+                    "Please rate the product and our Model, Thanks",
+                    "-s", "150",
+                    "-a", "200",
+                    "-v", "en+f3"
+                ])
+            except Exception as e:
+                print(f"❌ TTS error: {e}")
             redis_client.delete("trigger_rating_request")  # xoá để không lặp
 
 # 🌐 Routes
@@ -182,7 +194,6 @@ def handle_ai_request(data):
     else:
         print("No recognizable data received.")
         
-
 
 @socketio.on("submit_rating")
 def handle_rating(data):
