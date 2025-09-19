@@ -4,7 +4,7 @@ import json
 import redis
 import paho.mqtt.client as mqtt
 
-BROKER = "192.168.67.66"         # thay theo IP broker thực tế
+BROKER = "192.168.150.66"         # thay theo IP broker thực tế
 TOPIC_CONF = "ai/confidence"
 
 # MQTT client

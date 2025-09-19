@@ -7,7 +7,7 @@ import redis
 import paho.mqtt.client as mqtt
 
 # ⚙️ MQTT config
-BROKER = "192.168.67.66"        # nhớ check lại IP broker trước khi chạy
+BROKER = "192.168.150.66"        # nhớ check lại IP broker trước khi chạy
 TOPIC_CUSTOMER = "customer/data" # topic publish form_input
 
 # ⚙️ MQTT client
