@@ -4,6 +4,7 @@ uart_redis_csv_sender.py
 - Terminal UART interactive (gõ gửi)
 - Background thread: poll Redis key 'uart_outgoing_message' (contains JSON bytes),
   convert to PREF CSV line (same format as gen_csv in your GUI) and send via UART.
+- Bổ sung: nếu perfume ID trùng với các ID chỉ định thì kích sáng LED trên GPIO tương ứng
 """
 
 import serial
@@ -14,7 +15,6 @@ import time
 import sys
 import traceback
 import re
-
 
 # -------------------------
 # Vocabularies (same as GUI)
@@ -140,6 +140,88 @@ def gen_csv(gender, brand, notes, accords, sillage, longevity, price):
     return f"PREF,{g},{b},{notes_part},{accords_part},{s},{l},{p}"
 
 # -------------------------
+# GPIO LED mapping & setup
+# -------------------------
+# Mapping perfume ID -> BCM GPIO pin
+PERFUME_GPIO_MAP = {
+    "P001": 22,  # alien
+    "P030": 23,  # geranium
+    "P020": 24,  # bee
+    "P047": 25,  # gardenia
+    "P049": 5,   # incanto
+    "P007": 6,   # amber
+    "P017": 12,  # Gucci
+    "P045": 13,  # braze
+    "P026": 19,  # sexy
+    "P005": 26,  # gucci-bamboo
+}
+
+# Duration to keep LED on (seconds)
+LED_ON_DURATION = 10.0
+
+# Try import RPi.GPIO, otherwise disable GPIO features gracefully
+gpio_available = True
+try:
+    import RPi.GPIO as GPIO
+    GPIO.setmode(GPIO.BCM)
+    # setup pins
+    for pin in set(PERFUME_GPIO_MAP.values()):
+        try:
+            GPIO.setup(pin, GPIO.OUT, initial=GPIO.LOW)
+        except Exception as e:
+            print(f"[GPIO Warn] Không thể setup pin {pin}: {e}")
+except Exception as e:
+    gpio_available = False
+    print("[GPIO Warn] RPi.GPIO không khả dụng, sẽ bỏ qua phần điều khiển LED. Lỗi:", e)
+
+def _turn_off_pins(pins):
+    if not gpio_available:
+        return
+    for p in pins:
+        try:
+            GPIO.output(p, GPIO.LOW)
+        except Exception as ex:
+            print(f"[GPIO Warn] Lỗi tắt pin {p}: {ex}")
+
+def light_matched_leds(ids, duration=LED_ON_DURATION):
+    """
+    ids: list of strings like ['P001', 'P023', ...]
+    duration: seconds to keep LED on
+    Hành vi: bật HIGH các pin tương ứng, sau `duration` sẽ tắt lại (không block thread chính).
+    """
+    if not gpio_available:
+        # nếu RPi.GPIO không có, chỉ log ra
+        print("[GPIO] GPIO không khả dụng => bỏ qua việc bật LED. Matched IDs:", ids)
+        return
+
+    pins_to_turn_on = []
+    for pid in ids:
+        if not isinstance(pid, str):
+            continue
+        key = pid.strip().upper()
+        if key in PERFUME_GPIO_MAP:
+            pins_to_turn_on.append(PERFUME_GPIO_MAP[key])
+
+    if not pins_to_turn_on:
+        # không có pin khớp
+        return
+
+    # Bật các pin (HIGH)
+    for p in pins_to_turn_on:
+        try:
+            GPIO.output(p, GPIO.HIGH)
+        except Exception as ex:
+            print(f"[GPIO Warn] Lỗi bật pin {p}: {ex}")
+
+    # Lên lịch tắt các pin sau `duration` giây (không block)
+    try:
+        t = threading.Timer(duration, _turn_off_pins, args=(pins_to_turn_on,))
+        t.daemon = True
+        t.start()
+    except Exception as e:
+        print("[GPIO Warn] Không thể lên lịch tắt pin:", e)
+
+# -------------------------
 # Redis + UART setup
 # -------------------------
 redis_client = redis.Redis(host='localhost', port=6379, db=0)
@@ -183,6 +265,12 @@ def read_from_uart():
 
                         if ids:
                             try:
+                                # Bật LED tương ứng (nếu có) TRƯỚC khi lưu vào Redis
+                                try:
+                                    light_matched_leds(ids)
+                                except Exception as ex_light:
+                                    print("[Warn] Lỗi khi bật LED:", ex_light)
+
                                 redis_client.set("uart_model_result", ids[0])
                                 if len(ids) > 1:
                                     redis_client.set("uart_model_result_2", ids[1])
@@ -295,4 +383,10 @@ if __name__ == "__main__":
             ser.close()
         except Exception:
             pass
+        # cleanup GPIO nếu có
+        if gpio_available:
+            try:
+                GPIO.cleanup()
+            except Exception:
+                pass
         print("Closed UART. Bye.")
