@@ -824,8 +824,9 @@ let dataArray = null;
 let rafId = null;
 
 // init speech recognition if available
-if ('webkitSpeechRecognition' in window) {
-  recognition = new webkitSpeechRecognition();
+const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+if (SpeechRecognition) {
+  recognition = new SpeechRecognition();
   recognition.lang = 'en-US';
   recognition.continuous = false;
   recognition.interimResults = false;
