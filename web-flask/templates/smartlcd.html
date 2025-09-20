@@ -107,36 +107,7 @@
         </div>
         <div id="aiResult" class="ai-result-box"></div>
       </div>
-    <!-- Modal Ghi Âm (waveform) - chèn ngay trong <body> -->
-    <div id="recordModal" class="record-modal" aria-hidden="true" role="dialog">
-      <div class="record-content">
-        <div class="record-header">
-          <strong>S.C.E.N.T is listening, feel free to speak!</strong>
-          <span id="recDot" class="rec-dot"></span>
-          <button id="closeWaveModal" class="close-x" aria-label="Close">&times;</button>
-        </div>
-
-        <canvas id="waveCanvas" width="800" height="120" aria-label="Audio waveform"></canvas>
-
-        <div class="record-footer">
-          <div class="status-group">
-            <div id="recText">
-              <p><strong>Recommended features:</strong></p>
-              <ul>
-                <li>Age</li>
-                <li>Gender</li>
-                <li>Preferred accord</li>
-                <li>Preferred notes</li>
-                <li>Occasion</li>
-                <li>Longevity / Sillage</li>
-                <li>Price range</li>
-              </ul>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-
+    
       <!-- Manual Mode -->
       <div id="manualMode" style="display: none;">
         <div class="manual-form">
@@ -627,8 +598,6 @@
 
 
   <script>
-
-    
     const idToClassMap = {
       "P001": "bg-alien",
       "P005": "bg-gucci-bamboo",
@@ -800,293 +769,67 @@
       };
     });
 
-    // -----------------------------
-// Microphone + Waveform modal
-// -----------------------------
-const SILENCE_TIMEOUT_MS = 7000;
-const micBtn = document.getElementById('micBtn');
-const recordingStatus = document.getElementById('recordingStatus'); // vẫn còn, nhưng sẽ ẩn khi modal dùng
-const recordModal = document.getElementById('recordModal');
-const waveCanvas = document.getElementById('waveCanvas');
-const stopBtn = document.getElementById('stopBtn');
-const closeWaveModal = document.getElementById('closeWaveModal'); // nếu không có, safe-ignore
+    // Microphone logic with recording animation
+    const micBtn = document.getElementById('micBtn');
+    const recordingStatus = document.getElementById('recordingStatus');
 
-let recognition;
-let isRecording = false;
-let silenceTimeout = null;
 
-// WebAudio state
-let mediaStream = null;
-let audioCtx = null;
-let analyser = null;
-let sourceNode = null;
-let dataArray = null;
-let rafId = null;
+    let recognition;
+    let isRecording = false;
 
-// init speech recognition if available
-if ('webkitSpeechRecognition' in window) {
-  recognition = new webkitSpeechRecognition();
-  recognition.lang = 'en-US';
-  recognition.continuous = false;
-  recognition.interimResults = false;
+    if ('webkitSpeechRecognition' in window) {
+      recognition = new webkitSpeechRecognition();
+      recognition.lang = 'en-US';
+      recognition.continuous = false;
+      recognition.interimResults = false;
 
-  recognition.onstart = () => {
-    isRecording = true;
-    // show modal visual (prefer modal, hide small dot)
-    if (recordModal) {
-      recordModal.style.display = 'flex';
-      recordModal.setAttribute('aria-hidden', 'false');
-    }
-    if (recordingStatus) recordingStatus.style.display = 'none';
-    // start waveform visualiser (non-blocking)
-    startWaveform().catch(err => console.warn('Waveform start error:', err));
-    resetSilenceTimer();
-    console.log('🎤 recognition.onstart');
-  };
+      recognition.onstart = () => {
+        isRecording = true;
+        recordingStatus.style.display = 'inline-block';
+        console.log("Listening...");
+      };
 
-  recognition.onresult = (event) => {
-    const transcript = event.results && event.results[0] && event.results[0][0] && event.results[0][0].transcript;
-    if (transcript) {
-      aiInput.value += (aiInput.value.trim() ? ' ' : '') + transcript;
-    }
-    // reset silence timer when speech arrives
-    resetSilenceTimer();
-    console.log('🎤 recognition.onresult:', transcript);
-  };
+      recognition.onresult = (event) => {
+        const transcript = event.results[0][0].transcript;
+        aiInput.value += (aiInput.value.trim() ? ' ' : '') + transcript;
+        // tự stop sau 5s im lặng:
+        clearTimeout(silenceTimeout);
+        silenceTimeout = setTimeout(() => {
+          console.log("🤐 5s không nói, tự động dừng ghi âm.");
+          recognition.stop();
+        }, 5000);
+      };
 
-  recognition.onerror = (ev) => {
-    console.warn('Speech recognition error:', ev);
-    alert('Speech recognition error: ' + (ev.error || JSON.stringify(ev)));
-    stopAllRecording();
-  };
+      recognition.onerror = (event) => {
+        alert('Speech recognition error: ' + event.error);
+        isRecording = false;
+        recordingStatus.style.display = 'none';
+      };
 
-  recognition.onend = () => {
-    // recognition ended (either by stop() or natural)
-    isRecording = false;
-    clearSilenceTimer();
-    // hide modal & stop waveform slightly delayed for smoothness
-    setTimeout(() => {
-      if (recordModal) {
-        recordModal.style.display = 'none';
-        recordModal.setAttribute('aria-hidden', 'true');
-      }
-      stopWaveform();
-    }, 80);
-    if (recordingStatus) recordingStatus.style.display = 'none';
-    console.log('🎤 recognition.onend');
-  };
-} else {
-  // no webkitSpeechRecognition
-  if (micBtn) {
-    micBtn.disabled = true;
-    micBtn.title = "Speech recognition not supported in this browser.";
-  }
-}
-
-// mic button click handler
-if (micBtn) {
-  micBtn.onclick = async () => {
-    if (currentMode !== 'voice') {
-      alert("Switch to Voice tab first.");
-      return;
-    }
-    if (!recognition) {
-      alert('Speech recognition not supported. Use Chrome / Edge on desktop.');
-      return;
+      recognition.onend = () => {
+        isRecording = false;
+        recordingStatus.style.display = 'none';
+        console.log("🛑 Stopped listening.");
+      };
+    } else {
+      micBtn.disabled = true;
+      micBtn.title = "Speech recognition not supported.";
     }
 
-    if (!isRecording) {
-      // request mic permission early for visualiser; recognition may also request
-      try {
-        await ensureMediaStream(); // we do not attach the stream to recognition, only for visualiser
-      } catch (err) {
-        console.error('Microphone permission denied or unavailable:', err);
-        alert('Microphone access denied or unavailable.');
+    micBtn.onclick = () => {
+      if (currentMode !== 'voice') {
+        alert("Switch to Voice tab first.");
         return;
       }
-      try {
-        recognition.start();
-      } catch (err) {
-        console.warn('recognition.start failed:', err);
+
+      if (!recognition) return;
+
+      if (!isRecording) {
+        recognition.start(); // bắt đầu record
+      } else {
+        recognition.stop(); // dừng ghi âm
       }
-    } else {
-      try { recognition.stop(); } catch (e) { console.warn(e); }
-      stopAllRecording();
-    }
-  };
-}
-
-// stop button inside modal
-if (stopBtn) {
-  stopBtn.addEventListener('click', () => {
-    if (recognition && isRecording) {
-      try { recognition.stop(); } catch(e){ console.warn(e); }
-    }
-    stopAllRecording();
-  });
-}
-
-// optional close X on modal
-if (closeWaveModal) {
-  closeWaveModal.addEventListener('click', () => {
-    if (recognition && isRecording) {
-      try { recognition.stop(); } catch(e){ console.warn(e); }
-    }
-    stopAllRecording();
-  });
-}
-
-/* ---------- silence auto-stop ---------- */
-function resetSilenceTimer() {
-  clearSilenceTimer();
-  silenceTimeout = setTimeout(() => {
-    console.log(`Auto-stop: ${SILENCE_TIMEOUT_MS/1000}s silence`);
-    try { recognition && recognition.stop(); } catch(e){ console.warn(e); }
-  }, SILENCE_TIMEOUT_MS);
-}
-function clearSilenceTimer() {
-  if (silenceTimeout) { clearTimeout(silenceTimeout); silenceTimeout = null; }
-}
-
-/* ---------- Media + Waveform helpers ---------- */
-async function ensureMediaStream() {
-  if (mediaStream && mediaStream.getAudioTracks && mediaStream.getAudioTracks().length) return mediaStream;
-  if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
-    throw new Error('getUserMedia not supported');
-  }
-  mediaStream = await navigator.mediaDevices.getUserMedia({ audio: true });
-  return mediaStream;
-}
-
-async function startWaveform() {
-  try {
-    await ensureMediaStream();
-  } catch (err) {
-    console.warn('startWaveform: cannot get media stream', err);
-    return;
-  }
-  if (!audioCtx || audioCtx.state === 'closed') {
-    audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-  }
-
-  analyser = audioCtx.createAnalyser();
-  analyser.fftSize = 2048;
-  const bufferLen = analyser.fftSize;
-  dataArray = new Uint8Array(bufferLen);
-
-  if (mediaStream) {
-    sourceNode = audioCtx.createMediaStreamSource(mediaStream);
-    sourceNode.connect(analyser);
-  }
-
-  // start drawing loop
-  drawWaveformLoop();
-}
-
-function stopWaveform() {
-  if (rafId) {
-    cancelAnimationFrame(rafId);
-    rafId = null;
-  }
-
-  try { if (sourceNode) { sourceNode.disconnect(); sourceNode = null; } } catch(e){/*noop*/ }
-  try { if (analyser) { analyser.disconnect(); analyser = null; } } catch(e){/*noop*/ }
-
-  // stop media tracks
-  try {
-    if (mediaStream) {
-      mediaStream.getTracks().forEach(t => t.stop());
-      mediaStream = null;
-    }
-  } catch (e) { /* noop */ }
-
-  // close audio context
-  try { if (audioCtx && audioCtx.state !== 'closed') { audioCtx.close(); } audioCtx = null; } catch(e){/*noop*/}
-
-  // clear canvas visually
-  if (waveCanvas) {
-    const ctx = waveCanvas.getContext('2d');
-    ctx && ctx.clearRect(0, 0, waveCanvas.width, waveCanvas.height);
-  }
-}
-
-function drawWaveformLoop() {
-  const canvas = waveCanvas;
-  if (!canvas || !analyser) return;
-  const ctx = canvas.getContext('2d');
-
-  function resize() {
-    const dpr = window.devicePixelRatio || 1;
-    const w = canvas.clientWidth * dpr;
-    const h = canvas.clientHeight * dpr;
-    if (canvas.width !== w || canvas.height !== h) {
-      canvas.width = w;
-      canvas.height = h;
-    }
-  }
-
-  function loop() {
-    rafId = requestAnimationFrame(loop);
-    if (!analyser) return;
-    analyser.getByteTimeDomainData(dataArray);
-    resize();
-
-    // background -> trắng
-    ctx.fillStyle = '#ffffff';
-    ctx.fillRect(0, 0, canvas.width, canvas.height);
-
-    // draw main black smooth line
-    ctx.lineWidth = Math.max(2, Math.round(canvas.height * 0.03));
-    ctx.strokeStyle = '#0b0b0b'; // đen gần như #000
-    ctx.beginPath();
-
-    const sliceWidth = canvas.width / dataArray.length;
-    let x = 0;
-    for (let i = 0; i < dataArray.length; i++) {
-      const v = dataArray[i] / 128.0; // [0,2]
-      const y = (v * canvas.height) / 2;
-      if (i === 0) ctx.moveTo(x, y);
-      else ctx.lineTo(x, y);
-      x += sliceWidth;
-    }
-    ctx.lineTo(canvas.width, canvas.height / 2);
-    ctx.stroke();
-
-    // subtle glow -> nhẹ shadow đen (giữ tinh tế)
-    ctx.globalCompositeOperation = 'lighter';
-    ctx.strokeStyle = 'rgba(0,0,0,0.06)';
-    ctx.lineWidth = Math.max(4, Math.round(canvas.height * 0.07));
-    ctx.beginPath();
-    x = 0;
-    for (let i = 0; i < dataArray.length; i++) {
-      const v = dataArray[i] / 128.0;
-      const y = (v * canvas.height) / 2;
-      if (i === 0) ctx.moveTo(x, y);
-      else ctx.lineTo(x, y);
-      x += sliceWidth;
-    }
-    ctx.stroke();
-    ctx.globalCompositeOperation = 'source-over';
-  }
-
-  loop();
-}
-
-/* ---------- common stop/cleanup ---------- */
-function stopAllRecording() {
-  clearSilenceTimer();
-  if (recognition && isRecording) {
-    try { recognition.stop(); } catch(e) { /*noop*/ }
-  }
-  isRecording = false;
-  // hide modal
-  if (recordModal) {
-    recordModal.style.display = 'none';
-    recordModal.setAttribute('aria-hidden', 'true');
-  }
-  stopWaveform();
-  if (recordingStatus) recordingStatus.style.display = 'none';
-}
+    };
 
     const ageRange = document.getElementById("ageRange");
     const ageValue = document.getElementById("ageValue");
